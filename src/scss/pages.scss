@@ -8,6 +8,8 @@
 @use "@carbon/type";
 @use "@carbon/grid";
 
+@include type.type-classes();
+
 .layout {
     margin-top: layout.$spacing-09;
     background: themes.$background;
@@ -64,5 +66,19 @@
 
     @include grid.breakpoint(lg) {
         padding: layout.$spacing-07;
+    }
+}
+
+.password--label {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+
+    a {
+        font-size: inherit;
+    }
+
+    span {
+        display: block;
     }
 }
