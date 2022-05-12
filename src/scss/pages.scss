@@ -6,6 +6,7 @@
 @use "@carbon/colors";
 @use "@carbon/themes";
 @use "@carbon/type";
+@use "@carbon/grid";
 
 .layout {
     margin-top: layout.$spacing-09;
@@ -13,8 +14,7 @@
     min-height: 100vh;
 }
 
-.page__article {
-    position: sticky;
+.page--article {
     background-image: url("../images/background.svg");
     background-size: cover;
     background-repeat: repeat-y;
@@ -23,8 +23,8 @@
     min-height: 100vh;
     margin-left: -(layout.$spacing-06);
     padding-top: layout.$spacing-13;
-    padding-left: layout.$spacing-09;
-    padding-right: layout.$spacing-09;
+    padding-left: layout.$spacing-07;
+    padding-right: layout.$spacing-07;
     color: themes.$text-on-color;
 
     h2 {
@@ -35,12 +35,21 @@
     p {
         @include type.type-style("body-02");
     }
+
+    .page--article__content {
+        position: sticky;
+        top: (layout.$spacing-13 * 2);
+    }
+
+    @include grid.breakpoint(lg) {
+        padding-left: layout.$spacing-09;
+        padding-right: layout.$spacing-09;
+    }
 }
 
-.page__form {
-    min-height: 100vh;
+.page--form {
     background: themes.$background;
-    padding: layout.$spacing-07;
+    padding: layout.$spacing-04;
 
     h1 {
         @include type.type-style("heading-04");
@@ -51,5 +60,9 @@
     p {
         @include type.type-style("body-01");
         margin-bottom: layout.$spacing-07;
+    }
+
+    @include grid.breakpoint(lg) {
+        padding: layout.$spacing-07;
     }
 }

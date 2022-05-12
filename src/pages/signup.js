@@ -16,8 +16,8 @@ const Signup = () => {
   const regions = ["North-West", "West", "South-West"];
   return (
     <Grid>
-      <Column sm={0} lg={8} className="page__article">
-        <div className="page__article--content">
+      <Column sm={0} md={4} lg={8} className="page--article">
+        <div className="page--article__content">
           <h2>Lorem ipsum</h2>
           <p>
             Lorem ipsum dolor sit amet consectetur adipisicing elit. Nobis
@@ -27,7 +27,7 @@ const Signup = () => {
           </p>
         </div>
       </Column>
-      <Column sm={4} lg={8} className="page__form">
+      <Column sm={4} md={4} lg={8} className="page--form">
         <p>
           <span>Already have an account </span>
           <Link className="cds--link" to="login">
