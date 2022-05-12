@@ -37,7 +37,7 @@ const Login = () => {
               <FormGroup>
                 <FormLabel className="password--label">
                   <span>Password</span>
-                  <Link className="cds--link" to="password-reset">
+                  <Link className="cds--link" to="/password-reset">
                     Forgot password?
                   </Link>
                 </FormLabel>
@@ -46,7 +46,7 @@ const Login = () => {
               <Button type="submit">Continue</Button>
               <p className="account--link">
                 <span>Don't have an account </span>
-                <Link className="cds--link" to="signup">
+                <Link className="cds--link" to="/signup">
                   create an account
                 </Link>
               </p>
