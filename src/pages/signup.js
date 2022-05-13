@@ -1,19 +1,33 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Grid,
   Form,
   Stack,
   Column,
   Button,
+  Dropdown,
   FormGroup,
   TextInput,
-  Dropdown,
+  InlineLoading,
   PasswordInput,
 } from "@carbon/react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const Signup = () => {
   const regions = ["North-West", "West", "South-West"];
+
+  const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
+
+  function handleSignup(evt) {
+    evt.preventDefault();
+    setLoading(true);
+    setTimeout(() => {
+      setLoading(false);
+      navigate("/login");
+    }, 3000);
+  }
+
   return (
     <Grid>
       <Column sm={0} md={4} lg={8} className="page--article">
@@ -41,7 +55,7 @@ const Signup = () => {
           dolorem.
         </p>
 
-        <Form>
+        <Form onSubmit={(evt) => handleSignup(evt)}>
           <Stack gap={7}>
             <FormGroup legendText="Personal Information">
               <Stack gap={7}>
@@ -80,7 +94,15 @@ const Signup = () => {
               </Stack>
             </FormGroup>
 
-            <Button type="submit">Create account</Button>
+            {!loading ? (
+              <Button type="submit">Create account</Button>
+            ) : (
+              <InlineLoading
+                status="active"
+                iconDescription="Active loading indicator"
+                description="Loading data..."
+              />
+            )}
           </Stack>
         </Form>
       </Column>

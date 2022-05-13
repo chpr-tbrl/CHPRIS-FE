@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Grid,
   Form,
@@ -7,12 +7,25 @@ import {
   Button,
   TextInput,
   FormLabel,
-  PasswordInput,
   FormGroup,
+  PasswordInput,
+  InlineLoading,
 } from "@carbon/react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const Login = () => {
+  const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
+
+  function handleLogin(evt) {
+    evt.preventDefault();
+    setLoading(true);
+    setTimeout(() => {
+      setLoading(false);
+      navigate("/dashboard");
+    }, 3000);
+  }
+
   return (
     <Grid>
       <Column sm={0} md={4} lg={8} className="page--article">
@@ -31,7 +44,7 @@ const Login = () => {
           <h1>
             Login to CHPR <span className="cds--type-semibold">IS</span>
           </h1>
-          <Form>
+          <Form onSubmit={(evt) => handleLogin(evt)}>
             <Stack gap={7}>
               <TextInput id="email" labelText="Email" type="email" />
               <FormGroup>
@@ -43,7 +56,17 @@ const Login = () => {
                 </FormLabel>
                 <PasswordInput id="password" hideLabel />
               </FormGroup>
-              <Button type="submit">Continue</Button>
+
+              {!loading ? (
+                <Button type="submit">Continue</Button>
+              ) : (
+                <InlineLoading
+                  status="active"
+                  iconDescription="Active loading indicator"
+                  description="Loading data..."
+                />
+              )}
+
               <p className="account--link">
                 <span>Don't have an account </span>
                 <Link className="cds--link" to="/signup">
