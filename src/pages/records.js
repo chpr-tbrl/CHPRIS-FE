@@ -9,8 +9,8 @@ import {
   TableToolbarContent,
   TableToolbarSearch,
 } from "@carbon/react";
-
 import { Add, Renew } from "@carbon/icons-react";
+import { Link } from "react-router-dom";
 
 const Records = () => {
   return (
@@ -33,7 +33,7 @@ const Records = () => {
                 >
                   Refresh
                 </Button>
-                <Button renderIcon={Add} onClick={() => alert("Button click")}>
+                <Button renderIcon={Add} as={Link} to="new">
                   New record
                 </Button>
               </TableToolbarContent>

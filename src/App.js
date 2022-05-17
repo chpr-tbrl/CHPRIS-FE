@@ -5,6 +5,7 @@ import Signup from "pages/signup";
 import Login from "pages/login";
 import Records from "pages/records";
 import PasswordReset from "pages/password-reset";
+import NewRecord from "pages/new-record";
 
 function App() {
   return (
@@ -20,7 +21,10 @@ function App() {
 
           <Route path="/dashboard" element={<DashLayout />}>
             <Route index element={<Navigate to="records" />} />
-            <Route path="records" element={<Records />} />
+            <Route path="records">
+              <Route index element={<Records />} />
+              <Route path="new" element={<NewRecord />} />
+            </Route>
           </Route>
           <Route path="*" element={<Navigate to="/" />} />
         </Routes>
