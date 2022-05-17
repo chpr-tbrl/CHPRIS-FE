@@ -27,7 +27,7 @@ const Login = () => {
   }
 
   return (
-    <Grid>
+    <Grid fullWidth>
       <Column sm={0} md={4} lg={8} className="page--article">
         <div className="page--article__content">
           <h2>Lorem ipsum</h2>
@@ -68,7 +68,7 @@ const Login = () => {
               )}
 
               <p className="account--link">
-                <span>Don't have an account </span>
+                <span>Don't have an account? </span>
                 <Link className="cds--link" to="/signup">
                   create an account
                 </Link>
