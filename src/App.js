@@ -1,6 +1,7 @@
 import React, { Fragment } from "react";
 import { BrowserRouter, Navigate, Routes, Route } from "react-router-dom";
 import { Layout, DashLayout } from "components";
+import { Toaster } from "react-hot-toast";
 import Signup from "pages/signup";
 import Login from "pages/login";
 import Records from "pages/records";
@@ -10,6 +11,14 @@ import NewRecord from "pages/new-record";
 function App() {
   return (
     <Fragment>
+      <Toaster
+        position="top-right"
+        containerClassName="toast--container"
+        reverseOrder={false}
+        toastOptions={{
+          duration: 5000,
+        }}
+      />
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Layout />}>
