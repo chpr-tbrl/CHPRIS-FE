@@ -1,7 +1,8 @@
 // contains all store reducers
 import { combineReducers } from "@reduxjs/toolkit";
 import { API } from "../services/api";
-import authReducer from "./auth";
+import authReducer, { logout } from "./auth";
+import { clearCache, clearPersistedState } from "services";
 
 // Add the generated reducer as a specific top-level reducer
 const appReducer = combineReducers({
@@ -15,7 +16,9 @@ const appReducer = combineReducers({
  https://stackoverflow.com/questions/35622588/how-to-reset-the-state-of-a-redux-store?page=1&tab=votes#tab-top
 */
 const rootReducer = (state, action) => {
-  if (action.type === "RESET_STORE") {
+  if (logout.match(action)) {
+    clearCache();
+    clearPersistedState();
     return appReducer(undefined, action);
   }
   return appReducer(state, action);
