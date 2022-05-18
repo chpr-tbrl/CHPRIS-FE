@@ -8,21 +8,20 @@ export const API = createApi({
     headers: {
       "content-type": "application/json",
     },
-    credentials: "include",
   }),
   endpoints: (builder) => ({
     login: builder.mutation({
-      query: (credentials) => ({
+      query: (data) => ({
         url: "/login",
         method: "POST",
-        body: credentials,
+        body: data,
       }),
     }),
     signup: builder.mutation({
-      query: (credentials) => ({
+      query: (data) => ({
         url: "/signup",
         method: "POST",
-        body: credentials,
+        body: data,
       }),
     }),
   }),

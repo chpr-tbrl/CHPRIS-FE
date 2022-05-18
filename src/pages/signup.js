@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import {
   Grid,
   Form,
@@ -12,20 +12,35 @@ import {
   PasswordInput,
 } from "@carbon/react";
 import { Link, useNavigate } from "react-router-dom";
+import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { SignupSchema } from "schemas";
+import { useSignupMutation } from "services";
+import toast from "react-hot-toast";
 
 const Signup = () => {
   const regions = ["North-West", "West", "South-West"];
-
+  const sites = ["CHPR", "Afkanerd"];
   const navigate = useNavigate();
-  const [loading, setLoading] = useState(false);
+  const [signup, { isLoading }] = useSignupMutation();
 
-  function handleSignup(evt) {
-    evt.preventDefault();
-    setLoading(true);
-    setTimeout(() => {
-      setLoading(false);
+  const {
+    setValue,
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    resolver: yupResolver(SignupSchema),
+  });
+
+  async function handleSignup(data) {
+    try {
+      await signup(data).unwrap();
+      toast.success("Account created");
       navigate("/login");
-    }, 3000);
+    } catch (error) {
+      // we handle errors with middleware
+    }
   }
 
   return (
@@ -55,13 +70,31 @@ const Signup = () => {
           dolorem.
         </p>
 
-        <Form onSubmit={(evt) => handleSignup(evt)}>
+        <Form onSubmit={handleSubmit(handleSignup)}>
           <Stack gap={7}>
             <FormGroup legendText="Personal Information">
               <Stack gap={7}>
-                <TextInput id="name" labelText="Name" />
-                <TextInput id="occupation" labelText="Occupation" />
-                <TextInput id="phone_number" labelText="Phone Number" />
+                <TextInput
+                  id="name"
+                  labelText="Name"
+                  {...register("name")}
+                  invalid={errors.name ? true : false}
+                  invalidText={errors.name?.message}
+                />
+                <TextInput
+                  id="occupation"
+                  labelText="Occupation"
+                  {...register("occupation")}
+                  invalid={errors.occupation ? true : false}
+                  invalidText={errors.occupation?.message}
+                />
+                <TextInput
+                  id="phone_number"
+                  labelText="Phone Number"
+                  {...register("phone_number")}
+                  invalid={errors.phone_number ? true : false}
+                  invalidText={errors.phone_number?.message}
+                />
               </Stack>
             </FormGroup>
 
@@ -73,28 +106,60 @@ const Signup = () => {
                   label="Select region"
                   items={regions}
                   itemToString={(item) => item}
+                  invalid={errors.region ? true : false}
+                  invalidText={errors.region?.message}
+                  onChange={(evt) =>
+                    setValue("region", evt.selectedItem, {
+                      shouldValidate: true,
+                    })
+                  }
                 />
-                <TextInput id="site" labelText="Site" />
+
+                <Dropdown
+                  id="site"
+                  titleText="Site"
+                  label="Select site"
+                  items={sites}
+                  itemToString={(item) => item}
+                  invalid={errors.site ? true : false}
+                  invalidText={errors.site?.message}
+                  onChange={(evt) =>
+                    setValue("site", evt.selectedItem, {
+                      shouldValidate: true,
+                    })
+                  }
+                />
               </Stack>
             </FormGroup>
 
             <FormGroup legendText="Account Information">
               <Stack gap={7}>
-                <TextInput id="email" labelText="Email" type="email" />
+                <TextInput
+                  id="email"
+                  labelText="Email"
+                  type="email"
+                  {...register("email")}
+                  invalid={errors.email ? true : false}
+                  invalidText={errors.email?.message}
+                />
                 <PasswordInput
                   id="password"
                   labelText="Password"
-                  type="password"
+                  {...register("password")}
+                  invalid={errors.password ? true : false}
+                  invalidText={errors.password?.message}
                 />
                 <PasswordInput
                   id="confirm-password"
                   labelText="Confirm Password"
-                  type="password"
+                  {...register("confirm_password")}
+                  invalid={errors.confirm_password ? true : false}
+                  invalidText={errors.confirm_password?.message}
                 />
               </Stack>
             </FormGroup>
 
-            {!loading ? (
+            {!isLoading ? (
               <Button type="submit">Create account</Button>
             ) : (
               <InlineLoading
