@@ -27,13 +27,19 @@ const Records = () => {
               <TableToolbarContent>
                 <TableToolbarSearch expanded />
                 <Button
-                  renderIcon={Renew}
                   kind="tertiary"
-                  onClick={() => alert("Button click")}
+                  renderIcon={Renew}
+                  iconDescription="refresh"
+                  onClick={() => alert("refresh clicked")}
                 >
                   Refresh
                 </Button>
-                <Button renderIcon={Add} as={Link} to="new">
+                <Button
+                  as={Link}
+                  to="new"
+                  renderIcon={Add}
+                  iconDescription="new record"
+                >
                   New record
                 </Button>
               </TableToolbarContent>
@@ -45,15 +51,18 @@ const Records = () => {
               <TableToolbarContent>
                 <TableToolbarSearch expanded />
                 <Button
-                  renderIcon={Renew}
                   hasIconOnly
                   kind="tertiary"
-                  onClick={() => alert("Button click")}
+                  renderIcon={Renew}
+                  iconDescription="refresh"
+                  onClick={() => alert("refresh clicked")}
                 />
                 <Button
-                  renderIcon={Add}
                   hasIconOnly
-                  onClick={() => alert("Button click")}
+                  as={Link}
+                  to="new"
+                  renderIcon={Add}
+                  iconDescription="new record"
                 />
               </TableToolbarContent>
             </TableToolbar>

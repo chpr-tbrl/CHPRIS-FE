@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import {
   Grid,
   Form,
@@ -12,18 +12,32 @@ import {
   InlineLoading,
 } from "@carbon/react";
 import { Link, useNavigate } from "react-router-dom";
+import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { LoginSchema } from "schemas";
+import { useLoginMutation } from "services";
+import toast from "react-hot-toast";
 
 const Login = () => {
   const navigate = useNavigate();
-  const [loading, setLoading] = useState(false);
+  const [login, { isLoading }] = useLoginMutation();
 
-  function handleLogin(evt) {
-    evt.preventDefault();
-    setLoading(true);
-    setTimeout(() => {
-      setLoading(false);
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    resolver: yupResolver(LoginSchema),
+  });
+
+  async function handleLogin(data) {
+    try {
+      await login(data).unwrap();
+      toast.success("login successful");
       navigate("/dashboard");
-    }, 3000);
+    } catch (error) {
+      // we handle errors with middleware
+    }
   }
 
   return (
@@ -44,20 +58,34 @@ const Login = () => {
           <h1>
             Login to CHPR <span className="cds--type-semibold">IS</span>
           </h1>
-          <Form onSubmit={(evt) => handleLogin(evt)}>
+          <Form onSubmit={handleSubmit(handleLogin)}>
             <Stack gap={7}>
-              <TextInput id="email" labelText="Email" type="email" />
-              <FormGroup>
+              <TextInput
+                id="email"
+                labelText="Email"
+                type="email"
+                {...register("email")}
+                invalid={errors.email ? true : false}
+                invalidText={errors.email?.message}
+              />
+              <FormGroup legendText="">
                 <FormLabel className="password--label">
                   <span>Password</span>
                   <Link className="cds--link" to="/password-reset">
                     Forgot password?
                   </Link>
                 </FormLabel>
-                <PasswordInput id="password" hideLabel />
+                <PasswordInput
+                  id="password"
+                  hideLabel
+                  labelText="password"
+                  {...register("password")}
+                  invalid={errors.password ? true : false}
+                  invalidText={errors.password?.message}
+                />
               </FormGroup>
 
-              {!loading ? (
+              {!isLoading ? (
                 <Button type="submit">Continue</Button>
               ) : (
                 <InlineLoading
