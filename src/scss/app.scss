@@ -12,153 +12,182 @@
 @include type.default-type();
 
 .layout {
-    margin-top: layout.$spacing-09;
-    background: themes.$background;
-    min-height: 100vh;
+  margin-top: layout.$spacing-09;
+  background: themes.$background;
+  min-height: 100vh;
 }
 
 .page {
-    padding: layout.$spacing-06;
-    padding-top: layout.$spacing-07;
-    @include grid.breakpoint(lg) {
-        padding: layout.$spacing-07;
-    }
+  padding: layout.$spacing-06;
+  padding-top: layout.$spacing-07;
+  @include grid.breakpoint(lg) {
+    padding: layout.$spacing-07;
+  }
 }
 
 .page--header {
+  margin-bottom: layout.$spacing-07;
+
+  h1 {
+    @include type.type-style("heading-07");
+  }
+
+  @include grid.breakpoint(lg) {
+    margin-left: layout.$spacing-05;
     margin-bottom: layout.$spacing-07;
-
-    h1 {
-        @include type.type-style("heading-07");
-    }
-
-    @include grid.breakpoint(lg) {
-        margin-left: layout.$spacing-05;
-        margin-bottom: layout.$spacing-07;
-    }
+  }
 }
 
 .page--article {
-    background-image: url("../images/background.svg");
-    background-size: cover;
-    background-repeat: repeat-y;
-    background-position: center bottom;
-    background-attachment: fixed;
-    min-height: 100vh;
-    margin-left: -(layout.$spacing-06);
-    padding-top: layout.$spacing-13;
-    padding-left: layout.$spacing-07;
-    padding-right: layout.$spacing-07;
-    color: themes.$text-on-color;
+  background-image: url("../images/background.svg");
+  background-size: cover;
+  background-repeat: repeat-y;
+  background-position: center bottom;
+  background-attachment: fixed;
+  min-height: 100vh;
+  margin-left: -(layout.$spacing-06);
+  padding-top: layout.$spacing-13;
+  padding-left: layout.$spacing-07;
+  padding-right: layout.$spacing-07;
+  color: themes.$text-on-color;
 
-    h2 {
-        @include type.type-style("heading-07");
-        margin-bottom: layout.$spacing-07;
-    }
+  h2 {
+    @include type.type-style("heading-07");
+    margin-bottom: layout.$spacing-07;
+  }
 
-    p {
-        @include type.type-style("body-02");
-    }
+  p {
+    @include type.type-style("body-02");
+  }
 
-    .page--article__content {
-        position: sticky;
-        top: (layout.$spacing-13 * 2);
-    }
+  .page--article__content {
+    position: sticky;
+    top: (layout.$spacing-13 * 2);
+  }
 
-    @include grid.breakpoint(lg) {
-        padding-left: layout.$spacing-09;
-        padding-right: layout.$spacing-09;
-    }
+  @include grid.breakpoint(lg) {
+    padding-left: layout.$spacing-09;
+    padding-right: layout.$spacing-09;
+  }
 }
 
 .page--form {
-    background: themes.$background;
-    padding: layout.$spacing-04;
+  background: themes.$background;
+  padding: layout.$spacing-04;
 
-    h1 {
-        @include type.type-style("heading-04");
-        margin-top: layout.$spacing-07;
-        margin-bottom: layout.$spacing-04;
-    }
+  h1 {
+    @include type.type-style("heading-04");
+    margin-top: layout.$spacing-07;
+    margin-bottom: layout.$spacing-04;
+  }
 
-    p {
-        @include type.type-style("body-01");
-        margin-bottom: layout.$spacing-07;
-    }
+  p {
+    @include type.type-style("body-01");
+    margin-bottom: layout.$spacing-07;
+  }
 
-    @include grid.breakpoint(lg) {
-        padding: layout.$spacing-07;
-    }
+  @include grid.breakpoint(lg) {
+    padding: layout.$spacing-07;
+  }
 }
 
 .password--label {
-    display: flex;
-    width: 100%;
-    margin-bottom: layout.$spacing-04;
-    justify-content: space-between;
+  display: flex;
+  width: 100%;
+  margin-bottom: layout.$spacing-04;
+  justify-content: space-between;
 
-    a {
-        font-size: inherit;
-    }
+  a {
+    font-size: inherit;
+  }
 
-    span {
-        display: block;
-    }
+  span {
+    display: block;
+  }
 }
 
 .record--card {
-    width: 100%;
+  width: 100%;
+  height: 100%;
+
+  .record--card__icon {
+    color: colors.$blue-60;
+  }
+
+  h3 {
+    font-weight: "semibold";
+  }
+
+  p {
+    font-size: layout.rem(14px);
+  }
+}
+
+.action--card {
+  width: 100%;
+  height: layout.rem(150px);
+  display: block;
+  text-decoration: none;
+  border-width: 1px;
+  border-style: solid;
+  border-color: themes.$border-subtle-01;
+
+  .action--card__content {
     height: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
 
-    .record--card__icon {
-        color: colors.$blue-60;
-    }
+  .action--card__icon {
+    color: colors.$blue-60;
+  }
 
-    h3 {
-        font-weight: "semibold";
-    }
+  h4 {
+    font-weight: "semibold";
+  }
 
-    p {
-        font-size: layout.rem(14px);
-    }
+  p {
+    font-size: layout.rem(14px);
+  }
 }
 
 .record--card__container {
-    margin-bottom: layout.$spacing-04;
+  margin-bottom: layout.$spacing-04;
 }
 
 .card--grid {
-    margin-top: layout.$spacing-09;
+  margin-top: layout.$spacing-09;
 }
 
 .card--grid__header {
-    margin-bottom: layout.$spacing-07;
-    @include grid.breakpoint(lg) {
-        margin-left: layout.$spacing-05;
-    }
+  margin-bottom: layout.$spacing-07;
+  @include grid.breakpoint(lg) {
+    margin-left: layout.$spacing-05;
+  }
 
-    .search--desktop {
-        display: none;
-        @include grid.breakpoint(md) {
-            display: block;
-        }
+  .search--desktop {
+    display: none;
+    @include grid.breakpoint(md) {
+      display: block;
     }
+  }
 
-    .search--mobile {
-        display: block;
-        @include grid.breakpoint(md) {
-            display: none;
-        }
+  .search--mobile {
+    display: block;
+    @include grid.breakpoint(md) {
+      display: none;
     }
+  }
 }
 
 .card--grid__pagination {
-    margin-bottom: layout.$spacing-07;
-    @include grid.breakpoint(lg) {
-        margin-left: layout.$spacing-05;
-    }
+  margin-bottom: layout.$spacing-07;
+  @include grid.breakpoint(lg) {
+    margin-left: layout.$spacing-05;
+  }
 }
 
 .toast--container {
-    margin-top: layout.$spacing-11;
+  margin-top: layout.$spacing-11;
 }

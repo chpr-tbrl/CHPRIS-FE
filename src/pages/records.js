@@ -1,18 +1,42 @@
-import React from "react";
-import { PageHeader, RecordCard } from "components";
+import React, { useState } from "react";
+import { PageHeader, RecordCard, ActionCard } from "components";
 import {
   Grid,
   Button,
+  Modal,
   Column,
   Pagination,
   TableToolbar,
   TableToolbarContent,
   TableToolbarSearch,
 } from "@carbon/react";
-import { Add, Renew } from "@carbon/icons-react";
+import {
+  Add,
+  Renew,
+  Person,
+  Archive,
+  PillsAdd,
+  Hospital,
+  DocumentAdd,
+  ReminderMedical,
+} from "@carbon/icons-react";
 import { Link } from "react-router-dom";
 
 const Records = () => {
+  const [open, setOpen] = useState(false);
+  const [details, setDetails] = useState({});
+
+  function showActions() {
+    setDetails({
+      id: "1024",
+      name: "Jane Doe",
+      sex: "F",
+      created: new Date().toLocaleString(),
+      updated: new Date().toLocaleString(),
+    });
+    setOpen(true);
+  }
+
   return (
     <div className="page">
       <PageHeader
@@ -45,7 +69,6 @@ const Records = () => {
               </TableToolbarContent>
             </TableToolbar>
           </div>
-
           <div className="search--mobile">
             <TableToolbar>
               <TableToolbarContent>
@@ -71,28 +94,28 @@ const Records = () => {
 
         <Grid fullWidth narrow>
           <Column sm={4} md={4} lg={4} className="record--card__container">
-            <RecordCard name="Jane Doe" />
+            <RecordCard name="Jane Doe" onClick={() => showActions()} />
           </Column>
           <Column sm={4} md={4} lg={4} className="record--card__container">
-            <RecordCard name="Jane Doe" />
+            <RecordCard name="Jane Doe" onClick={() => showActions()} />
           </Column>
           <Column sm={4} md={4} lg={4} className="record--card__container">
-            <RecordCard name="Jane Doe" />
+            <RecordCard name="Jane Doe" onClick={() => showActions()} />
           </Column>
           <Column sm={4} md={4} lg={4} className="record--card__container">
-            <RecordCard name="Jane Doe" />
+            <RecordCard name="Jane Doe" onClick={() => showActions()} />
           </Column>
           <Column sm={4} md={4} lg={4} className="record--card__container">
-            <RecordCard name="Jane Doe" />
+            <RecordCard name="Jane Doe" onClick={() => showActions()} />
           </Column>
           <Column sm={4} md={4} lg={4} className="record--card__container">
-            <RecordCard name="Jane Doe" />
+            <RecordCard name="Jane Doe" onClick={() => showActions()} />
           </Column>
           <Column sm={4} md={4} lg={4} className="record--card__container">
-            <RecordCard name="Jane Doe" />
+            <RecordCard name="Jane Doe" onClick={() => showActions()} />
           </Column>
           <Column sm={4} md={4} lg={4} className="record--card__container">
-            <RecordCard name="Jane Doe" />
+            <RecordCard name="Jane Doe" onClick={() => showActions()} />
           </Column>
         </Grid>
 
@@ -104,6 +127,66 @@ const Records = () => {
           className="card--grid__pagination"
         />
       </div>
+
+      <Modal
+        open={open}
+        passiveModal
+        modalHeading="Available actions"
+        modalLabel="Record details"
+        aria-label="Available actions"
+        onRequestClose={() => setOpen(false)}
+      >
+        <Grid fullWidth>
+          <Column sm={4} md={8} lg={16}>
+            <PageHeader
+              title={details.name}
+              description={`Manage and update records for ${details.name}`}
+            />
+          </Column>
+          <Column sm={4} md={4} lg={8} className="record--card__container">
+            <ActionCard
+              renderIcon={<Person size={32} />}
+              label="Information"
+              path="information"
+            />
+          </Column>
+          <Column sm={4} md={4} lg={8} className="record--card__container">
+            <ActionCard
+              renderIcon={<PillsAdd size={32} />}
+              label="Collect specimens"
+              path="specimens"
+            />
+          </Column>
+          <Column sm={4} md={4} lg={8} className="record--card__container">
+            <ActionCard
+              renderIcon={<Hospital size={32} />}
+              label="Lab results"
+              path="lab-results"
+            />
+          </Column>
+          <Column sm={4} md={4} lg={8} className="record--card__container">
+            <ActionCard
+              renderIcon={<ReminderMedical size={32} />}
+              label="Follow up"
+              path="follow-up"
+            />
+          </Column>
+          <Column sm={4} md={4} lg={8} className="record--card__container">
+            <ActionCard
+              renderIcon={<DocumentAdd size={32} />}
+              label="Outcome recorded"
+              path="outcome-recorded"
+            />
+          </Column>
+          <Column sm={4} md={4} lg={8} className="record--card__container">
+            <ActionCard
+              renderIcon={<Archive size={32} />}
+              label="TB treatment outcome"
+              path="tb-treatment-outcome"
+            />
+          </Column>
+        </Grid>
+      </Modal>
     </div>
   );
 };
