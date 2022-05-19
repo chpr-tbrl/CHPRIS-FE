@@ -24,28 +24,17 @@ export const API = createApi({
         body: data,
       }),
     }),
+    newRecord: builder.mutation({
+      query: (data) => ({
+        url: `/users/${data.uid}/sites/${data.site_id}/regions/${data.region_id}/records`,
+        method: "POST",
+        body: data,
+      }),
+    }),
   }),
 });
 
 // Export hooks for usage in functional components, which are
 // auto-generated based on the defined endpoints
-export const {
-  useGetDocsQuery,
-  useLoginMutation,
-  useLogoutMutation,
-  useSignupMutation,
-  useGetMetricsQuery,
-  useTriggerOTPQuery,
-  useGetPlatformsQuery,
-  useStoreTokenMutation,
-  useNewPasswordMutation,
-  useSynchronizeMutation,
-  useTokenRevokeMutation,
-  useVerifySignupMutation,
-  useDeleteAccountMutation,
-  useChangePasswordMutation,
-  useRecoverPasswordMutation,
-  useValidateOTPCodeMutation,
-  useVerifyTokenStorageMutation,
-  useCreateExternalAccountMutation,
-} = API;
+export const { useLoginMutation, useSignupMutation, useNewRecordMutation } =
+  API;

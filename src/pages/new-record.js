@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { PageHeader } from "components";
+import { PageHeader, TabBar } from "components";
 import {
   Tab,
   Tabs,
@@ -18,11 +18,17 @@ import {
   DatePicker,
   DatePickerInput,
   NumberInput,
+  InlineLoading,
 } from "@carbon/react";
 
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { NEW_RECORD_SCHEMA } from "schemas";
+import { useNewRecordMutation } from "services";
+import { useSelector } from "react-redux";
+import { authSelector } from "features";
+import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
 
 const regions = [
   {
@@ -38,6 +44,11 @@ const sites = [
 ];
 
 const NewRecord = () => {
+  const [page, setPage] = useState(0);
+  const auth = useSelector(authSelector);
+  const navigate = useNavigate();
+  const [newRecord, { isLoading }] = useNewRecordMutation();
+
   const {
     setValue,
     register,
@@ -47,25 +58,33 @@ const NewRecord = () => {
     resolver: yupResolver(NEW_RECORD_SCHEMA),
   });
 
-  const [page, setPage] = useState(0);
-
   function togglePage(index) {
     setPage(index);
   }
 
   async function handleRecordCreation(data) {
-    alert("form sumbitted check console for output");
-    console.log("form data: ", data);
+    const request = {
+      ...auth,
+      ...data,
+    };
+    try {
+      await newRecord(request).unwrap();
+      toast.success("Record created");
+      navigate("/dashboard");
+    } catch (error) {
+      // we handle errors with middleware
+    }
   }
 
   return (
     <div className="page">
+      <TabBar />
       <PageHeader title="New record" description="Create a new client record" />
       <Tabs
         selectedIndex={page}
         onChange={(evt) => togglePage(evt.selectedIndex)}
       >
-        <TabList aria-label="List of tabs" contained>
+        <TabList aria-label="List of tabs" contained activation="manual">
           <Tab>Personal details</Tab>
           <Tab>Category and Symptoms</Tab>
         </TabList>
@@ -92,7 +111,11 @@ const NewRecord = () => {
                   legendText="Sex"
                   name="records_sex"
                   defaultSelected="female"
-                  onChange={(evt) => setValue("records_sex", evt)}
+                  onChange={(evt) =>
+                    setValue("records_sex", evt, {
+                      shouldValidate: true,
+                    })
+                  }
                 >
                   <RadioButton labelText="Female" value="female" id="female" />
                   <RadioButton labelText="Male" value="male" id="male" />
@@ -155,9 +178,13 @@ const NewRecord = () => {
 
                 <RadioButtonGroup
                   legendText="Status"
-                  name="status"
+                  name="records_status"
                   defaultSelected="outpatient"
-                  onChange={(evt) => setValue("records_status", evt)}
+                  onChange={(evt) =>
+                    setValue("records_status", evt, {
+                      shouldValidate: true,
+                    })
+                  }
                 >
                   <RadioButton
                     labelText="Outpatient"
@@ -179,14 +206,16 @@ const NewRecord = () => {
 
                 <RadioButtonGroup
                   legendText="Currently pregnant"
-                  name="currently pregnant"
+                  name="records_currently_pregnant"
                   defaultSelected="no"
                   onChange={(evt) =>
-                    setValue("records_currently_pregnant", evt)
+                    setValue("records_currently_pregnant", evt, {
+                      shouldValidate: true,
+                    })
                   }
                 >
-                  <RadioButton labelText="yes" value="yes" id="yes" />
-                  <RadioButton labelText="no" value="no" id="no" />
+                  <RadioButton labelText="yes" value="yes" id="cp-yes" />
+                  <RadioButton labelText="no" value="no" id="cp-no" />
                 </RadioButtonGroup>
                 <Button type="button" onClick={() => togglePage(1)}>
                   Continue
@@ -359,9 +388,17 @@ const NewRecord = () => {
                   >
                     Back
                   </Button>
-                  <Button kind="primary" type="submit">
-                    Create record
-                  </Button>
+                  {!isLoading ? (
+                    <Button kind="primary" type="submit">
+                      Create record
+                    </Button>
+                  ) : (
+                    <InlineLoading
+                      status="active"
+                      iconDescription="Active loading indicator"
+                      description="Loading data..."
+                    />
+                  )}
                 </div>
               </Stack>
             </TabPanel>

@@ -4,6 +4,8 @@ import { createSlice, createAction } from "@reduxjs/toolkit";
 
 const initialState = {
   uid: "",
+  site_id: 1,
+  region_id: 1,
 };
 
 export const authSlice = createSlice({

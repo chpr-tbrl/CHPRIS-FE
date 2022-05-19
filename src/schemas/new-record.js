@@ -27,7 +27,7 @@ export const NEW_RECORD_SCHEMA = yup.object({
     .default("unknown")
     .required("Field is required"),
   records_art_unique_code: yup.string(),
-  record_status: yup
+  records_status: yup
     .string()
     .oneOf(["outpatient", "ward-bed"])
     .default("outpatient")

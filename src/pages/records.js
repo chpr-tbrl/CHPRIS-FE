@@ -23,12 +23,13 @@ import {
 
 import { useDispatch, useSelector } from "react-redux";
 import { saveRecord, recordSelector } from "features";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const Records = () => {
   const [open, setOpen] = useState(false);
   const record = useSelector(recordSelector);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   function showActions() {
     let record = {
@@ -87,10 +88,9 @@ const Records = () => {
                 />
                 <Button
                   hasIconOnly
-                  as={Link}
-                  to="new"
                   renderIcon={Add}
                   iconDescription="new record"
+                  onClick={() => navigate("new")}
                 />
               </TableToolbarContent>
             </TableToolbar>
