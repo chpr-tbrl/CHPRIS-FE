@@ -21,16 +21,11 @@ export const RecordCard = ({ name, ...rest }) => {
 export const ActionCard = ({ label, path, renderIcon, ...rest }) => {
   return (
     <Link to={path} className="action--card">
-      <ClickableTile
-        element={Link}
-        to={path}
-        className="action--card__content"
-        {...rest}
-      >
+      <div className="action--card__content" {...rest}>
         {isValidElement(renderIcon) && renderIcon}
         <h4>{label}</h4>
         <ArrowRight size={24} className="action--card__icon" />
-      </ClickableTile>
+      </div>
     </Link>
   );
 };

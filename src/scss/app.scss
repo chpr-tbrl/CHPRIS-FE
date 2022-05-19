@@ -126,11 +126,17 @@
 .action--card {
   width: 100%;
   height: layout.rem(150px);
+  color: themes.$text-primary;
   display: block;
+  padding: layout.$spacing-06;
   text-decoration: none;
   border-width: 1px;
   border-style: solid;
   border-color: themes.$border-subtle-01;
+
+  &:hover {
+    background-color: themes.$background-hover;
+  }
 
   .action--card__content {
     height: 100%;
