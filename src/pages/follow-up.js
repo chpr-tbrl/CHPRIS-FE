@@ -114,6 +114,7 @@ const FollowUP = () => {
             labelText="Comments"
             rows={4}
             id="follow_up_comments"
+            {...register("follow_up_comments")}
             invalid={errors.follow_up_comments ? true : false}
             invalidText={errors.follow_up_comments?.message}
           />

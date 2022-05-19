@@ -130,6 +130,7 @@ const OutcomeRecorded = () => {
             labelText="Comments"
             rows={4}
             id="outcome_recorded_comments"
+            {...register("outcome_recorded_comments")}
             invalid={errors.outcome_recorded_comments ? true : false}
             invalidText={errors.outcome_recorded_comments?.message}
           />

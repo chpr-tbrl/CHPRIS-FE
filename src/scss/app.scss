@@ -200,3 +200,12 @@
 .accordion--title {
   color: themes.$interactive;
 }
+
+.accordion--row {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  @include grid.breakpoint(md) {
+    flex-direction: row;
+  }
+}

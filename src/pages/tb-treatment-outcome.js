@@ -1,5 +1,5 @@
 import React from "react";
-import { PageHeader } from "components";
+import { PageHeader, TabBar } from "components";
 import {
   Stack,
   Form,
@@ -18,7 +18,6 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { TB_TREATMENT_OUTCOME_SCHEMA } from "schemas";
 import { useSelector } from "react-redux";
 import { recordSelector } from "features";
-import TabBar from "components/TabBar";
 
 const TBTreatmentOutcome = () => {
   const record = useSelector(recordSelector);
@@ -58,25 +57,60 @@ const TBTreatmentOutcome = () => {
       <Form onSubmit={handleSubmit(handleOutcome)}>
         <Stack gap={7}>
           <br />
-          <Accordion>
-            <AccordionItem
-              title={<span className="accordion--title">View lab results</span>}
-            >
-              <Stack gap={5}>
-                <h5>SMR results</h5>
-                <p>Result 1: Not done</p>
-                <p>Result 2: Not done</p>
-                <h5>Xpert results</h5>
-                <p>MTB: Detected</p>
-                <p>Grade: Very Low</p>
-                <p>RIF: Not done</p>
+          <div class="accordion--row">
+            <Accordion>
+              <AccordionItem
+                title={
+                  <span className="accordion--title">View lab results</span>
+                }
+              >
+                <Stack gap={5}>
+                  <h5>SMR results</h5>
+                  <p>Result 1: Not done</p>
+                  <p>Result 2: Not done</p>
+                  <h5>Xpert results</h5>
+                  <p>MTB: Detected</p>
+                  <p>Grade: Very Low</p>
+                  <p>RIF: Not done</p>
 
-                <h5>Urine results</h5>
-                <p>Result: Not done</p>
-              </Stack>
-            </AccordionItem>
-          </Accordion>
-
+                  <h5>Urine results</h5>
+                  <p>Result: Not done</p>
+                </Stack>
+              </AccordionItem>
+            </Accordion>
+            <Accordion>
+              <AccordionItem
+                title={
+                  <span className="accordion--title">
+                    View follow up recorded
+                  </span>
+                }
+              >
+                <Stack gap={5}>
+                  <p>xray:</p>
+                  <p>Amoxicilin:</p>
+                  <p>Other Antibiotic:</p>
+                  <p>Follow up date(Y-m-d):</p>
+                  <p>Comments:</p>
+                </Stack>
+              </AccordionItem>
+            </Accordion>
+            <Accordion>
+              <AccordionItem
+                title={
+                  <span className="accordion--title">
+                    View outcome recorded
+                  </span>
+                }
+              >
+                <Stack gap={5}>
+                  <p>Outcome:</p>
+                  <p> TB RX number:</p>
+                  <p> Comments:</p>
+                </Stack>
+              </AccordionItem>
+            </Accordion>
+          </div>
           <RadioButtonGroup
             orientation="vertical"
             legendText="Treatment outcome"
