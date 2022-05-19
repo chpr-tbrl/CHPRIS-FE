@@ -10,6 +10,7 @@ import PasswordReset from "pages/password-reset";
 import NewRecord from "pages/new-record";
 import LabResults from "pages/lab-results";
 import FollowUp from "pages/follow-up";
+import SpecimenCollection from "pages/specimen-collection";
 
 function App() {
   return (
@@ -38,6 +39,10 @@ function App() {
               <Route path="new" element={<NewRecord />} />
               <Route path="lab-results" element={<LabResults />} />
               <Route path="follow-up" element={<FollowUp />} />
+              <Route
+                path="specimen-collection"
+                element={<SpecimenCollection />}
+              />
             </Route>
           </Route>
           <Route path="*" element={<NotFound />} />

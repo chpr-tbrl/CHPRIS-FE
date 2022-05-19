@@ -159,7 +159,7 @@ const Records = () => {
             <ActionCard
               renderIcon={<PillsAdd size={32} />}
               label="Collect specimens"
-              path="specimens"
+              path="specimen-collection"
             />
           </Column>
           <Column sm={4} md={4} lg={8} className="record--card__container">
