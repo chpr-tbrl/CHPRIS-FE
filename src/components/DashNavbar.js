@@ -90,7 +90,7 @@ export const DashNavbar = () => {
               <SwitcherDivider />
               <SwitcherItem
                 aria-label="logout"
-                onClick={() => handleNavigate("login")}
+                onClick={() => handleNavigate("/login")}
               >
                 Logout
               </SwitcherItem>
