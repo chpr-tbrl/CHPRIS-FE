@@ -4,3 +4,4 @@ export * from "./login";
 export * from "./lab-results";
 export * from "./follow-up";
 export * from "./specimen-collection";
+export * from "./outcome-recorded";
