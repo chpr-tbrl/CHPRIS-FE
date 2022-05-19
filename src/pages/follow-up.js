@@ -59,7 +59,9 @@ const FollowUP = () => {
         <Stack gap={7}>
           <br />
           <Accordion>
-            <AccordionItem title="View lab results">
+            <AccordionItem
+              title={<span className="accordion--title">View lab results</span>}
+            >
               <Stack gap={5}>
                 <h5>SMR results</h5>
                 <p>Result 1: Not done</p>
