@@ -10,6 +10,7 @@
 
 @include type.type-classes();
 @include type.default-type();
+@include grid.flex-grid();
 
 .layout {
   margin-top: layout.$spacing-09;

@@ -13,6 +13,7 @@ import FollowUp from "pages/follow-up";
 import SpecimenCollection from "pages/specimen-collection";
 import OutcomeRecorded from "pages/outcome-recorded";
 import TBTreatmentOutcome from "pages/tb-treatment-outcome";
+import RecordDetails from "pages/record-details";
 
 function App() {
   return (
@@ -39,6 +40,7 @@ function App() {
             <Route path="records">
               <Route index element={<Records />} />
               <Route path="new" element={<NewRecord />} />
+              <Route path="details" element={<RecordDetails />} />
               <Route path="lab-results" element={<LabResults />} />
               <Route path="follow-up" element={<FollowUp />} />
               <Route

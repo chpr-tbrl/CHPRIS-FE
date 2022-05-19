@@ -152,7 +152,7 @@ const Records = () => {
             <ActionCard
               renderIcon={<Person size={32} />}
               label="Information"
-              path="information"
+              path="details"
             />
           </Column>
           <Column sm={4} md={4} lg={8} className="record--card__container">
