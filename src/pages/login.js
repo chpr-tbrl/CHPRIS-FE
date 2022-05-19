@@ -14,7 +14,7 @@ import {
 import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { LoginSchema } from "schemas";
+import { LOGIN_SCHEMA } from "schemas";
 import { useLoginMutation } from "services";
 import toast from "react-hot-toast";
 
@@ -27,7 +27,7 @@ const Login = () => {
     handleSubmit,
     formState: { errors },
   } = useForm({
-    resolver: yupResolver(LoginSchema),
+    resolver: yupResolver(LOGIN_SCHEMA),
   });
 
   async function handleLogin(data) {

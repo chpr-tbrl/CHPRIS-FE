@@ -1,6 +1,6 @@
 import * as yup from "yup";
 
-export const NewRecordSchema = yup.object({
+export const NEW_RECORD_SCHEMA = yup.object({
   site_id: yup.number().positive().integer().required("Field is required"),
   region_id: yup.number().positive().integer().required("Field is required"),
   records_age: yup

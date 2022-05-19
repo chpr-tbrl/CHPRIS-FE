@@ -15,7 +15,7 @@ import {
 
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { LabResultSchema } from "schemas";
+import { LAB_RESULTS_SCHEMA } from "schemas";
 import { useSelector } from "react-redux";
 import { recordSelector } from "features";
 import TabBar from "components/TabBar";
@@ -28,7 +28,7 @@ const LabResults = () => {
     handleSubmit,
     formState: { errors },
   } = useForm({
-    resolver: yupResolver(LabResultSchema),
+    resolver: yupResolver(LAB_RESULTS_SCHEMA),
   });
 
   async function handleResultRecording(data) {

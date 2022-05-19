@@ -22,7 +22,7 @@ import {
 
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { NewRecordSchema } from "schemas";
+import { NEW_RECORD_SCHEMA } from "schemas";
 
 const regions = [
   {
@@ -44,7 +44,7 @@ const NewRecord = () => {
     handleSubmit,
     formState: { errors },
   } = useForm({
-    resolver: yupResolver(NewRecordSchema),
+    resolver: yupResolver(NEW_RECORD_SCHEMA),
   });
 
   const [page, setPage] = useState(0);

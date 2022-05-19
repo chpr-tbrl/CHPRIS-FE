@@ -14,7 +14,7 @@ import {
 import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { SignupSchema } from "schemas";
+import { sIGNUP_SCHEMA } from "schemas";
 import { useSignupMutation } from "services";
 import toast from "react-hot-toast";
 
@@ -30,7 +30,7 @@ const Signup = () => {
     handleSubmit,
     formState: { errors },
   } = useForm({
-    resolver: yupResolver(SignupSchema),
+    resolver: yupResolver(sIGNUP_SCHEMA),
   });
 
   async function handleSignup(data) {

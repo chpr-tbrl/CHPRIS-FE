@@ -1,6 +1,6 @@
 import * as yup from "yup";
 
-export const LabResultSchema = yup.object({
+export const LAB_RESULTS_SCHEMA = yup.object({
   lab_date_specimen_collection_received: yup
     .date()
     .default(() => new Date())
