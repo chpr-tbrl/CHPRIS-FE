@@ -12,6 +12,8 @@ import LabResults from "pages/lab-results";
 import FollowUp from "pages/follow-up";
 import SpecimenCollection from "pages/specimen-collection";
 import OutcomeRecorded from "pages/outcome-recorded";
+import TBTreatmentOutcome from "pages/tb-treatment-outcome";
+
 function App() {
   return (
     <Fragment>
@@ -44,6 +46,10 @@ function App() {
                 element={<SpecimenCollection />}
               />
               <Route path="outcome-recorded" element={<OutcomeRecorded />} />
+              <Route
+                path="tb-treatment-outcome"
+                element={<TBTreatmentOutcome />}
+              />
             </Route>
           </Route>
           <Route path="*" element={<NotFound />} />
