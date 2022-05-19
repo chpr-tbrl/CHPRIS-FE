@@ -1,5 +1,5 @@
 import React from "react";
-import { PageHeader } from "components";
+import { PageHeader, TabBar } from "components";
 import {
   Stack,
   Form,
@@ -18,7 +18,6 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { OUTCOME_RECORDED_SCHEMA } from "schemas";
 import { useSelector } from "react-redux";
 import { recordSelector } from "features";
-import TabBar from "components/TabBar";
 
 const OutcomeRecorded = () => {
   const record = useSelector(recordSelector);

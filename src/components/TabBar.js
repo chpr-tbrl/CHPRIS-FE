@@ -3,8 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Button, Stack } from "@carbon/react";
 import { ArrowLeft } from "@carbon/icons-react";
 
-
-const TabBar = () => {
+export const TabBar = () => {
   const navigate = useNavigate();
   return (
     <Stack gap={7}>
@@ -21,5 +20,3 @@ const TabBar = () => {
     </Stack>
   );
 };
-
-export default TabBar;

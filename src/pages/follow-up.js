@@ -1,5 +1,5 @@
 import React from "react";
-import { PageHeader } from "components";
+import { PageHeader, TabBar } from "components";
 import {
   Stack,
   Form,
@@ -20,7 +20,6 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { FOLLOW_UP_SCHEMA } from "schemas";
 import { useSelector } from "react-redux";
 import { recordSelector } from "features";
-import TabBar from "components/TabBar";
 
 const FollowUP = () => {
   const record = useSelector(recordSelector);
