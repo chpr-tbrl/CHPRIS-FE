@@ -3,7 +3,7 @@ import { Grid, Form, Stack, Column, Button, TextInput } from "@carbon/react";
 
 const PasswordReset = () => {
   return (
-    <Grid>
+    <Grid fullWidth>
       <Column sm={0} md={4} lg={8} className="page--article">
         <div className="page--article__content">
           <h2>Lorem ipsum</h2>

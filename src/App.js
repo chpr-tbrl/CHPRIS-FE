@@ -4,6 +4,7 @@ import { Layout, DashLayout } from "components";
 import { Toaster } from "react-hot-toast";
 import Signup from "pages/signup";
 import Login from "pages/login";
+import NotFound from "./pages/not-found";
 import Records from "pages/records";
 import PasswordReset from "pages/password-reset";
 import NewRecord from "pages/new-record";
@@ -39,7 +40,7 @@ function App() {
               <Route path="follow-up" element={<FollowUp />} />
             </Route>
           </Route>
-          <Route path="*" element={<Navigate to="/" />} />
+          <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
     </Fragment>
