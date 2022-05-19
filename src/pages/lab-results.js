@@ -5,6 +5,7 @@ import {
   Form,
   Button,
   FormGroup,
+  FormLabel,
   TextInput,
   RadioButton,
   RadioButtonGroup,
@@ -40,19 +41,22 @@ const LabResults = () => {
       <TabBar />
       <PageHeader
         title="Lab Results"
-        description={`Manage and update lab results for ${record?.name}|${record?.id}`}
+        description="Manage and update lab results"
       />
 
+      <Stack orientation="horizontal" gap={10}>
+        <div>
+          <FormLabel>ID</FormLabel>
+          <p>{record?.id}</p>
+        </div>
+        <div>
+          <FormLabel>Patient's name</FormLabel>
+          <p>{record?.name}</p>
+        </div>
+      </Stack>
       <Form onSubmit={handleSubmit(handleResultRecording)}>
         <Stack gap={7}>
-          <TextInput
-            readOnly
-            id="records_name"
-            labelText="Patient's Name"
-            {...register("records_name")}
-            value={record?.name}
-          />
-
+          <br />
           <DatePicker datePickerType="single">
             <DatePickerInput
               placeholder="mm/dd/yyyy"

@@ -42,7 +42,7 @@ const FollowUP = () => {
       <TabBar />
       <PageHeader
         title="Follow Up"
-        description={`Manage and update follow up for ${record?.name} | ${record?.id}`}
+        description="Manage and update client follow up"
       />
       <Stack orientation="horizontal" gap={10}>
         <div>
