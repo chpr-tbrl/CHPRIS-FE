@@ -7,6 +7,7 @@ import Login from "pages/login";
 import Records from "pages/records";
 import PasswordReset from "pages/password-reset";
 import NewRecord from "pages/new-record";
+import LabResults from "pages/lab-results";
 
 function App() {
   return (
@@ -33,6 +34,7 @@ function App() {
             <Route path="records">
               <Route index element={<Records />} />
               <Route path="new" element={<NewRecord />} />
+              <Route path="lab-results" element={<LabResults />} />
             </Route>
           </Route>
           <Route path="*" element={<Navigate to="/" />} />

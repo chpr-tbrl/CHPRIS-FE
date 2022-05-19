@@ -20,20 +20,25 @@ import {
   DocumentAdd,
   ReminderMedical,
 } from "@carbon/icons-react";
+
+import { useDispatch, useSelector } from "react-redux";
+import { saveRecord, recordSelector } from "features";
 import { Link } from "react-router-dom";
 
 const Records = () => {
   const [open, setOpen] = useState(false);
-  const [details, setDetails] = useState({});
+  const record = useSelector(recordSelector);
+  const dispatch = useDispatch();
 
   function showActions() {
-    setDetails({
+    let record = {
       id: "1024",
       name: "Jane Doe",
       sex: "F",
       created: new Date().toLocaleString(),
       updated: new Date().toLocaleString(),
-    });
+    };
+    dispatch(saveRecord(record));
     setOpen(true);
   }
 
@@ -139,8 +144,8 @@ const Records = () => {
         <Grid fullWidth>
           <Column sm={4} md={8} lg={16}>
             <PageHeader
-              title={details.name}
-              description={`Manage and update records for ${details.name}`}
+              title={record?.name}
+              description={`Manage and update records for ${record?.name}`}
             />
           </Column>
           <Column sm={4} md={4} lg={8} className="record--card__container">
