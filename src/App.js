@@ -11,7 +11,7 @@ import NewRecord from "pages/new-record";
 import LabResults from "pages/lab-results";
 import FollowUp from "pages/follow-up";
 import SpecimenCollection from "pages/specimen-collection";
-
+import OutcomeRecorded from "pages/outcome-recorded";
 function App() {
   return (
     <Fragment>
@@ -43,6 +43,7 @@ function App() {
                 path="specimen-collection"
                 element={<SpecimenCollection />}
               />
+              <Route path="outcome-recorded" element={<OutcomeRecorded />} />
             </Route>
           </Route>
           <Route path="*" element={<NotFound />} />
