@@ -1,5 +1,5 @@
 import React from "react";
-import { PageHeader, TabBar } from "components";
+import { PageHeader, Spacer, TabBar } from "components";
 import {
   Stack,
   Form,
@@ -11,16 +11,26 @@ import {
   RadioButtonGroup,
   DatePicker,
   DatePickerInput,
+  InlineLoading,
+  FlexGrid,
 } from "@carbon/react";
+import { PillsAdd } from "@carbon/icons-react";
 
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { SPECIMEN_COLLECTION_SCHEMA } from "schemas";
 import { useSelector } from "react-redux";
-import { recordSelector } from "features";
+import { recordSelector, authSelector } from "features";
+import { useNewSpecimenMutation } from "services";
+import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
 
 const SpecimenCollection = () => {
   const record = useSelector(recordSelector);
+  const auth = useSelector(authSelector);
+  const navigate = useNavigate();
+  const [newSpecimen, { isLoading }] = useNewSpecimenMutation();
+
   const {
     setValue,
     register,
@@ -31,31 +41,42 @@ const SpecimenCollection = () => {
   });
 
   async function handleResultRecording(data) {
-    alert("form sumbitted check console for output");
-    console.log("form data: ", data);
+    const request = {
+      ...auth,
+      ...data,
+      record_id: record.record_id,
+    };
+    try {
+      await newSpecimen(request).unwrap();
+      toast.success("Record created");
+      navigate("/dashboard");
+    } catch (error) {
+      // we handle errors with middleware
+    }
   }
 
   return (
-    <div className="page">
+    <FlexGrid fullWidth className="page">
       <TabBar />
       <PageHeader
         title="Specimen collection"
         description="Manage and update specimen collections"
+        renderIcon={<PillsAdd size={42} />}
       />
-
+      <Spacer h={7} />
       <Stack orientation="horizontal" gap={10}>
         <div>
           <FormLabel>ID</FormLabel>
-          <p>{record?.id}</p>
+          <p>{record?.record_id}</p>
         </div>
         <div>
           <FormLabel>Patient's name</FormLabel>
-          <p>{record?.name}</p>
+          <p>{record?.records_name}</p>
         </div>
       </Stack>
+      <Spacer h={7} />
       <Form onSubmit={handleSubmit(handleResultRecording)}>
         <Stack gap={7}>
-          <br />
           <FormGroup legendText="Collection 1">
             <Stack gap={7}>
               <DatePicker datePickerType="single">
@@ -284,12 +305,20 @@ const SpecimenCollection = () => {
             </Stack>
           </FormGroup>
 
-          <Button kind="primary" type="submit">
-            Save
-          </Button>
+          {!isLoading ? (
+            <Button kind="primary" type="submit">
+              Save
+            </Button>
+          ) : (
+            <InlineLoading
+              status="active"
+              iconDescription="Active loading indicator"
+              description="Loading data..."
+            />
+          )}
         </Stack>
       </Form>
-    </div>
+    </FlexGrid>
   );
 };
 

@@ -37,6 +37,13 @@ export const API = createApi({
         method: "get",
       }),
     }),
+    newSpecimen: builder.mutation({
+      query: (data) => ({
+        url: `/users/${data.uid}/sites/${data.site_id}/regions/${data.region_id}/records/${data.record_id}/specimen_collections`,
+        method: "POST",
+        body: data,
+      }),
+    }),
   }),
 });
 
@@ -45,6 +52,7 @@ export const API = createApi({
 export const {
   useLoginMutation,
   useSignupMutation,
-  useNewRecordMutation,
   useGetRecordsQuery,
+  useNewRecordMutation,
+  useNewSpecimenMutation,
 } = API;
