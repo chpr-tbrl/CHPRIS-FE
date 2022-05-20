@@ -1,7 +1,8 @@
 import React, { useState } from "react";
-import { PageHeader, RecordCard, ActionCard } from "components";
+import { PageHeader, RecordCard, ActionCard, Spacer } from "components";
 import {
-  Grid,
+  Row,
+  FlexGrid,
   Button,
   Modal,
   Column,
@@ -12,9 +13,11 @@ import {
 } from "@carbon/react";
 import {
   Add,
+  User,
   Renew,
   Person,
   Archive,
+  Account,
   PillsAdd,
   Hospital,
   DocumentAdd,
@@ -44,94 +47,91 @@ const Records = () => {
   }
 
   return (
-    <div className="page">
+    <FlexGrid fullWidth className="page">
       <PageHeader
         title="Records"
-        description="Manage and update all available client  records"
+        description="Manage and update all available records"
+        renderIcon={<Account size={42} />}
       />
+      <Row>
+        <Column sm={0} md={8}>
+          <Spacer h={5} />
+          <TableToolbar>
+            <TableToolbarContent>
+              <TableToolbarSearch expanded />
+              <Button
+                kind="tertiary"
+                renderIcon={Renew}
+                iconDescription="refresh"
+                onClick={() => alert("refresh clicked")}
+              >
+                Refresh
+              </Button>
+              <Button
+                as={Link}
+                to="new"
+                renderIcon={Add}
+                iconDescription="new record"
+              >
+                New record
+              </Button>
+            </TableToolbarContent>
+          </TableToolbar>
+        </Column>
+        <Column sm={4} md={0}>
+          <Spacer h={5} />
+          <TableToolbar>
+            <TableToolbarContent>
+              <TableToolbarSearch expanded />
+              <Button
+                hasIconOnly
+                kind="tertiary"
+                renderIcon={Renew}
+                iconDescription="refresh"
+                onClick={() => alert("refresh clicked")}
+              />
+              <Button
+                hasIconOnly
+                renderIcon={Add}
+                iconDescription="new record"
+                onClick={() => navigate("new")}
+              />
+            </TableToolbarContent>
+          </TableToolbar>
+        </Column>
+      </Row>
 
-      <div className="card--grid">
-        <div className="card--grid__header">
-          <div className="search--desktop">
-            <TableToolbar>
-              <TableToolbarContent>
-                <TableToolbarSearch expanded />
-                <Button
-                  kind="tertiary"
-                  renderIcon={Renew}
-                  iconDescription="refresh"
-                  onClick={() => alert("refresh clicked")}
-                >
-                  Refresh
-                </Button>
-                <Button
-                  as={Link}
-                  to="new"
-                  renderIcon={Add}
-                  iconDescription="new record"
-                >
-                  New record
-                </Button>
-              </TableToolbarContent>
-            </TableToolbar>
-          </div>
-          <div className="search--mobile">
-            <TableToolbar>
-              <TableToolbarContent>
-                <TableToolbarSearch expanded />
-                <Button
-                  hasIconOnly
-                  kind="tertiary"
-                  renderIcon={Renew}
-                  iconDescription="refresh"
-                  onClick={() => alert("refresh clicked")}
-                />
-                <Button
-                  hasIconOnly
-                  renderIcon={Add}
-                  iconDescription="new record"
-                  onClick={() => navigate("new")}
-                />
-              </TableToolbarContent>
-            </TableToolbar>
-          </div>
-        </div>
+      <Spacer h={7} />
 
-        <Grid fullWidth narrow>
-          <Column sm={4} md={4} lg={4} className="record--card__container">
-            <RecordCard name="Jane Doe" onClick={() => showActions()} />
-          </Column>
-          <Column sm={4} md={4} lg={4} className="record--card__container">
-            <RecordCard name="Jane Doe" onClick={() => showActions()} />
-          </Column>
-          <Column sm={4} md={4} lg={4} className="record--card__container">
-            <RecordCard name="Jane Doe" onClick={() => showActions()} />
-          </Column>
-          <Column sm={4} md={4} lg={4} className="record--card__container">
-            <RecordCard name="Jane Doe" onClick={() => showActions()} />
-          </Column>
-          <Column sm={4} md={4} lg={4} className="record--card__container">
-            <RecordCard name="Jane Doe" onClick={() => showActions()} />
-          </Column>
-          <Column sm={4} md={4} lg={4} className="record--card__container">
-            <RecordCard name="Jane Doe" onClick={() => showActions()} />
-          </Column>
-          <Column sm={4} md={4} lg={4} className="record--card__container">
-            <RecordCard name="Jane Doe" onClick={() => showActions()} />
-          </Column>
-          <Column sm={4} md={4} lg={4} className="record--card__container">
-            <RecordCard name="Jane Doe" onClick={() => showActions()} />
-          </Column>
-        </Grid>
+      <Row>
+        <Column sm={4} md={4} lg={4} className="record--card__container">
+          <RecordCard name="Jane Doe" onClick={() => showActions()} />
+        </Column>
+        <Column sm={4} md={4} lg={4} className="record--card__container">
+          <RecordCard name="Jane Doe" onClick={() => showActions()} />
+        </Column>
+        <Column sm={4} md={4} lg={4} className="record--card__container">
+          <RecordCard name="Jane Doe" onClick={() => showActions()} />
+        </Column>
+        <Column sm={4} md={4} lg={4} className="record--card__container">
+          <RecordCard name="Jane Doe" onClick={() => showActions()} />
+        </Column>
+        <Column sm={4} md={4} lg={4} className="record--card__container">
+          <RecordCard name="Jane Doe" onClick={() => showActions()} />
+        </Column>
+        <Column sm={4} md={4} lg={4} className="record--card__container">
+          <RecordCard name="Jane Doe" onClick={() => showActions()} />
+        </Column>
+        <Column sm={4} md={4} lg={4} className="record--card__container">
+          <RecordCard name="Jane Doe" onClick={() => showActions()} />
+        </Column>
+        <Column sm={4} md={4} lg={4} className="record--card__container">
+          <RecordCard name="Jane Doe" onClick={() => showActions()} />
+        </Column>
+      </Row>
 
-        <br />
-
-        <Pagination
-          pageSizes={[10, 20, 30, 40, 50]}
-          totalItems={8}
-          className="card--grid__pagination"
-        />
-      </div>
+      <Spacer h={7} />
+      <Pagination pageSizes={[10, 20, 30, 40, 50]} totalItems={8} />
 
       <Modal
         open={open}
@@ -141,58 +141,59 @@ const Records = () => {
         aria-label="Available actions"
         onRequestClose={() => setOpen(false)}
       >
-        <Grid fullWidth>
-          <Column sm={4} md={8} lg={16}>
-            <PageHeader
-              title={record?.name}
-              description={`Manage and update records for ${record?.name}`}
-            />
-          </Column>
-          <Column sm={4} md={4} lg={8} className="record--card__container">
-            <ActionCard
-              renderIcon={<Person size={32} />}
-              label="Information"
-              path="details"
-            />
-          </Column>
-          <Column sm={4} md={4} lg={8} className="record--card__container">
-            <ActionCard
-              renderIcon={<PillsAdd size={32} />}
-              label="Collect specimens"
-              path="specimen-collection"
-            />
-          </Column>
-          <Column sm={4} md={4} lg={8} className="record--card__container">
-            <ActionCard
-              renderIcon={<Hospital size={32} />}
-              label="Lab results"
-              path="lab-results"
-            />
-          </Column>
-          <Column sm={4} md={4} lg={8} className="record--card__container">
-            <ActionCard
-              renderIcon={<ReminderMedical size={32} />}
-              label="Follow up"
-              path="follow-up"
-            />
-          </Column>
-          <Column sm={4} md={4} lg={8} className="record--card__container">
-            <ActionCard
-              renderIcon={<DocumentAdd size={32} />}
-              label="Outcome recorded"
-              path="outcome-recorded"
-            />
-          </Column>
-          <Column sm={4} md={4} lg={8} className="record--card__container">
-            <ActionCard
-              renderIcon={<Archive size={32} />}
-              label="TB treatment outcome"
-              path="tb-treatment-outcome"
-            />
-          </Column>
-        </Grid>
+        <FlexGrid fullWidth>
+          <PageHeader
+            title={record?.name}
+            description={`Manage and update records for ${record?.name}`}
+            renderIcon={<User size={42} />}
+          />
+          <Row>
+            <Column sm={4} md={4} lg={8} className="record--card__container">
+              <ActionCard
+                renderIcon={<Person size={32} />}
+                label="Information"
+                path="details"
+              />
+            </Column>
+            <Column sm={4} md={4} lg={8} className="record--card__container">
+              <ActionCard
+                renderIcon={<PillsAdd size={32} />}
+                label="Collect specimens"
+                path="specimen-collection"
+              />
+            </Column>
+            <Column sm={4} md={4} lg={8} className="record--card__container">
+              <ActionCard
+                renderIcon={<Hospital size={32} />}
+                label="Lab results"
+                path="lab-results"
+              />
+            </Column>
+            <Column sm={4} md={4} lg={8} className="record--card__container">
+              <ActionCard
+                renderIcon={<ReminderMedical size={32} />}
+                label="Follow up"
+                path="follow-up"
+              />
+            </Column>
+            <Column sm={4} md={4} lg={8} className="record--card__container">
+              <ActionCard
+                renderIcon={<DocumentAdd size={32} />}
+                label="Outcome recorded"
+                path="outcome-recorded"
+              />
+            </Column>
+            <Column sm={4} md={4} lg={8} className="record--card__container">
+              <ActionCard
+                renderIcon={<Archive size={32} />}
+                label="TB treatment outcome"
+                path="tb-treatment-outcome"
+              />
+            </Column>
+          </Row>
+        </FlexGrid>
       </Modal>
-    </div>
+    </FlexGrid>
   );
 };
 

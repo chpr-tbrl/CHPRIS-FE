@@ -156,39 +156,7 @@
 }
 
 .record--card__container {
-  margin-bottom: layout.$spacing-04;
-}
-
-.card--grid {
-  margin-top: layout.$spacing-09;
-}
-
-.card--grid__header {
-  margin-bottom: layout.$spacing-07;
-  @include grid.breakpoint(lg) {
-    margin-left: layout.$spacing-05;
-  }
-
-  .search--desktop {
-    display: none;
-    @include grid.breakpoint(md) {
-      display: block;
-    }
-  }
-
-  .search--mobile {
-    display: block;
-    @include grid.breakpoint(md) {
-      display: none;
-    }
-  }
-}
-
-.card--grid__pagination {
-  margin-bottom: layout.$spacing-07;
-  @include grid.breakpoint(lg) {
-    margin-left: layout.$spacing-05;
-  }
+  margin-bottom: layout.$spacing-05;
 }
 
 .toast--container {
