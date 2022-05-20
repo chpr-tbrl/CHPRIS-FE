@@ -18,12 +18,14 @@ import {
   HeaderSideNavItems,
 } from "@carbon/react";
 import { UserAvatar, Help } from "@carbon/icons-react";
-
 import { useNavigate, NavLink } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { logout } from "features";
 
 export const DashNavbar = () => {
   const [panelOpen, setPanelOpen] = useState(false);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   function togglePanel() {
     setPanelOpen(!panelOpen);
@@ -32,6 +34,10 @@ export const DashNavbar = () => {
   function handleNavigate(path) {
     togglePanel();
     return navigate(path);
+  }
+  function handleLogout() {
+    dispatch(logout());
+    navigate("/login");
   }
 
   return (
@@ -88,10 +94,7 @@ export const DashNavbar = () => {
                 Account
               </SwitcherItem>
               <SwitcherDivider />
-              <SwitcherItem
-                aria-label="logout"
-                onClick={() => handleNavigate("/login")}
-              >
+              <SwitcherItem aria-label="logout" onClick={() => handleLogout()}>
                 Logout
               </SwitcherItem>
             </Switcher>
