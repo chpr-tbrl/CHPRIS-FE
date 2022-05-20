@@ -76,6 +76,19 @@ export const API = createApi({
         method: "get",
       }),
     }),
+    newOutcome: builder.mutation({
+      query: (data) => ({
+        url: `/users/${data.uid}/sites/${data.site_id}/regions/${data.region_id}/records/${data.record_id}/outcome_recorded`,
+        method: "POST",
+        body: data,
+      }),
+    }),
+    getOutcomes: builder.query({
+      query: (data) => ({
+        url: `/users/${data.uid}/sites/${data.site_id}/regions/${data.region_id}/records/${data.record_id}/outcome_recorded`,
+        method: "get",
+      }),
+    }),
   }),
 });
 
@@ -92,4 +105,6 @@ export const {
   useNewLabResultMutation,
   useGetFollowUpsQuery,
   useNewFollowUpMutation,
+  useGetOutcomesQuery,
+  useNewOutcomeMutation,
 } = API;
