@@ -57,6 +57,12 @@ export const API = createApi({
         body: data,
       }),
     }),
+    getLabResults: builder.query({
+      query: (data) => ({
+        url: `/users/${data.uid}/sites/${data.site_id}/regions/${data.region_id}/records/${data.record_id}/labs`,
+        method: "get",
+      }),
+    }),
   }),
 });
 
@@ -69,5 +75,6 @@ export const {
   useNewRecordMutation,
   useGetSpecimensQuery,
   useNewSpecimenMutation,
+  useGetLabResultsQuery,
   useNewLabResultMutation,
 } = API;

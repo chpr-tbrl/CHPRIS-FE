@@ -1,9 +1,10 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { PageHeader, Spacer, TabBar } from "components";
 import {
   Stack,
   Form,
   Button,
+  Loading,
   FlexGrid,
   FormGroup,
   FormLabel,
@@ -20,7 +21,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { LAB_RESULTS_SCHEMA } from "schemas";
 import { useSelector } from "react-redux";
 import { recordSelector, authSelector } from "features";
-import { useNewLabResultMutation } from "services";
+import { useNewLabResultMutation, useGetLabResultsQuery } from "services";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 
@@ -29,7 +30,14 @@ const LabResults = () => {
   const auth = useSelector(authSelector);
   const navigate = useNavigate();
   const [newLabResult, { isLoading }] = useNewLabResultMutation();
+  const { data: results = [], isLoading: fetchingResults } =
+    useGetLabResultsQuery({
+      ...auth,
+      record_id: record.record_id,
+    });
+
   const {
+    reset,
     setValue,
     register,
     handleSubmit,
@@ -37,6 +45,12 @@ const LabResults = () => {
   } = useForm({
     resolver: yupResolver(LAB_RESULTS_SCHEMA),
   });
+
+  useEffect(() => {
+    if (results.length) {
+      reset(results[0]);
+    }
+  }, [results, reset]);
 
   async function handleResultRecording(data) {
     const request = {
@@ -52,6 +66,8 @@ const LabResults = () => {
       // we handle errors with middleware
     }
   }
+
+  if (fetchingResults) return <Loading />;
 
   return (
     <FlexGrid fullWidth className="page">
@@ -113,7 +129,9 @@ const LabResults = () => {
                 orientation="vertical"
                 legendText="Result 1"
                 name="lab_smear_microscopy_result_result_1"
-                defaultSelected="not_done"
+                defaultSelected={
+                  results[0]?.lab_smear_microscopy_result_result_1 || "not_done"
+                }
                 onChange={(evt) =>
                   setValue("lab_smear_microscopy_result_result_1", evt)
                 }
@@ -138,7 +156,9 @@ const LabResults = () => {
                 orientation="vertical"
                 legendText="Result 2"
                 name="lab_smear_microscopy_result_result_2"
-                defaultSelected="not_done"
+                defaultSelected={
+                  results[0]?.lab_smear_microscopy_result_result_2 || "not_done"
+                }
                 onChange={(evt) =>
                   setValue("lab_smear_microscopy_result_result_2", evt)
                 }
@@ -193,7 +213,9 @@ const LabResults = () => {
                 orientation="vertical"
                 legendText="MTB result"
                 name="lab_xpert_mtb_rif_assay_result"
-                defaultSelected="not_done"
+                defaultSelected={
+                  results[0]?.lab_xpert_mtb_rif_assay_result || "not_done"
+                }
                 onChange={(evt) =>
                   setValue("lab_xpert_mtb_rif_assay_result", evt)
                 }
@@ -209,7 +231,9 @@ const LabResults = () => {
                 orientation="vertical"
                 legendText="Grades"
                 name="lab_xpert_mtb_rif_assay_grades"
-                defaultSelected="very_low"
+                defaultSelected={
+                  results[0]?.lab_xpert_mtb_rif_assay_grades || "very_low"
+                }
                 onChange={(evt) =>
                   setValue("lab_xpert_mtb_rif_assay_grades", evt)
                 }
@@ -228,7 +252,9 @@ const LabResults = () => {
                 orientation="vertical"
                 legendText="RIF result"
                 name="lab_xpert_mtb_rif_assay_rif_result"
-                defaultSelected="not_done"
+                defaultSelected={
+                  results[0]?.lab_xpert_mtb_rif_assay_rif_result || "not_done"
+                }
                 onChange={(evt) =>
                   setValue("lab_xpert_mtb_rif_assay_rif_result", evt)
                 }
@@ -267,7 +293,9 @@ const LabResults = () => {
                 orientation="vertical"
                 legendText=""
                 name="lab_urine_lf_lam_result"
-                defaultSelected="not_done"
+                defaultSelected={
+                  results[0]?.lab_urine_lf_lam_result || "not_done"
+                }
                 onChange={(evt) => setValue("lab_urine_lf_lam_result", evt)}
               >
                 <RadioButton labelText="Negative" value="negative" />
@@ -306,7 +334,7 @@ const LabResults = () => {
             <InlineLoading
               status="active"
               iconDescription="Active loading indicator"
-              description="Loading data..."
+              description="processing ..."
             />
           )}
         </Stack>
