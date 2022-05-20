@@ -19,23 +19,20 @@
 }
 
 .page {
-  padding: layout.$spacing-06;
   padding-top: layout.$spacing-07;
-  @include grid.breakpoint(lg) {
-    padding: layout.$spacing-07;
-  }
+  padding-bottom: layout.$spacing-07;
 }
 
 .page--header {
   margin-bottom: layout.$spacing-07;
-
   h1 {
     @include type.type-style("heading-07");
   }
+}
 
-  @include grid.breakpoint(lg) {
-    margin-bottom: layout.$spacing-07;
-  }
+.page--header__icon {
+  vertical-align: middle;
+  margin-right: layout.$spacing-03;
 }
 
 .page--article {

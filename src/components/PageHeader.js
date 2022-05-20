@@ -1,14 +1,18 @@
-import React from "react";
+import React, { isValidElement } from "react";
 import PropTypes from "prop-types";
 import { Stack } from "@carbon/react";
 
-export const PageHeader = ({ title, description }) => {
+export const PageHeader = ({ title, description, renderIcon }) => {
   return (
     <header className="page--header">
-      <Stack gap={5}>
-        <h1>{title}</h1>
+      <Stack gap={3}>
+        <h1 className="page--header__title">
+          {isValidElement(renderIcon) && (
+            <span className="page--header__icon">{renderIcon}</span>
+          )}
+          <span>{title}</span>
+        </h1>
         <p>{description}</p>
-        <br />
       </Stack>
     </header>
   );
@@ -16,4 +20,6 @@ export const PageHeader = ({ title, description }) => {
 
 PageHeader.propTypes = {
   title: PropTypes.string,
+  description: PropTypes.string,
+  renderIcon: PropTypes.node,
 };
