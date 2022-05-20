@@ -1,26 +1,33 @@
-import React from "react";
-import { PageHeader, TabBar } from "components";
+import { PageHeader, Spacer, TabBar } from "components";
 import {
   Stack,
   Form,
   Button,
-  TextArea,
+  FlexGrid,
   Checkbox,
-  FormLabel,
   Accordion,
-  RadioButton,
   AccordionItem,
+  RadioButton,
   RadioButtonGroup,
+  InlineLoading,
+  FormLabel,
+  TextArea,
 } from "@carbon/react";
-
+import { Archive } from "@carbon/icons-react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { TB_TREATMENT_OUTCOME_SCHEMA } from "schemas";
+import { recordSelector, authSelector } from "features";
 import { useSelector } from "react-redux";
-import { recordSelector } from "features";
+import { useNewTreatmentOutcomeMutation } from "services";
+import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
 
 const TBTreatmentOutcome = () => {
   const record = useSelector(recordSelector);
+  const auth = useSelector(authSelector);
+  const navigate = useNavigate();
+  const [newTreatmentOutcome, { isLoading }] = useNewTreatmentOutcomeMutation();
   const {
     setValue,
     register,
@@ -30,31 +37,43 @@ const TBTreatmentOutcome = () => {
     resolver: yupResolver(TB_TREATMENT_OUTCOME_SCHEMA),
   });
 
-  async function handleOutcome(data) {
-    alert("form sumbitted check console for output");
-    console.log("form data: ", data);
+  async function handleTreatmentOutcome(data) {
+    const request = {
+      ...auth,
+      ...data,
+      record_id: record.record_id,
+    };
+    try {
+      await newTreatmentOutcome(request).unwrap();
+      toast.success("Treatment outcome recorded");
+      navigate("/dashboard");
+    } catch (error) {
+      // we handle errors with middleware
+    }
   }
 
   return (
-    <div className="page">
+    <FlexGrid fullWidth className="page">
       <TabBar />
       <PageHeader
         title="TB treatment outcome"
         description="Manage and update Tb treatment outcome"
+        renderIcon={<Archive size={42} />}
       />
-
+      <Spacer h={7} />
       <Stack orientation="horizontal" gap={10}>
         <div>
           <FormLabel>ID</FormLabel>
-          <p>{record?.id}</p>
+          <p>{record?.record_id}</p>
         </div>
         <div>
           <FormLabel>Patient's name</FormLabel>
-          <p>{record?.name}</p>
+          <p>{record?.records_name}</p>
         </div>
       </Stack>
+      <Spacer h={7} />
 
-      <Form onSubmit={handleSubmit(handleOutcome)}>
+      <Form onSubmit={handleSubmit(handleTreatmentOutcome)}>
         <Stack gap={7}>
           <br />
           <div class="accordion--row">
@@ -156,12 +175,20 @@ const TBTreatmentOutcome = () => {
             {...register("tb_treatment_outcome_close_patient_file")}
           />
 
-          <Button kind="primary" type="submit">
-            Save
-          </Button>
+          {!isLoading ? (
+            <Button kind="primary" type="submit">
+              Save
+            </Button>
+          ) : (
+            <InlineLoading
+              status="active"
+              iconDescription="Active loading indicator"
+              description="processing ..."
+            />
+          )}
         </Stack>
       </Form>
-    </div>
+    </FlexGrid>
   );
 };
 

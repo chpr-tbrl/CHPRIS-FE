@@ -89,9 +89,15 @@ export const API = createApi({
         method: "get",
       }),
     }),
+    newTreatmentOutcome: builder.mutation({
+      query: (data) => ({
+        url: `/users/${data.uid}/sites/${data.site_id}/regions/${data.region_id}/records/${data.record_id}/tb_treatment_outcomes`,
+        method: "POST",
+        body: data,
+      }),
+    }),
   }),
 });
-
 // Export hooks for usage in functional components, which are
 // auto-generated based on the defined endpoints
 export const {
@@ -107,4 +113,5 @@ export const {
   useNewFollowUpMutation,
   useGetOutcomesQuery,
   useNewOutcomeMutation,
+  useNewTreatmentOutcomeMutation
 } = API;
