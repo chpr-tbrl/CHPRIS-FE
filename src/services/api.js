@@ -63,6 +63,13 @@ export const API = createApi({
         method: "get",
       }),
     }),
+    newFollowUp: builder.mutation({
+      query: (data) => ({
+        url: `/users/${data.uid}/sites/${data.site_id}/regions/${data.region_id}/records/${data.record_id}/follow_ups`,
+        method: "POST",
+        body: data,
+      }),
+    }),
   }),
 });
 
@@ -77,4 +84,5 @@ export const {
   useNewSpecimenMutation,
   useGetLabResultsQuery,
   useNewLabResultMutation,
+  useNewFollowUpMutation,
 } = API;

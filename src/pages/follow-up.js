@@ -1,9 +1,10 @@
 import React from "react";
-import { PageHeader, TabBar } from "components";
+import { PageHeader, Spacer, TabBar } from "components";
 import {
   Stack,
   Form,
   Button,
+  FlexGrid,
   FormGroup,
   TextInput,
   Checkbox,
@@ -11,18 +12,25 @@ import {
   AccordionItem,
   DatePicker,
   DatePickerInput,
+  InlineLoading,
   FormLabel,
   TextArea,
 } from "@carbon/react";
-
+import { ReminderMedical } from "@carbon/icons-react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { FOLLOW_UP_SCHEMA } from "schemas";
+import { recordSelector, authSelector } from "features";
 import { useSelector } from "react-redux";
-import { recordSelector } from "features";
+import { useNewFollowUpMutation } from "services";
+import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
 
 const FollowUP = () => {
   const record = useSelector(recordSelector);
+  const auth = useSelector(authSelector);
+  const navigate = useNavigate();
+  const [newFollowUp, { isLoading }] = useNewFollowUpMutation();
   const {
     register,
     handleSubmit,
@@ -31,32 +39,43 @@ const FollowUP = () => {
     resolver: yupResolver(FOLLOW_UP_SCHEMA),
   });
 
-  async function handleResultRecording(data) {
-    alert("form sumbitted check console for output");
-    console.log("form data: ", data);
+  async function handleFollowUpRecording(data) {
+    const request = {
+      ...auth,
+      ...data,
+      record_id: record.record_id,
+    };
+    try {
+      await newFollowUp(request).unwrap();
+      toast.success("Follow up recorded");
+      navigate("/dashboard");
+    } catch (error) {
+      // we handle errors with middleware
+    }
   }
 
   return (
-    <div className="page">
+    <FlexGrid fullWidth className="page">
       <TabBar />
       <PageHeader
         title="Follow Up"
         description="Manage and update client follow up"
+        renderIcon={<ReminderMedical size={42} />}
       />
+      <Spacer h={7} />
       <Stack orientation="horizontal" gap={10}>
         <div>
           <FormLabel>ID</FormLabel>
-          <p>{record?.id}</p>
+          <p>{record?.record_id}</p>
         </div>
         <div>
           <FormLabel>Patient's name</FormLabel>
-          <p>{record?.name}</p>
+          <p>{record?.records_name}</p>
         </div>
       </Stack>
-
-      <Form onSubmit={handleSubmit(handleResultRecording)}>
+      <Spacer h={7} />
+      <Form onSubmit={handleSubmit(handleFollowUpRecording)}>
         <Stack gap={7}>
-          <br />
           <Accordion>
             <AccordionItem
               title={<span className="accordion--title">View lab results</span>}
@@ -118,12 +137,20 @@ const FollowUP = () => {
             invalidText={errors.follow_up_comments?.message}
           />
 
-          <Button kind="primary" type="submit">
-            Save
-          </Button>
+          {!isLoading ? (
+            <Button kind="primary" type="submit">
+              Save
+            </Button>
+          ) : (
+            <InlineLoading
+              status="active"
+              iconDescription="Active loading indicator"
+              description="processing ..."
+            />
+          )}
         </Stack>
       </Form>
-    </div>
+    </FlexGrid>
   );
 };
 
