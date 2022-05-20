@@ -1,10 +1,11 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { PageHeader, Spacer, TabBar } from "components";
 import {
   Stack,
   Form,
   Button,
   FlexGrid,
+  Loading,
   FormGroup,
   TextInput,
   Checkbox,
@@ -22,7 +23,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { FOLLOW_UP_SCHEMA } from "schemas";
 import { recordSelector, authSelector } from "features";
 import { useSelector } from "react-redux";
-import { useNewFollowUpMutation } from "services";
+import { useNewFollowUpMutation, useGetFollowUpsQuery } from "services";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 
@@ -31,13 +32,26 @@ const FollowUP = () => {
   const auth = useSelector(authSelector);
   const navigate = useNavigate();
   const [newFollowUp, { isLoading }] = useNewFollowUpMutation();
+  const { data: followUps = [], isLoading: fetchingfollowUps } =
+    useGetFollowUpsQuery({
+      ...auth,
+      record_id: record.record_id,
+    });
+
   const {
+    reset,
     register,
     handleSubmit,
     formState: { errors },
   } = useForm({
     resolver: yupResolver(FOLLOW_UP_SCHEMA),
   });
+
+  useEffect(() => {
+    if (followUps.length) {
+      reset(followUps[0]);
+    }
+  }, [followUps, reset]);
 
   async function handleFollowUpRecording(data) {
     const request = {
@@ -53,6 +67,8 @@ const FollowUP = () => {
       // we handle errors with middleware
     }
   }
+
+  if (fetchingfollowUps) return <Loading />;
 
   return (
     <FlexGrid fullWidth className="page">
