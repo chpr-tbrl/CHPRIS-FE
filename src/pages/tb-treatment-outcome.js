@@ -1,8 +1,10 @@
+import React, { useEffect } from "react";
 import { PageHeader, Spacer, TabBar } from "components";
 import {
   Stack,
   Form,
   Button,
+  Loading,
   FlexGrid,
   Checkbox,
   Accordion,
@@ -19,7 +21,10 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { TB_TREATMENT_OUTCOME_SCHEMA } from "schemas";
 import { recordSelector, authSelector } from "features";
 import { useSelector } from "react-redux";
-import { useNewTreatmentOutcomeMutation } from "services";
+import {
+  useNewTreatmentOutcomeMutation,
+  useGetTreatmentOutcomesQuery,
+} from "services";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 
@@ -28,7 +33,13 @@ const TBTreatmentOutcome = () => {
   const auth = useSelector(authSelector);
   const navigate = useNavigate();
   const [newTreatmentOutcome, { isLoading }] = useNewTreatmentOutcomeMutation();
+  const { data: treatmentOutcomes = [], isLoading: fetchingTreatmentOutcomes } =
+    useGetTreatmentOutcomesQuery({
+      ...auth,
+      record_id: record.record_id,
+    });
   const {
+    reset,
     setValue,
     register,
     handleSubmit,
@@ -36,6 +47,12 @@ const TBTreatmentOutcome = () => {
   } = useForm({
     resolver: yupResolver(TB_TREATMENT_OUTCOME_SCHEMA),
   });
+
+  useEffect(() => {
+    if (treatmentOutcomes.length) {
+      reset(treatmentOutcomes[0]);
+    }
+  }, [treatmentOutcomes, reset]);
 
   async function handleTreatmentOutcome(data) {
     const request = {
@@ -52,6 +69,7 @@ const TBTreatmentOutcome = () => {
     }
   }
 
+  if (fetchingTreatmentOutcomes) return <Loading />;
   return (
     <FlexGrid fullWidth className="page">
       <TabBar />
@@ -76,7 +94,7 @@ const TBTreatmentOutcome = () => {
       <Form onSubmit={handleSubmit(handleTreatmentOutcome)}>
         <Stack gap={7}>
           <br />
-          <div class="accordion--row">
+          <div className="accordion--row">
             <Accordion>
               <AccordionItem
                 title={
@@ -134,7 +152,9 @@ const TBTreatmentOutcome = () => {
             orientation="vertical"
             legendText="Treatment outcome"
             name="tb_treatment_outcome_result"
-            defaultSelected="cured"
+            defaultSelected={
+              treatmentOutcomes[0]?.tb_treatment_outcome_result || "cured"
+            }
             onChange={(evt) =>
               setValue("tb_treatment_outcome_result", evt, {
                 shouldValidate: true,
