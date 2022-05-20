@@ -44,6 +44,12 @@ export const API = createApi({
         body: data,
       }),
     }),
+    getSpecimens: builder.query({
+      query: (data) => ({
+        url: `/users/${data.uid}/sites/${data.site_id}/regions/${data.region_id}/records/${data.record_id}/specimen_collections`,
+        method: "get",
+      }),
+    }),
   }),
 });
 
@@ -54,5 +60,6 @@ export const {
   useSignupMutation,
   useGetRecordsQuery,
   useNewRecordMutation,
+  useGetSpecimensQuery,
   useNewSpecimenMutation,
 } = API;
