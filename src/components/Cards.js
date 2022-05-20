@@ -19,7 +19,7 @@ export const RecordCard = ({ id, sex, date, updated, name, ...rest }) => {
 };
 
 RecordCard.propTypes = {
-  id: PropTypes.string.isRequired,
+  id: PropTypes.number.isRequired,
   name: PropTypes.string.isRequired,
   sex: PropTypes.string.isRequired,
   date: PropTypes.string.isRequired,

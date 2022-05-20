@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { PageHeader, TabBar } from "components";
+import { PageHeader, TabBar, Spacer } from "components";
 import {
   Tab,
   Tabs,
@@ -9,6 +9,7 @@ import {
   TabPanels,
   Dropdown,
   Stack,
+  FlexGrid,
   Form,
   FormGroup,
   TextInput,
@@ -21,6 +22,7 @@ import {
   InlineLoading,
 } from "@carbon/react";
 
+import { AddAlt } from "@carbon/icons-react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { NEW_RECORD_SCHEMA } from "schemas";
@@ -77,9 +79,14 @@ const NewRecord = () => {
   }
 
   return (
-    <div className="page">
+    <FlexGrid fullWidth className="page">
       <TabBar />
-      <PageHeader title="New record" description="Create a new client record" />
+      <PageHeader
+        title="New record"
+        description="Create a new client record"
+        renderIcon={<AddAlt size={42} />}
+      />
+      <Spacer h={7} />
       <Tabs
         selectedIndex={page}
         onChange={(evt) => togglePage(evt.selectedIndex)}
@@ -405,7 +412,7 @@ const NewRecord = () => {
           </TabPanels>
         </Form>
       </Tabs>
-    </div>
+    </FlexGrid>
   );
 };
 
