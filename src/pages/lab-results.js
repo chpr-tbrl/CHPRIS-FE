@@ -1,26 +1,34 @@
 import React from "react";
-import { PageHeader, TabBar } from "components";
+import { PageHeader, Spacer, TabBar } from "components";
 import {
   Stack,
   Form,
   Button,
+  FlexGrid,
   FormGroup,
   FormLabel,
   TextInput,
   RadioButton,
   RadioButtonGroup,
   DatePicker,
+  InlineLoading,
   DatePickerInput,
 } from "@carbon/react";
-
+import { Hospital } from "@carbon/icons-react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { LAB_RESULTS_SCHEMA } from "schemas";
 import { useSelector } from "react-redux";
-import { recordSelector } from "features";
+import { recordSelector, authSelector } from "features";
+import { useNewLabResultMutation } from "services";
+import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
 
 const LabResults = () => {
   const record = useSelector(recordSelector);
+  const auth = useSelector(authSelector);
+  const navigate = useNavigate();
+  const [newLabResult, { isLoading }] = useNewLabResultMutation();
   const {
     setValue,
     register,
@@ -31,31 +39,42 @@ const LabResults = () => {
   });
 
   async function handleResultRecording(data) {
-    alert("form sumbitted check console for output");
-    console.log("form data: ", data);
+    const request = {
+      ...auth,
+      ...data,
+      record_id: record.record_id,
+    };
+    try {
+      await newLabResult(request).unwrap();
+      toast.success("Lab result recorded");
+      navigate("/dashboard");
+    } catch (error) {
+      // we handle errors with middleware
+    }
   }
 
   return (
-    <div className="page">
+    <FlexGrid fullWidth className="page">
       <TabBar />
       <PageHeader
         title="Lab Results"
         description="Manage and update lab results"
+        renderIcon={<Hospital size={42} />}
       />
-
+      <Spacer h={7} />
       <Stack orientation="horizontal" gap={10}>
         <div>
           <FormLabel>ID</FormLabel>
-          <p>{record?.id}</p>
+          <p>{record?.record_id}</p>
         </div>
         <div>
           <FormLabel>Patient's name</FormLabel>
-          <p>{record?.name}</p>
+          <p>{record?.records_name}</p>
         </div>
       </Stack>
+      <Spacer h={7} />
       <Form onSubmit={handleSubmit(handleResultRecording)}>
         <Stack gap={7}>
-          <br />
           <DatePicker datePickerType="single">
             <DatePickerInput
               placeholder="mm/dd/yyyy"
@@ -99,30 +118,20 @@ const LabResults = () => {
                   setValue("lab_smear_microscopy_result_result_1", evt)
                 }
               >
-                <RadioButton
-                  labelText="No AFB seen"
-                  value="no_afb_seen"
-                  id="no_afb_seen"
-                />
-                <RadioButton labelText="Scanty" value="scanty" id="scanty" />
-                <RadioButton labelText="1+" value="1+" id="1+" />
-                <RadioButton labelText="2+" value="2+" id="2+" />
-                <RadioButton labelText="3+" value="3+" id="3+" />
+                <RadioButton labelText="No AFB seen" value="no_afb_seen" />
+                <RadioButton labelText="Scanty" value="scanty" />
+                <RadioButton labelText="1+" value="1+" />
+                <RadioButton labelText="2+" value="2+" />
+                <RadioButton labelText="3+" value="3+" />
                 <RadioButton
                   labelText="TB LAMP - Positive"
                   value="tb_lamp_positive"
-                  id="tb_lamp_positive"
                 />
                 <RadioButton
                   labelText="TB LAMP - Negative"
                   value="tb_lamp_negative"
-                  id="tb_lamp_negative"
                 />
-                <RadioButton
-                  labelText="Not done"
-                  value="not_done"
-                  id="not_done"
-                />
+                <RadioButton labelText="Not done" value="not_done" />
               </RadioButtonGroup>
 
               <RadioButtonGroup
@@ -134,11 +143,7 @@ const LabResults = () => {
                   setValue("lab_smear_microscopy_result_result_2", evt)
                 }
               >
-                <RadioButton
-                  labelText="No AFB seen"
-                  value="no_afb_seen"
-                  id="no_afb_seen"
-                />
+                <RadioButton labelText="No AFB seen" value="no_afb_seen" />
                 <RadioButton labelText="Scanty" value="scanty" id="scanty" />
                 <RadioButton labelText="1+" value="1+" id="1+" />
                 <RadioButton labelText="2+" value="2+" id="2+" />
@@ -146,18 +151,12 @@ const LabResults = () => {
                 <RadioButton
                   labelText="TB LAMP - Positive"
                   value="tb_lamp_positive"
-                  id="tb_lamp_positive"
                 />
                 <RadioButton
                   labelText="TB LAMP - Negative"
                   value="tb_lamp_negative"
-                  id="tb_lamp_negative"
                 />
-                <RadioButton
-                  labelText="Not done"
-                  value="not_done"
-                  id="not_done"
-                />
+                <RadioButton labelText="Not done" value="not_done" />
               </RadioButtonGroup>
 
               <DatePicker datePickerType="single">
@@ -199,27 +198,11 @@ const LabResults = () => {
                   setValue("lab_xpert_mtb_rif_assay_result", evt)
                 }
               >
-                <RadioButton
-                  labelText="Detected"
-                  value="detected"
-                  id="detected"
-                />
+                <RadioButton labelText="Detected" value="detected" />
                 <RadioButton labelText="Trace" value="trace" id="trace" />
-                <RadioButton
-                  labelText="Not detected"
-                  value="not_detected"
-                  id="not_detected"
-                />
-                <RadioButton
-                  labelText="Error/invalid"
-                  value="error_invalid"
-                  id="error_invalid"
-                />
-                <RadioButton
-                  labelText="Not done"
-                  value="not_done"
-                  id="not_done"
-                />
+                <RadioButton labelText="Not detected" value="not_detected" />
+                <RadioButton labelText="Error/invalid" value="error_invalid" />
+                <RadioButton labelText="Not done" value="not_done" />
               </RadioButtonGroup>
 
               <RadioButtonGroup
@@ -250,26 +233,10 @@ const LabResults = () => {
                   setValue("lab_xpert_mtb_rif_assay_rif_result", evt)
                 }
               >
-                <RadioButton
-                  labelText="Detected"
-                  value="detected"
-                  id="detected"
-                />
-                <RadioButton
-                  labelText="Indeterminate"
-                  value="indeterminate"
-                  id="indeterminate"
-                />
-                <RadioButton
-                  labelText="Not detected"
-                  value="not_detected"
-                  id="not_detected"
-                />
-                <RadioButton
-                  labelText="Not done"
-                  value="not_done"
-                  id="not_done"
-                />
+                <RadioButton labelText="Detected" value="detected" />
+                <RadioButton labelText="Indeterminate" value="indeterminate" />
+                <RadioButton labelText="Not detected" value="not_detected" />
+                <RadioButton labelText="Not done" value="not_done" />
               </RadioButtonGroup>
 
               <DatePicker datePickerType="single">
@@ -303,26 +270,10 @@ const LabResults = () => {
                 defaultSelected="not_done"
                 onChange={(evt) => setValue("lab_urine_lf_lam_result", evt)}
               >
-                <RadioButton
-                  labelText="Negative"
-                  value="negative"
-                  id="negative"
-                />
-                <RadioButton
-                  labelText="Positive"
-                  value="positive"
-                  id="positive"
-                />
-                <RadioButton
-                  labelText="Error/invalid"
-                  value="error_invalid"
-                  id="error_invalid"
-                />
-                <RadioButton
-                  labelText="Not done"
-                  value="not_done"
-                  id="not_done"
-                />
+                <RadioButton labelText="Negative" value="negative" />
+                <RadioButton labelText="Positive" value="positive" />
+                <RadioButton labelText="Error/invalid" value="error_invalid" />
+                <RadioButton labelText="Not done" value="not_done" />
               </RadioButtonGroup>
 
               <DatePicker datePickerType="single">
@@ -347,12 +298,20 @@ const LabResults = () => {
             </Stack>
           </FormGroup>
 
-          <Button kind="primary" type="submit">
-            Save
-          </Button>
+          {!isLoading ? (
+            <Button kind="primary" type="submit">
+              Save
+            </Button>
+          ) : (
+            <InlineLoading
+              status="active"
+              iconDescription="Active loading indicator"
+              description="Loading data..."
+            />
+          )}
         </Stack>
       </Form>
-    </div>
+    </FlexGrid>
   );
 };
 
