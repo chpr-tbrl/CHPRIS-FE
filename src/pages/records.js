@@ -6,6 +6,7 @@ import {
   Button,
   Modal,
   Column,
+  Loading,
   Pagination,
   TableToolbar,
   TableToolbarContent,
@@ -25,23 +26,25 @@ import {
 } from "@carbon/icons-react";
 
 import { useDispatch, useSelector } from "react-redux";
-import { saveRecord, recordSelector } from "features";
+import { saveRecord, recordSelector, authSelector } from "features";
 import { Link, useNavigate } from "react-router-dom";
+import { useGetRecordsQuery } from "services";
 
 const Records = () => {
   const [open, setOpen] = useState(false);
   const record = useSelector(recordSelector);
+  const auth = useSelector(authSelector);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  function showActions() {
-    let record = {
-      id: "1024",
-      name: "Jane Doe",
-      sex: "F",
-      created: new Date().toLocaleString(),
-      updated: new Date().toLocaleString(),
-    };
+  const {
+    data: records = [],
+    isLoading,
+    isFetching,
+    refetch,
+  } = useGetRecordsQuery(auth);
+
+  function showActions(record) {
     dispatch(saveRecord(record));
     setOpen(true);
   }
@@ -63,7 +66,7 @@ const Records = () => {
                 kind="tertiary"
                 renderIcon={Renew}
                 iconDescription="refresh"
-                onClick={() => alert("refresh clicked")}
+                onClick={() => refetch()}
               >
                 Refresh
               </Button>
@@ -88,7 +91,7 @@ const Records = () => {
                 kind="tertiary"
                 renderIcon={Renew}
                 iconDescription="refresh"
-                onClick={() => alert("refresh clicked")}
+                onClick={() => refetch()}
               />
               <Button
                 hasIconOnly
@@ -100,38 +103,49 @@ const Records = () => {
           </TableToolbar>
         </Column>
       </Row>
-
       <Spacer h={7} />
-
       <Row>
-        <Column sm={4} md={4} lg={4} className="record--card__container">
-          <RecordCard name="Jane Doe" onClick={() => showActions()} />
-        </Column>
-        <Column sm={4} md={4} lg={4} className="record--card__container">
-          <RecordCard name="Jane Doe" onClick={() => showActions()} />
-        </Column>
-        <Column sm={4} md={4} lg={4} className="record--card__container">
-          <RecordCard name="Jane Doe" onClick={() => showActions()} />
-        </Column>
-        <Column sm={4} md={4} lg={4} className="record--card__container">
-          <RecordCard name="Jane Doe" onClick={() => showActions()} />
-        </Column>
-        <Column sm={4} md={4} lg={4} className="record--card__container">
-          <RecordCard name="Jane Doe" onClick={() => showActions()} />
-        </Column>
-        <Column sm={4} md={4} lg={4} className="record--card__container">
-          <RecordCard name="Jane Doe" onClick={() => showActions()} />
-        </Column>
-        <Column sm={4} md={4} lg={4} className="record--card__container">
-          <RecordCard name="Jane Doe" onClick={() => showActions()} />
-        </Column>
-        <Column sm={4} md={4} lg={4} className="record--card__container">
-          <RecordCard name="Jane Doe" onClick={() => showActions()} />
-        </Column>
+        {isLoading || isFetching ? (
+          <Loading />
+        ) : records.length ? (
+          records.map((record) => (
+            <Column
+              sm={4}
+              md={4}
+              lg={4}
+              key={record.record_id}
+              className="record--card__container"
+            >
+              <RecordCard
+                id={record.record_id}
+                name={record.records_name}
+                sex={record.records_sex}
+                date={record.records_date}
+                updated={record.records_date_of_test_request}
+                onClick={() => showActions(record)}
+              />
+            </Column>
+          ))
+        ) : (
+          <Column>
+            <Spacer h={5} />
+            <h4
+              style={{
+                textAlign: "center",
+              }}
+            >
+              No available records
+            </h4>
+            <Spacer h={5} />
+          </Column>
+        )}
       </Row>
 
       <Spacer h={7} />
-      <Pagination pageSizes={[10, 20, 30, 40, 50]} totalItems={8} />
+      <Pagination
+        pageSizes={[10, 20, 30, 40, 50]}
+        totalItems={records?.length}
+      />
 
       <Modal
         open={open}
@@ -143,8 +157,8 @@ const Records = () => {
       >
         <FlexGrid fullWidth>
           <PageHeader
-            title={record?.name}
-            description={`Manage and update records for ${record?.name}`}
+            title={record?.records_name}
+            description={`Manage and update records for ${record?.records_name}`}
             renderIcon={<User size={42} />}
           />
           <Row>

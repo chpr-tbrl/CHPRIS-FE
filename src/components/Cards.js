@@ -3,19 +3,27 @@ import PropTypes from "prop-types";
 import { ClickableTile, Stack } from "@carbon/react";
 import { ArrowRight } from "@carbon/icons-react";
 import { Link } from "react-router-dom";
-export const RecordCard = ({ name, ...rest }) => {
+export const RecordCard = ({ id, sex, date, updated, name, ...rest }) => {
   return (
     <ClickableTile className="record--card" {...rest}>
       <Stack gap={4}>
-        <small>ID 1024</small>
+        <small>ID-{id}</small>
         <h3>{name}</h3>
-        <p>Sex: F</p>
-        <p>created: {new Date().toLocaleString()}</p>
-        <p>Last updated: {new Date().toLocaleString()}</p>
+        <p>Sex: {sex}</p>
+        <p>created: {new Date(date).toLocaleString()}</p>
+        <p>Last updated: {new Date(updated).toLocaleString()}</p>
         <ArrowRight size={20} className="record--card__icon" />
       </Stack>
     </ClickableTile>
   );
+};
+
+RecordCard.propTypes = {
+  id: PropTypes.string.isRequired,
+  name: PropTypes.string.isRequired,
+  sex: PropTypes.string.isRequired,
+  date: PropTypes.string.isRequired,
+  updated: PropTypes.string.isRequired,
 };
 
 export const ActionCard = ({ label, path, renderIcon, ...rest }) => {
@@ -30,6 +38,8 @@ export const ActionCard = ({ label, path, renderIcon, ...rest }) => {
   );
 };
 
-RecordCard.propTypes = {
+ActionCard.propTypes = {
   name: PropTypes.string,
+  path: PropTypes.string,
+  renderIcon: PropTypes.node,
 };

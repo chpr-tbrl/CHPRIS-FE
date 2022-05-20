@@ -31,10 +31,20 @@ export const API = createApi({
         body: data,
       }),
     }),
+    getRecords: builder.query({
+      query: (auth) => ({
+        url: `/users/${auth.uid}/sites/${auth.site_id}/regions/${auth.region_id}/records`,
+        method: "get",
+      }),
+    }),
   }),
 });
 
 // Export hooks for usage in functional components, which are
 // auto-generated based on the defined endpoints
-export const { useLoginMutation, useSignupMutation, useNewRecordMutation } =
-  API;
+export const {
+  useLoginMutation,
+  useSignupMutation,
+  useNewRecordMutation,
+  useGetRecordsQuery,
+} = API;
