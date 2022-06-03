@@ -25,25 +25,13 @@ import {
 import { AddAlt } from "@carbon/icons-react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { NEW_RECORD_SCHEMA } from "schemas";
+import { NEW_RECORD_SCHEMA, REGIONS, SITES } from "schemas";
 import { useNewRecordMutation } from "services";
 import { useSelector } from "react-redux";
 import { authSelector } from "features";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 
-const regions = [
-  {
-    id: 1,
-    text: "FCS Test Region",
-  },
-];
-const sites = [
-  {
-    id: 1,
-    text: "Afkanerd Developers",
-  },
-];
 
 const NewRecord = () => {
   const [page, setPage] = useState(0);
@@ -361,7 +349,7 @@ const NewRecord = () => {
                       id="region"
                       titleText="Region"
                       label="Select region"
-                      items={regions}
+                      items={REGIONS}
                       itemToString={(item) => item.text}
                       invalid={errors.region_id ? true : false}
                       invalidText={errors.region_id?.message}
@@ -375,7 +363,7 @@ const NewRecord = () => {
                       id="site"
                       titleText="Site"
                       label="Select site"
-                      items={sites}
+                      items={SITES}
                       itemToString={(item) => item.text}
                       invalid={errors.site_id ? true : false}
                       invalidText={errors.site_id?.message}
