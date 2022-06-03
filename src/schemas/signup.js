@@ -17,6 +17,6 @@ export const sIGNUP_SCHEMA = yup.object({
     .required("Please confirm your password")
     .oneOf([yup.ref("password"), null], "Passwords do not match"),
   occupation: yup.string().required("please enter your occupation"),
-  site: yup.string().required("please please select a site"),
-  region: yup.string().required("please select a region"),
+  site_id: yup.number().required("please please select a site"),
+  region_id: yup.number().required("please select a region"),
 });

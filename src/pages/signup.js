@@ -14,13 +14,11 @@ import {
 import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { sIGNUP_SCHEMA } from "schemas";
+import { sIGNUP_SCHEMA, REGIONS, SITES } from "schemas";
 import { useSignupMutation } from "services";
 import toast from "react-hot-toast";
 
 const Signup = () => {
-  const regions = ["North-West", "West", "South-West"];
-  const sites = ["CHPR", "Afkanerd"];
   const navigate = useNavigate();
   const [signup, { isLoading }] = useSignupMutation();
 
@@ -104,12 +102,12 @@ const Signup = () => {
                   id="region"
                   titleText="Region"
                   label="Select region"
-                  items={regions}
-                  itemToString={(item) => item}
-                  invalid={errors.region ? true : false}
-                  invalidText={errors.region?.message}
+                  items={REGIONS}
+                  itemToString={(item) => item.text}
+                  invalid={errors.region_id ? true : false}
+                  invalidText={errors.region_id?.message}
                   onChange={(evt) =>
-                    setValue("region", evt.selectedItem, {
+                    setValue("region_id", evt.selectedItem.id, {
                       shouldValidate: true,
                     })
                   }
@@ -119,12 +117,12 @@ const Signup = () => {
                   id="site"
                   titleText="Site"
                   label="Select site"
-                  items={sites}
-                  itemToString={(item) => item}
-                  invalid={errors.site ? true : false}
-                  invalidText={errors.site?.message}
+                  items={SITES}
+                  itemToString={(item) => item.text}
+                  invalid={errors.site_id ? true : false}
+                  invalidText={errors.site_id?.message}
                   onChange={(evt) =>
-                    setValue("site", evt.selectedItem, {
+                    setValue("site_id", evt.selectedItem.id, {
                       shouldValidate: true,
                     })
                   }
