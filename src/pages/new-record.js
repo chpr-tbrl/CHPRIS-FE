@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, Fragment } from "react";
 import { PageHeader, TabBar, Spacer } from "components";
 import {
   Tab,
@@ -14,24 +14,25 @@ import {
   FormGroup,
   TextInput,
   RadioButton,
-  RadioButtonGroup,
   Checkbox,
   DatePicker,
-  DatePickerInput,
   NumberInput,
   InlineLoading,
+  DatePickerInput,
+  DropdownSkeleton,
+  RadioButtonGroup,
 } from "@carbon/react";
 
 import { AddAlt } from "@carbon/icons-react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { NEW_RECORD_SCHEMA, REGIONS, SITES } from "schemas";
+import { NEW_RECORD_SCHEMA } from "schemas";
 import { useNewRecordMutation } from "services";
+import { useRegionsAndSites } from "hooks";
 import { useSelector } from "react-redux";
 import { authSelector } from "features";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
-
 
 const NewRecord = () => {
   const [page, setPage] = useState(0);
@@ -47,6 +48,15 @@ const NewRecord = () => {
   } = useForm({
     resolver: yupResolver(NEW_RECORD_SCHEMA),
   });
+
+  const {
+    regions,
+    sites,
+    selectSite,
+    selectRegion,
+    loadingRegions,
+    loadingSites,
+  } = useRegionsAndSites(setValue);
 
   function togglePage(index) {
     setPage(index);
@@ -344,35 +354,40 @@ const NewRecord = () => {
                 </FormGroup>
 
                 <FormGroup legendText="Community">
-                  <Stack gap={4}>
-                    <Dropdown
-                      id="region"
-                      titleText="Region"
-                      label="Select region"
-                      items={REGIONS}
-                      itemToString={(item) => item.text}
-                      invalid={errors.region_id ? true : false}
-                      invalidText={errors.region_id?.message}
-                      onChange={(evt) =>
-                        setValue("region_id", evt.selectedItem.id, {
-                          shouldValidate: true,
-                        })
-                      }
-                    />
-                    <Dropdown
-                      id="site"
-                      titleText="Site"
-                      label="Select site"
-                      items={SITES}
-                      itemToString={(item) => item.text}
-                      invalid={errors.site_id ? true : false}
-                      invalidText={errors.site_id?.message}
-                      onChange={(evt) =>
-                        setValue("site_id", evt.selectedItem.id, {
-                          shouldValidate: true,
-                        })
-                      }
-                    />
+                  <Stack gap={7}>
+                    <Fragment>
+                      {!loadingRegions ? (
+                        <Dropdown
+                          id="region"
+                          titleText="Region"
+                          label="Select region"
+                          items={regions}
+                          itemToString={(item) => item.name}
+                          invalid={errors.region_id ? true : false}
+                          invalidText={errors.region_id?.message}
+                          onChange={(evt) => selectRegion(evt.selectedItem.id)}
+                        />
+                      ) : (
+                        <DropdownSkeleton />
+                      )}
+                    </Fragment>
+
+                    <Fragment>
+                      {!loadingSites ? (
+                        <Dropdown
+                          id="site"
+                          titleText="Site"
+                          label="Select site"
+                          items={sites}
+                          itemToString={(item) => item.name}
+                          invalid={errors.site_id ? true : false}
+                          invalidText={errors.site_id?.message}
+                          onChange={(evt) => selectSite(evt.selectedItem.id)}
+                        />
+                      ) : (
+                        <DropdownSkeleton />
+                      )}
+                    </Fragment>
                   </Stack>
                 </FormGroup>
                 <div>

@@ -1,4 +1,4 @@
-import React, { useState, Fragment } from "react";
+import React, { Fragment } from "react";
 import {
   Grid,
   Form,
@@ -17,15 +17,12 @@ import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { sIGNUP_SCHEMA } from "schemas";
-import {
-  useSignupMutation,
-  useGetRegionsQuery,
-  useGetSitesQuery,
-} from "services";
+import { useSignupMutation } from "services";
+import { useRegionsAndSites } from "hooks";
+
 import toast from "react-hot-toast";
 
 const Signup = () => {
-  const [regionId, setRegionId] = useState(null);
   const navigate = useNavigate();
   const [signup, { isLoading }] = useSignupMutation();
 
@@ -38,29 +35,14 @@ const Signup = () => {
     resolver: yupResolver(sIGNUP_SCHEMA),
   });
 
-  const { data: regions = [], isLoading: loadingRegions } =
-    useGetRegionsQuery();
-
-  const { data: sites = [], isLoading: loadingSites } = useGetSitesQuery(
-    regionId,
-    {
-      skip: !regionId ? true : false,
-      refetchOnMountOrArgChange: true,
-    }
-  );
-
-  function selectRegion(id) {
-    setRegionId(id);
-    setValue("region_id", id, {
-      shouldValidate: true,
-    });
-  }
-
-  function selectSite(id) {
-    setValue("site_id", id, {
-      shouldValidate: true,
-    });
-  }
+  const {
+    regions,
+    sites,
+    selectSite,
+    selectRegion,
+    loadingRegions,
+    loadingSites,
+  } = useRegionsAndSites(setValue);
 
   async function handleSignup(data) {
     try {
