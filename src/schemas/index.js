@@ -6,4 +6,3 @@ export * from "./follow-up";
 export * from "./specimen-collection";
 export * from "./outcome-recorded";
 export * from "./tb-treatment-outcome";
-export * from "./shared";

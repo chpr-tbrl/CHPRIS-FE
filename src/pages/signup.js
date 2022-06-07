@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, Fragment } from "react";
 import {
   Grid,
   Form,
@@ -10,15 +10,22 @@ import {
   TextInput,
   InlineLoading,
   PasswordInput,
+  DropdownSkeleton,
+  InlineNotification,
 } from "@carbon/react";
 import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { sIGNUP_SCHEMA, REGIONS, SITES } from "schemas";
-import { useSignupMutation } from "services";
+import { sIGNUP_SCHEMA } from "schemas";
+import {
+  useSignupMutation,
+  useGetRegionsQuery,
+  useGetSitesQuery,
+} from "services";
 import toast from "react-hot-toast";
 
 const Signup = () => {
+  const [regionId, setRegionId] = useState(null);
   const navigate = useNavigate();
   const [signup, { isLoading }] = useSignupMutation();
 
@@ -30,6 +37,30 @@ const Signup = () => {
   } = useForm({
     resolver: yupResolver(sIGNUP_SCHEMA),
   });
+
+  const { data: regions = [], isLoading: loadingRegions } =
+    useGetRegionsQuery();
+
+  const { data: sites = [], isLoading: loadingSites } = useGetSitesQuery(
+    regionId,
+    {
+      skip: !regionId ? true : false,
+      refetchOnMountOrArgChange: true,
+    }
+  );
+
+  function selectRegion(id) {
+    setRegionId(id);
+    setValue("region_id", id, {
+      shouldValidate: true,
+    });
+  }
+
+  function selectSite(id) {
+    setValue("site_id", id, {
+      shouldValidate: true,
+    });
+  }
 
   async function handleSignup(data) {
     try {
@@ -54,6 +85,7 @@ const Signup = () => {
           </p>
         </div>
       </Column>
+
       <Column sm={4} md={4} lg={8} className="page--form">
         <p>
           <span>Already have an account? </span>
@@ -97,37 +129,51 @@ const Signup = () => {
             </FormGroup>
 
             <FormGroup legendText="Location information">
-              <Stack gap={7}>
-                <Dropdown
-                  id="region"
-                  titleText="Region"
-                  label="Select region"
-                  items={REGIONS}
-                  itemToString={(item) => item.text}
-                  invalid={errors.region_id ? true : false}
-                  invalidText={errors.region_id?.message}
-                  onChange={(evt) =>
-                    setValue("region_id", evt.selectedItem.id, {
-                      shouldValidate: true,
-                    })
-                  }
+              {!regions.length ? (
+                <InlineNotification
+                  kind="info"
+                  hideCloseButton
+                  lowContrast
+                  title="Missing regions"
+                  subtitle="Sorry there are no available regions. Please contact administrator to create regions and sites"
                 />
+              ) : (
+                <Stack gap={7}>
+                  <Fragment>
+                    {!loadingRegions ? (
+                      <Dropdown
+                        id="region"
+                        titleText="Region"
+                        label="Select region"
+                        items={regions}
+                        itemToString={(item) => item.name}
+                        invalid={errors.region_id ? true : false}
+                        invalidText={errors.region_id?.message}
+                        onChange={(evt) => selectRegion(evt.selectedItem.id)}
+                      />
+                    ) : (
+                      <DropdownSkeleton />
+                    )}
+                  </Fragment>
 
-                <Dropdown
-                  id="site"
-                  titleText="Site"
-                  label="Select site"
-                  items={SITES}
-                  itemToString={(item) => item.text}
-                  invalid={errors.site_id ? true : false}
-                  invalidText={errors.site_id?.message}
-                  onChange={(evt) =>
-                    setValue("site_id", evt.selectedItem.id, {
-                      shouldValidate: true,
-                    })
-                  }
-                />
-              </Stack>
+                  <Fragment>
+                    {!loadingSites ? (
+                      <Dropdown
+                        id="site"
+                        titleText="Site"
+                        label="Select site"
+                        items={sites}
+                        itemToString={(item) => item.name}
+                        invalid={errors.site_id ? true : false}
+                        invalidText={errors.site_id?.message}
+                        onChange={(evt) => selectSite(evt.selectedItem.id)}
+                      />
+                    ) : (
+                      <DropdownSkeleton />
+                    )}
+                  </Fragment>
+                </Stack>
+              )}
             </FormGroup>
 
             <FormGroup legendText="Account Information">
@@ -158,7 +204,9 @@ const Signup = () => {
             </FormGroup>
 
             {!isLoading ? (
-              <Button type="submit">Create account</Button>
+              <Button type="submit" disabled={!regions?.length}>
+                Create account
+              </Button>
             ) : (
               <InlineLoading
                 status="active"

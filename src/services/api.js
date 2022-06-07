@@ -102,14 +102,28 @@ export const API = createApi({
         method: "get",
       }),
     }),
+    getRegions: builder.query({
+      query: () => ({
+        url: "/regions",
+        method: "GET",
+      }),
+    }),
+    getSites: builder.query({
+      query: (id) => ({
+        url: `regions/${id}/sites`,
+        method: "GET",
+      }),
+    }),
   }),
 });
 // Export hooks for usage in functional components, which are
 // auto-generated based on the defined endpoints
 export const {
+  useGetSitesQuery,
   useLoginMutation,
   useSignupMutation,
   useGetRecordsQuery,
+  useGetRegionsQuery,
   useNewRecordMutation,
   useGetSpecimensQuery,
   useNewSpecimenMutation,
