@@ -31,7 +31,7 @@ export const RequestErrorHandler = (store) => (next) => (action) => {
           break;
         case 403:
           toast.error(
-            "Forbidden. Sorry your are not authorized for this resource"
+            "Forbidden. Sorry you are not authorized for this resource"
           );
           break;
         case 404:

@@ -1,6 +1,6 @@
 import React, { Fragment } from "react";
 import { BrowserRouter, Navigate, Routes, Route } from "react-router-dom";
-import { Layout, DashLayout } from "components";
+import { Layout, DashLayout, RequireAuth } from "components";
 import { Toaster } from "react-hot-toast";
 import Signup from "pages/signup";
 import Login from "pages/login";
@@ -35,7 +35,14 @@ function App() {
             <Route path="password-reset" element={<PasswordReset />} />
           </Route>
 
-          <Route path="/dashboard" element={<DashLayout />}>
+          <Route
+            path="/dashboard"
+            element={
+              <RequireAuth>
+                <DashLayout />
+              </RequireAuth>
+            }
+          >
             <Route index element={<Navigate to="records" />} />
             <Route path="records">
               <Route index element={<Records />} />

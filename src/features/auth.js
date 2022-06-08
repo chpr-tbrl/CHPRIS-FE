@@ -4,8 +4,6 @@ import { createSlice, createAction } from "@reduxjs/toolkit";
 
 const initialState = {
   uid: "",
-  site_id: 1,
-  region_id: 1,
 };
 
 export const authSlice = createSlice({
@@ -16,6 +14,7 @@ export const authSlice = createSlice({
       return {
         ...state,
         ...action.payload,
+        uid: action.payload.id,
       };
     },
     clearAuth: (state) => {
@@ -32,6 +31,7 @@ export const authSlice = createSlice({
         return {
           ...state,
           ...payload,
+          uid: payload.id,
         };
       }
     );
