@@ -3,12 +3,14 @@ import { combineReducers } from "@reduxjs/toolkit";
 import { API } from "../services/api";
 import authReducer, { logout } from "./auth";
 import recordReducer from "./records";
+import accountReducer from "./account";
 import { clearCache, clearPersistedState } from "services";
 
 // Add the generated reducer as a specific top-level reducer
 const appReducer = combineReducers({
   auth: authReducer,
   records: recordReducer,
+  account: accountReducer,
   [API.reducerPath]: API.reducer,
 });
 

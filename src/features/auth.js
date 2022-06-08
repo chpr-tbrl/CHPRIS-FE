@@ -1,9 +1,14 @@
 // user management
-import { API } from "services";
 import { createSlice, createAction } from "@reduxjs/toolkit";
 
 const initialState = {
   uid: "",
+  account_type: "",
+  account_status: "",
+  permitted_approve_accounts: false,
+  permitted_decrypted_data: false,
+  permitted_export_range: 1,
+  permitted_export_types: [],
 };
 
 export const authSlice = createSlice({
@@ -13,8 +18,13 @@ export const authSlice = createSlice({
     saveAuth: (state, action) => {
       return {
         ...state,
-        ...action.payload,
         uid: action.payload.id,
+        account_type: action.payload.account_type,
+        account_status: action.payload.account_status,
+        permitted_approve_accounts: action.payload.permitted_approve_accounts,
+        permitted_decrypted_data: action.payload.permitted_decrypted_data,
+        permitted_export_range: action.payload.permitted_export_range,
+        permitted_export_types: action.payload.permitted_export_types,
       };
     },
     clearAuth: (state) => {
@@ -23,18 +33,6 @@ export const authSlice = createSlice({
         ...initialState,
       };
     },
-  },
-  extraReducers: (builder) => {
-    builder.addMatcher(
-      API.endpoints.login.matchFulfilled,
-      (state, { payload }) => {
-        return {
-          ...state,
-          ...payload,
-          uid: payload.id,
-        };
-      }
-    );
   },
 });
 
