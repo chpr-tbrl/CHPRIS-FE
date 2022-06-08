@@ -33,9 +33,9 @@ export const API = createApi({
       }),
     }),
     getRecords: builder.query({
-      query: (auth) => ({
-        url: `/users/${auth.uid}/records`,
-        method: "get",
+      query: () => ({
+        url: "/records",
+        method: "GET",
       }),
     }),
     newSpecimen: builder.mutation({
@@ -48,7 +48,7 @@ export const API = createApi({
     getSpecimens: builder.query({
       query: (data) => ({
         url: `/users/${data.uid}/records/${data.record_id}/specimen_collections`,
-        method: "get",
+        method: "GET",
       }),
     }),
     newLabResult: builder.mutation({
@@ -61,7 +61,7 @@ export const API = createApi({
     getLabResults: builder.query({
       query: (data) => ({
         url: `/users/${data.uid}/records/${data.record_id}/labs`,
-        method: "get",
+        method: "GET",
       }),
     }),
     newFollowUp: builder.mutation({
@@ -74,7 +74,7 @@ export const API = createApi({
     getFollowUps: builder.query({
       query: (data) => ({
         url: `/users/${data.uid}/records/${data.record_id}/follow_ups`,
-        method: "get",
+        method: "GET",
       }),
     }),
     newOutcome: builder.mutation({
@@ -87,7 +87,7 @@ export const API = createApi({
     getOutcomes: builder.query({
       query: (data) => ({
         url: `/users/${data.uid}/records/${data.record_id}/outcome_recorded`,
-        method: "get",
+        method: "GET",
       }),
     }),
     newTreatmentOutcome: builder.mutation({
@@ -100,7 +100,7 @@ export const API = createApi({
     getTreatmentOutcomes: builder.query({
       query: (data) => ({
         url: `/users/${data.uid}/records/${data.record_id}/tb_treatment_outcomes`,
-        method: "get",
+        method: "GET",
       }),
     }),
     getRegions: builder.query({

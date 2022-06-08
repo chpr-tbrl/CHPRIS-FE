@@ -1,5 +1,9 @@
 import React, { useState } from "react";
 import { PageHeader, RecordCard, ActionCard, Spacer } from "components";
+import { useDispatch, useSelector } from "react-redux";
+import { saveRecord, recordSelector } from "features";
+import { Link, useNavigate } from "react-router-dom";
+import { useGetRecordsQuery } from "services";
 import {
   Row,
   FlexGrid,
@@ -25,15 +29,9 @@ import {
   ReminderMedical,
 } from "@carbon/icons-react";
 
-import { useDispatch, useSelector } from "react-redux";
-import { saveRecord, recordSelector, authSelector } from "features";
-import { Link, useNavigate } from "react-router-dom";
-import { useGetRecordsQuery } from "services";
-
 const Records = () => {
   const [open, setOpen] = useState(false);
   const record = useSelector(recordSelector);
-  const auth = useSelector(authSelector);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -42,7 +40,7 @@ const Records = () => {
     isLoading,
     isFetching,
     refetch,
-  } = useGetRecordsQuery(auth);
+  } = useGetRecordsQuery();
 
   function showActions(record) {
     dispatch(saveRecord(record));
@@ -63,13 +61,12 @@ const Records = () => {
             <TableToolbarContent>
               <TableToolbarSearch expanded />
               <Button
-                kind="tertiary"
+                kind="ghost"
+                hasIconOnly
+                onClick={() => refetch()}
                 renderIcon={Renew}
                 iconDescription="refresh"
-                onClick={() => refetch()}
-              >
-                Refresh
-              </Button>
+              />
               <Button
                 as={Link}
                 to="new"
@@ -142,10 +139,12 @@ const Records = () => {
       </Row>
 
       <Spacer h={7} />
-      <Pagination
-        pageSizes={[10, 20, 30, 40, 50]}
-        totalItems={records?.length}
-      />
+      {records.length > 0 && (
+        <Pagination
+          pageSizes={[10, 20, 30, 40, 50]}
+          totalItems={records?.length}
+        />
+      )}
 
       <Modal
         open={open}
