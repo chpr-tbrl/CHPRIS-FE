@@ -13,6 +13,7 @@ import {
   InlineLoading,
   DatePickerInput,
   DropdownSkeleton,
+  InlineNotification,
 } from "@carbon/react";
 
 import { WatsonHealthDownloadStudy } from "@carbon/icons-react";
@@ -61,6 +62,11 @@ const DataExport = () => {
     return null;
   }
 
+  function checkPermission() {
+    const { permitted_export_types } = account;
+    return permitted_export_types.length > 1 ? true : false;
+  }
+
   async function handleDataExport(data) {
     const API_URL = process.env.REACT_APP_API_URL;
     const request = {
@@ -88,137 +94,147 @@ const DataExport = () => {
       />
       <Spacer h={7} />
 
-      <Form onSubmit={handleSubmit(handleDataExport)}>
-        <Spacer h={5} />
-        <Stack gap={7}>
-          <FormGroup legendText="Region">
-            {!loadingRegions ? (
-              <Dropdown
-                id="region"
-                titleText=""
-                label="Select region"
-                items={[
-                  {
-                    id: "all",
-                    name: "all",
-                  },
-                  ...regions,
-                ]}
-                itemToString={(item) => item.name}
-                invalid={errors.region_id ? true : false}
-                invalidText={errors.region_id?.message}
-                onChange={(evt) => selectRegion(evt.selectedItem.id)}
-              />
-            ) : (
-              <DropdownSkeleton />
-            )}
-          </FormGroup>
-
-          <FormGroup legendText="Site">
-            {!loadingSites ? (
-              <Dropdown
-                id="site"
-                titleText=""
-                label={
-                  sites.length && regionId !== "all"
-                    ? "Select site"
-                    : regionId === "all"
-                    ? "Exporting for all sites"
-                    : "No available sites"
-                }
-                items={[
-                  {
-                    id: "all",
-                    name: "all",
-                  },
-                  ...sites,
-                ]}
-                itemToString={(item) => item.name}
-                invalid={errors.site_id ? true : false}
-                invalidText={errors.site_id?.message}
-                onChange={(evt) => selectSite(evt.selectedItem.id)}
-              />
-            ) : (
-              <DropdownSkeleton />
-            )}
-          </FormGroup>
-
-          <Row>
-            <Column>
-              <DatePicker
-                datePickerType="single"
-                maxDate={new Date()}
-                minDate={sub(new Date(), { months: getExportRange() })}
-                onChange={(evt) => {
-                  handleSetValue("start_date", evt[0], setValue);
-                }}
-              >
-                <DatePickerInput
-                  id="start_date"
-                  placeholder="mm/dd/yyyy"
-                  labelText="Start date"
-                  invalid={errors.start_date ? true : false}
-                  invalidText={errors.start_date?.message}
+      {!checkPermission() ? (
+        <InlineNotification
+          kind="error"
+          hideCloseButton
+          lowContrast
+          title="Invalid permission"
+          subtitle="Sorry, you do not have the right permission to export data, contact administrator"
+        />
+      ) : (
+        <Form onSubmit={handleSubmit(handleDataExport)}>
+          <Spacer h={5} />
+          <Stack gap={7}>
+            <FormGroup legendText="Region">
+              {!loadingRegions ? (
+                <Dropdown
+                  id="region"
+                  titleText=""
+                  label="Select region"
+                  items={[
+                    {
+                      id: "all",
+                      name: "all",
+                    },
+                    ...regions,
+                  ]}
+                  itemToString={(item) => item.name}
+                  invalid={errors.region_id ? true : false}
+                  invalidText={errors.region_id?.message}
+                  onChange={(evt) => selectRegion(evt.selectedItem.id)}
                 />
-              </DatePicker>
-              <Spacer h={7} />
-            </Column>
-            <Column>
-              <DatePicker
-                datePickerType="single"
-                maxDate={new Date()}
-                minDate={sub(new Date(), { months: getExportRange() })}
-                onChange={(evt) => {
-                  handleSetValue("end_date", evt[0], setValue);
-                }}
-              >
-                <DatePickerInput
-                  id="end_date"
-                  placeholder="mm/dd/yyyy"
-                  labelText="End date"
-                  invalid={errors.end_date ? true : false}
-                  invalidText={errors.end_date?.message}
+              ) : (
+                <DropdownSkeleton />
+              )}
+            </FormGroup>
+
+            <FormGroup legendText="Site">
+              {!loadingSites ? (
+                <Dropdown
+                  id="site"
+                  titleText=""
+                  label={
+                    sites.length && regionId !== "all"
+                      ? "Select site"
+                      : regionId === "all"
+                      ? "Exporting for all sites"
+                      : "No available sites"
+                  }
+                  items={[
+                    {
+                      id: "all",
+                      name: "all",
+                    },
+                    ...sites,
+                  ]}
+                  itemToString={(item) => item.name}
+                  invalid={errors.site_id ? true : false}
+                  invalidText={errors.site_id?.message}
+                  onChange={(evt) => selectSite(evt.selectedItem.id)}
                 />
-              </DatePicker>
-              <Spacer h={7} />
-            </Column>
-          </Row>
+              ) : (
+                <DropdownSkeleton />
+              )}
+            </FormGroup>
 
-          <Dropdown
-            id="format"
-            titleText="Export format"
-            label="Select format"
-            items={["csv", "pdf"]}
-            itemToString={(item) => item}
-            invalid={errors.format ? true : false}
-            invalidText={errors.format?.message}
-            onChange={(evt) => {
-              handleSetValue("format", evt.selectedItem, setValue);
-            }}
-          />
+            <Row>
+              <Column>
+                <DatePicker
+                  datePickerType="single"
+                  maxDate={new Date()}
+                  minDate={sub(new Date(), { months: getExportRange() })}
+                  onChange={(evt) => {
+                    handleSetValue("start_date", evt[0], setValue);
+                  }}
+                >
+                  <DatePickerInput
+                    id="start_date"
+                    placeholder="mm/dd/yyyy"
+                    labelText="Start date"
+                    invalid={errors.start_date ? true : false}
+                    invalidText={errors.start_date?.message}
+                  />
+                </DatePicker>
+                <Spacer h={7} />
+              </Column>
+              <Column>
+                <DatePicker
+                  datePickerType="single"
+                  maxDate={new Date()}
+                  minDate={sub(new Date(), { months: getExportRange() })}
+                  onChange={(evt) => {
+                    handleSetValue("end_date", evt[0], setValue);
+                  }}
+                >
+                  <DatePickerInput
+                    id="end_date"
+                    placeholder="mm/dd/yyyy"
+                    labelText="End date"
+                    invalid={errors.end_date ? true : false}
+                    invalidText={errors.end_date?.message}
+                  />
+                </DatePicker>
+                <Spacer h={7} />
+              </Column>
+            </Row>
 
-          {isExporting ? (
-            <InlineLoading
-              status="active"
-              iconDescription="Active loading indicator"
-              description="processing ..."
+            <Dropdown
+              id="format"
+              titleText="Export format"
+              label="Select format"
+              items={["csv", "pdf"]}
+              itemToString={(item) => item}
+              invalid={errors.format ? true : false}
+              invalidText={errors.format?.message}
+              onChange={(evt) => {
+                handleSetValue("format", evt.selectedItem, setValue);
+              }}
             />
-          ) : (
-            <Fragment>
-              <Button type="submit">Query and download</Button>
-              <a
-                ref={downloadRef}
-                href="empty"
-                aria-label="download link"
-                download
-                hidden
-              >
-                download
-              </a>
-            </Fragment>
-          )}
-        </Stack>
-      </Form>
+
+            {isExporting ? (
+              <InlineLoading
+                status="active"
+                iconDescription="Active loading indicator"
+                description="processing ..."
+              />
+            ) : (
+              <Fragment>
+                <Button type="submit">Query and download</Button>
+                <a
+                  ref={downloadRef}
+                  href="empty"
+                  aria-label="download link"
+                  download
+                  hidden
+                >
+                  download
+                </a>
+              </Fragment>
+            )}
+          </Stack>
+        </Form>
+      )}
     </FlexGrid>
   );
 };

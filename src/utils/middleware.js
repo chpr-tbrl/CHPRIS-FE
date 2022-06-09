@@ -30,9 +30,16 @@ export const RequestErrorHandler = (store) => (next) => (action) => {
 
           break;
         case 403:
-          toast.error(
-            "Forbidden. Sorry you are not authorized for this resource"
-          );
+          switch (endpointName) {
+            case "dataExport":
+              toast.error(
+                "Sorry you are not authorized. to export, contact admin"
+              );
+              break;
+            default: {
+              toast.error("Forbidden, you are not authorized");
+            }
+          }
           break;
         case 404:
           toast.error(
