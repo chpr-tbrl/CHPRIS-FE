@@ -1,4 +1,4 @@
-import React, { Fragment } from "react";
+import React, { Fragment,useState } from "react";
 import {
   Grid,
   Form,
@@ -12,6 +12,7 @@ import {
   PasswordInput,
   DropdownSkeleton,
   InlineNotification,
+  Modal,
 } from "@carbon/react";
 import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
@@ -23,6 +24,7 @@ import { useRegionsAndSites } from "hooks";
 import toast from "react-hot-toast";
 
 const Signup = () => {
+  const [open, setOpen] = useState(false);
   const navigate = useNavigate();
   const [signup, { isLoading }] = useSignupMutation();
 
@@ -199,6 +201,12 @@ const Signup = () => {
           </Stack>
         </Form>
       </Column>
+      <Modal
+        open = {open}
+        passiveModal
+        modalHeading="You have been successfully signed out"
+        onRequestClose={() => setOpen(false)}
+      ></Modal>
     </Grid>
   );
 };
