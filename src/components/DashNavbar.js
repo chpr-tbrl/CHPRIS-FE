@@ -57,6 +57,9 @@ export const DashNavbar = () => {
             <HeaderMenuItem element={NavLink} to="records">
               Records
             </HeaderMenuItem>
+            <HeaderMenuItem element={NavLink} to="data-export">
+                  Data export
+                </HeaderMenuItem>
           </HeaderNavigation>
           <SideNav
             aria-label="Side navigation"
@@ -67,6 +70,9 @@ export const DashNavbar = () => {
               <HeaderSideNavItems>
                 <HeaderMenuItem element={NavLink} to="records">
                   Records
+                </HeaderMenuItem>
+                <HeaderMenuItem element={NavLink} to="data-export">
+                  Data export
                 </HeaderMenuItem>
               </HeaderSideNavItems>
             </SideNavItems>

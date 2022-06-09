@@ -115,6 +115,18 @@ export const API = createApi({
         method: "GET",
       }),
     }),
+
+    dataExport: builder.mutation({
+      query: ({ region_id, site_id, format, start_date, end_date }) => ({
+        url: `/regions/${region_id}/sites/${site_id}/exports/${format}?start_date=${start_date}&end_date=${end_date}`,
+        method: "GET",
+        responseHandler: (response) => {
+          return response.status === 200 ? response.text() : response.json();
+        },
+      }),
+    }),
+
+
   }),
 });
 // Export hooks for usage in functional components, which are
@@ -136,4 +148,5 @@ export const {
   useNewOutcomeMutation,
   useGetTreatmentOutcomesQuery,
   useNewTreatmentOutcomeMutation,
+  useDataExportMutation,
 } = API;
