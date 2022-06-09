@@ -27,6 +27,7 @@ store.subscribe(() => {
   persistState({
     auth: store.getState().auth,
     records: store.getState().records,
+    account: store.getState().account,
   });
 });
 

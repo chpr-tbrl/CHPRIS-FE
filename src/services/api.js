@@ -27,7 +27,7 @@ export const API = createApi({
     }),
     newRecord: builder.mutation({
       query: (data) => ({
-        url: `/users/${data.uid}/records`,
+        url: `/regions/${data.region_id}/sites/${data.site_id}/records`,
         method: "POST",
         body: data,
       }),

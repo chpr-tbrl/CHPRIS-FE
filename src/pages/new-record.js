@@ -1,4 +1,4 @@
-import React, { useState, Fragment } from "react";
+import React, { useState } from "react";
 import { PageHeader, TabBar, Spacer } from "components";
 import {
   Tab,
@@ -19,7 +19,6 @@ import {
   NumberInput,
   InlineLoading,
   DatePickerInput,
-  DropdownSkeleton,
   RadioButtonGroup,
 } from "@carbon/react";
 
@@ -28,10 +27,11 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { NEW_RECORD_SCHEMA } from "schemas";
 import { useNewRecordMutation } from "services";
-import { useRegionsAndSites } from "hooks";
+import { useFetchedRegionsAndSites } from "hooks";
 import { useSelector } from "react-redux";
 import { authSelector } from "features";
 import { useNavigate } from "react-router-dom";
+import { handleSetValue } from "utils";
 import toast from "react-hot-toast";
 
 const NewRecord = () => {
@@ -49,14 +49,8 @@ const NewRecord = () => {
     resolver: yupResolver(NEW_RECORD_SCHEMA),
   });
 
-  const {
-    regions,
-    sites,
-    selectSite,
-    selectRegion,
-    loadingRegions,
-    loadingSites,
-  } = useRegionsAndSites(setValue);
+  const { regions, sites, selectSite, selectRegion } =
+    useFetchedRegionsAndSites(setValue);
 
   function togglePage(index) {
     setPage(index);
@@ -107,6 +101,8 @@ const NewRecord = () => {
                 <NumberInput
                   id="age"
                   label="Age"
+                  min={1}
+                  allowEmpty={false}
                   {...register("records_age")}
                   invalid={errors.records_age ? true : false}
                   invalidText={errors.records_age?.message}
@@ -126,13 +122,21 @@ const NewRecord = () => {
                   <RadioButton labelText="Male" value="male" id="male" />
                 </RadioButtonGroup>
 
-                <DatePicker datePickerType="single">
+                <DatePicker
+                  datePickerType="single"
+                  maxDate={new Date()}
+                  onChange={(evt) => {
+                    handleSetValue(
+                      "records_date_of_test_request",
+                      evt[0],
+                      setValue
+                    );
+                  }}
+                >
                   <DatePickerInput
                     placeholder="mm/dd/yyyy"
                     labelText="Date of test request"
                     id="records_date_of_test_request"
-                    {...register("records_date_of_test_request")}
-                    defaultValue={new Date()}
                     invalid={errors.records_date_of_test_request ? true : false}
                     invalidText={errors.records_date_of_test_request?.message}
                   />
@@ -355,41 +359,30 @@ const NewRecord = () => {
 
                 <FormGroup legendText="Community">
                   <Stack gap={7}>
-                    <Fragment>
-                      {!loadingRegions ? (
-                        <Dropdown
-                          id="region"
-                          titleText="Region"
-                          label="Select region"
-                          items={regions}
-                          itemToString={(item) => item.name}
-                          invalid={errors.region_id ? true : false}
-                          invalidText={errors.region_id?.message}
-                          onChange={(evt) => selectRegion(evt.selectedItem.id)}
-                        />
-                      ) : (
-                        <DropdownSkeleton />
-                      )}
-                    </Fragment>
+                    <Dropdown
+                      id="region"
+                      titleText="Region"
+                      label="Select region"
+                      items={regions}
+                      itemToString={(item) => item.name}
+                      invalid={errors.region_id ? true : false}
+                      invalidText={errors.region_id?.message}
+                      onChange={(evt) => selectRegion(evt.selectedItem.id)}
+                    />
 
-                    <Fragment>
-                      {!loadingSites ? (
-                        <Dropdown
-                          id="site"
-                          titleText="Site"
-                          label="Select site"
-                          items={sites}
-                          itemToString={(item) => item.name}
-                          invalid={errors.site_id ? true : false}
-                          invalidText={errors.site_id?.message}
-                          onChange={(evt) => selectSite(evt.selectedItem.id)}
-                        />
-                      ) : (
-                        <DropdownSkeleton />
-                      )}
-                    </Fragment>
+                    <Dropdown
+                      id="site"
+                      titleText="Site"
+                      label="Select site"
+                      items={sites}
+                      itemToString={(item) => item.name}
+                      invalid={errors.site_id ? true : false}
+                      invalidText={errors.site_id?.message}
+                      onChange={(evt) => selectSite(evt.selectedItem.id)}
+                    />
                   </Stack>
                 </FormGroup>
+
                 <div>
                   <Button
                     kind="secondary"

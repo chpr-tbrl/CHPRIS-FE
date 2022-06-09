@@ -7,17 +7,15 @@ export const NEW_RECORD_SCHEMA = yup.object({
     .number()
     .positive("Field is required")
     .integer()
-    .required("Field is required"),
+    .required("Field is required")
+    .typeError("Field is required"),
   records_name: yup.string().required("Field is required"),
   records_sex: yup
     .string()
     .oneOf(["male", "female"])
     .default("female")
     .required("Field is required"),
-  records_date_of_test_request: yup
-    .date()
-    .default(() => new Date())
-    .required("Field is required"),
+  records_date_of_test_request: yup.date().required("Field is required"),
   records_address: yup.string().required("Field is required"),
   records_telephone: yup.string().required("Field is required"),
   records_telephone_2: yup.string(),
