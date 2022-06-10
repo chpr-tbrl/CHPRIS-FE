@@ -25,6 +25,7 @@ import toast from "react-hot-toast";
 
 const Signup = () => {
   const [open, setOpen] = useState(false);
+  
   const navigate = useNavigate();
   const [signup, { isLoading }] = useSignupMutation();
 
@@ -50,11 +51,23 @@ const Signup = () => {
     try {
       await signup(data).unwrap();
       toast.success("Account created");
-      navigate("/login");
+      
     } catch (error) {
       // we handle errors with middleware
     }
   }
+
+  async function handleShow(data) {
+    try {
+      await signup(data).unwrap();
+      
+      setOpen(true)
+      
+    } catch (error) {
+      // we handle errors with middleware
+    }
+  }
+  
 
   return (
     <Grid fullWidth>
@@ -84,7 +97,7 @@ const Signup = () => {
           dolorem.
         </p>
 
-        <Form onSubmit={handleSubmit(handleSignup)}>
+        <Form onSubmit={handleSubmit(handleShow)}>
           <Stack gap={7}>
             <FormGroup legendText="Personal Information">
               <Stack gap={7}>
@@ -188,7 +201,7 @@ const Signup = () => {
             </FormGroup>
 
             {!isLoading ? (
-              <Button type="submit" disabled={!regions?.length}>
+              <Button type="submit" disabled={!regions?.length} >
                 Create account
               </Button>
             ) : (
@@ -202,11 +215,17 @@ const Signup = () => {
         </Form>
       </Column>
       <Modal
-        open = {open}
+        open={open}
         passiveModal
-        modalHeading="You have been successfully signed out"
-        onRequestClose={() => setOpen(false)}
-      ></Modal>
+        
+        onRequestClose={() => navigate("/login")}
+      >
+        <Stack gap={7}>
+              <h4>Successfull signed in!</h4>
+              <p> You will be notified when your acccount is approved </p>
+              
+            </Stack>
+      </Modal>
     </Grid>
   );
 };
