@@ -1,4 +1,4 @@
-import React, { Fragment } from "react";
+import React, { Fragment, useState } from "react";
 import {
   Grid,
   Form,
@@ -12,6 +12,7 @@ import {
   PasswordInput,
   DropdownSkeleton,
   InlineNotification,
+  Modal,
 } from "@carbon/react";
 import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
@@ -23,6 +24,8 @@ import { useRegionsAndSites } from "hooks";
 import toast from "react-hot-toast";
 
 const Signup = () => {
+  const [open, setOpen] = useState(false);
+
   const navigate = useNavigate();
   const [signup, { isLoading }] = useSignupMutation();
 
@@ -48,7 +51,7 @@ const Signup = () => {
     try {
       await signup(data).unwrap();
       toast.success("Account created");
-      navigate("/login");
+      setOpen(true);
     } catch (error) {
       // we handle errors with middleware
     }
@@ -199,6 +202,19 @@ const Signup = () => {
           </Stack>
         </Form>
       </Column>
+      <Modal
+        open={open}
+        passiveModal
+        onRequestClose={() => {
+          setOpen(false);
+          navigate("/login");
+        }}
+      >
+        <Stack gap={7}>
+          <h4>Successfull signed in!</h4>
+          <p> You will be notified when your acccount is approved </p>
+        </Stack>
+      </Modal>
     </Grid>
   );
 };
