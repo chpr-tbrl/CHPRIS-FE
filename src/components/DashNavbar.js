@@ -93,6 +93,7 @@ export const DashNavbar = () => {
 
           <HeaderPanel aria-label="user actions menu" expanded={panelOpen}>
             <Switcher aria-label="Switcher Container">
+             
               <SwitcherItem
                 aria-label="account"
                 onClick={() => handleNavigate("account")}

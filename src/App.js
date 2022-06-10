@@ -15,6 +15,7 @@ import OutcomeRecorded from "pages/outcome-recorded";
 import TBTreatmentOutcome from "pages/tb-treatment-outcome";
 import RecordDetails from "pages/record-details";
 import DataExport from "pages/data-export";
+import Account from "pages/account";
 
 function App() {
   return (
@@ -45,6 +46,7 @@ function App() {
             }
           >
             <Route index element={<Navigate to="records" />} />
+            <Route path="account" element={<Account />} />
             <Route path="data-export" element={<DataExport />} />
             <Route path="records">
             
