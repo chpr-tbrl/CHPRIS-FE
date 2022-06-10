@@ -1,4 +1,4 @@
-import React, { Fragment,useState } from "react";
+import React, { Fragment, useState } from "react";
 import {
   Grid,
   Form,
@@ -25,7 +25,7 @@ import toast from "react-hot-toast";
 
 const Signup = () => {
   const [open, setOpen] = useState(false);
-  
+
   const navigate = useNavigate();
   const [signup, { isLoading }] = useSignupMutation();
 
@@ -51,23 +51,11 @@ const Signup = () => {
     try {
       await signup(data).unwrap();
       toast.success("Account created");
-      
+      setOpen(true);
     } catch (error) {
       // we handle errors with middleware
     }
   }
-
-  async function handleShow(data) {
-    try {
-      await signup(data).unwrap();
-      
-      setOpen(true)
-      
-    } catch (error) {
-      // we handle errors with middleware
-    }
-  }
-  
 
   return (
     <Grid fullWidth>
@@ -97,7 +85,7 @@ const Signup = () => {
           dolorem.
         </p>
 
-        <Form onSubmit={handleSubmit(handleShow)}>
+        <Form onSubmit={handleSubmit(handleSignup)}>
           <Stack gap={7}>
             <FormGroup legendText="Personal Information">
               <Stack gap={7}>
@@ -201,7 +189,7 @@ const Signup = () => {
             </FormGroup>
 
             {!isLoading ? (
-              <Button type="submit" disabled={!regions?.length} >
+              <Button type="submit" disabled={!regions?.length}>
                 Create account
               </Button>
             ) : (
@@ -217,14 +205,15 @@ const Signup = () => {
       <Modal
         open={open}
         passiveModal
-        
-        onRequestClose={() => navigate("/login")}
+        onRequestClose={() => {
+          setOpen(false);
+          navigate("/login");
+        }}
       >
         <Stack gap={7}>
-              <h4>Successfull signed in!</h4>
-              <p> You will be notified when your acccount is approved </p>
-              
-            </Stack>
+          <h4>Successfull signed in!</h4>
+          <p> You will be notified when your acccount is approved </p>
+        </Stack>
       </Modal>
     </Grid>
   );
