@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import { ClickableTile, Stack } from "@carbon/react";
 import { ArrowRight } from "@carbon/icons-react";
 import { Link } from "react-router-dom";
+
 export const RecordCard = ({ id, sex, date, updated, name, ...rest }) => {
   return (
     <ClickableTile className="record--card" {...rest}>
@@ -10,8 +11,8 @@ export const RecordCard = ({ id, sex, date, updated, name, ...rest }) => {
         <small>ID-{id}</small>
         <h3>{name}</h3>
         <p>Sex: {sex}</p>
-        <p>created: {new Date(date).toLocaleString()}</p>
-        <p>Last updated: {new Date(updated).toLocaleString()}</p>
+        <p>created: {new Date(date).toLocaleDateString()}</p>
+        <p>Last updated: {new Date(updated).toLocaleDateString()}</p>
         <ArrowRight size={20} className="record--card__icon" />
       </Stack>
     </ClickableTile>

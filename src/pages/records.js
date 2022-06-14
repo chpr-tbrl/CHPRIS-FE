@@ -154,13 +154,15 @@ const Records = () => {
         aria-label="Available actions"
         onRequestClose={() => setOpen(false)}
       >
-        <FlexGrid fullWidth>
-          <PageHeader
-            title={record?.records_name}
-            description={`Manage and update records for ${record?.records_name}`}
-            renderIcon={<User size={42} />}
-          />
+        <FlexGrid>
           <Row>
+            <PageHeader
+              title={record?.records_name}
+              description="Manage and update records"
+              renderIcon={<User size={42} />}
+            />
+          </Row>
+          <Row narrow>
             <Column sm={4} md={4} lg={8} className="record--card__container">
               <ActionCard
                 renderIcon={<Person size={32} />}

@@ -21,12 +21,15 @@
 .page {
   padding-top: layout.$spacing-07;
   padding-bottom: layout.$spacing-07;
+  margin: 0 auto;
 }
 
 .page--header {
   margin-bottom: layout.$spacing-07;
   h1 {
     @include type.type-style("heading-07");
+    word-wrap: break-word;
+    overflow: hidden;
   }
 }
 
@@ -113,6 +116,8 @@
 
   h3 {
     font-weight: "semibold";
+    word-wrap: break-word;
+    overflow: hidden;
   }
 
   p {
@@ -177,5 +182,10 @@
 }
 
 form {
-  max-width: 768px;
+  max-width: 1024px;
+
+  .cds--label {
+    font-size: type.type-scale(3);
+    margin-bottom: layout.$spacing-04;
+  }
 }
