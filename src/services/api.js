@@ -40,66 +40,66 @@ export const API = createApi({
     }),
     newSpecimen: builder.mutation({
       query: (data) => ({
-        url: `/users/${data.uid}/records/${data.record_id}/specimen_collections`,
+        url: `/records/${data.record_id}/specimen_collections`,
         method: "POST",
         body: data,
       }),
     }),
     getSpecimens: builder.query({
-      query: (data) => ({
-        url: `/users/${data.uid}/records/${data.record_id}/specimen_collections`,
+      query: (id) => ({
+        url: `/records/${id}/specimen_collections`,
         method: "GET",
       }),
     }),
     newLabResult: builder.mutation({
       query: (data) => ({
-        url: `/users/${data.uid}/records/${data.record_id}/labs`,
+        url: `/records/${data.record_id}/labs`,
         method: "POST",
         body: data,
       }),
     }),
     getLabResults: builder.query({
-      query: (data) => ({
-        url: `/users/${data.uid}/records/${data.record_id}/labs`,
+      query: (id) => ({
+        url: `/records/${id}/labs`,
         method: "GET",
       }),
     }),
     newFollowUp: builder.mutation({
       query: (data) => ({
-        url: `/users/${data.uid}/records/${data.record_id}/follow_ups`,
+        url: `/records/${data.record_id}/follow_ups`,
         method: "POST",
         body: data,
       }),
     }),
     getFollowUps: builder.query({
-      query: (data) => ({
-        url: `/users/${data.uid}/records/${data.record_id}/follow_ups`,
+      query: (id) => ({
+        url: `/records/${id}/follow_ups`,
         method: "GET",
       }),
     }),
     newOutcome: builder.mutation({
       query: (data) => ({
-        url: `/users/${data.uid}/records/${data.record_id}/outcome_recorded`,
+        url: `/records/${data.record_id}/outcome_recorded`,
         method: "POST",
         body: data,
       }),
     }),
     getOutcomes: builder.query({
-      query: (data) => ({
-        url: `/users/${data.uid}/records/${data.record_id}/outcome_recorded`,
+      query: (id) => ({
+        url: `/records/${id}/outcome_recorded`,
         method: "GET",
       }),
     }),
     newTreatmentOutcome: builder.mutation({
       query: (data) => ({
-        url: `/users/${data.uid}/records/${data.record_id}/tb_treatment_outcomes`,
+        url: `/records/${data.record_id}/tb_treatment_outcomes`,
         method: "POST",
         body: data,
       }),
     }),
     getTreatmentOutcomes: builder.query({
-      query: (data) => ({
-        url: `/users/${data.uid}/records/${data.record_id}/tb_treatment_outcomes`,
+      query: (id) => ({
+        url: `/records/${id}/tb_treatment_outcomes`,
         method: "GET",
       }),
     }),
@@ -111,7 +111,7 @@ export const API = createApi({
     }),
     getSites: builder.query({
       query: (id) => ({
-        url: `regions/${id}/sites`,
+        url: `/regions/${id}/sites`,
         method: "GET",
       }),
     }),
@@ -125,8 +125,6 @@ export const API = createApi({
         },
       }),
     }),
-
-
   }),
 });
 // Export hooks for usage in functional components, which are
