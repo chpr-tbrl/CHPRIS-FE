@@ -12,7 +12,7 @@ export const useRegionsAndSites = (setValue) => {
   const { data: sites = [], isLoading: loadingSites } = useGetSitesQuery(
     regionId,
     {
-      skip: !regionId ? true : false,
+      skip: !regionId || regionId === "all" ? true : false,
       refetchOnMountOrArgChange: true,
     }
   );
@@ -22,6 +22,7 @@ export const useRegionsAndSites = (setValue) => {
     setValue("region_id", id, {
       shouldValidate: true,
     });
+    if (regionId === "all") selectSite("all");
   }
 
   function selectSite(id) {
