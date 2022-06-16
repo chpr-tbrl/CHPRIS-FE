@@ -64,18 +64,19 @@ Create a new specimen collection for a record.
 
 ```js
 {
-    "specimen_collection_1_date":"date",
-    "specimen_collection_1_specimen_collection_type":"string",
-    "specimen_collection_1_other":"string",
-    "specimen_collection_1_period":"string",
-    "specimen_collection_1_aspect":"string",
-    "specimen_collection_1_received_by":"string",
-    "specimen_collection_2_date":"string",
-    "specimen_collection_2_specimen_collection_type":"string",
-    "specimen_collection_2_other":"string",
-    "specimen_collection_2_period":"string",
-    "specimen_collection_2_aspect":"string",
-    "specimen_collection_2_received_by":"string"
+    "specimen_collection_1_date":"date", required
+    "specimen_collection_1_specimen_collection_type":"string" required,
+    "specimen_collection_1_other":"string" required if specimen_collection_1_specimen_collection_type === "other",
+    "specimen_collection_1_period":"string", required if specimen_collection_1_specimen_collection_type === "sputum",
+    "specimen_collection_1_aspect":"string", required if specimen_collection_1_specimen_collection_type === "sputum",
+    "specimen_collection_1_received_by":"string" required,
+
+    "specimen_collection_2_date":"string" required,
+    "specimen_collection_2_specimen_collection_type":"string" required,
+    "specimen_collection_2_other":"string" required if specimen_collection_2_specimen_collection_type === "other",
+    "specimen_collection_2_period":"string", required if specimen_collection_2_specimen_collection_type === "sputum",
+    "specimen_collection_2_aspect":"string" required if specimen_collection_2_specimen_collection_type === "sputum",
+    "specimen_collection_2_received_by":"string" required
 }
 ```
 

@@ -1,4 +1,5 @@
 import React, { Fragment, useEffect } from "react";
+import toast from "react-hot-toast";
 import { PageHeader, Spacer, TabBar } from "components";
 import {
   Stack,
@@ -17,7 +18,6 @@ import {
   Loading,
 } from "@carbon/react";
 import { PillsAdd } from "@carbon/icons-react";
-
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { SPECIMEN_COLLECTION_SCHEMA } from "schemas";
@@ -25,7 +25,7 @@ import { useSelector } from "react-redux";
 import { recordSelector } from "features";
 import { useNewSpecimenMutation, useGetSpecimensQuery } from "services";
 import { useNavigate } from "react-router-dom";
-import toast from "react-hot-toast";
+import { handleSetValue } from "utils";
 
 const SpecimenCollection = () => {
   const record = useSelector(recordSelector);
@@ -37,13 +37,24 @@ const SpecimenCollection = () => {
 
   const {
     reset,
+    watch,
     setValue,
     register,
     handleSubmit,
     formState: { errors },
   } = useForm({
+    defaultValues: SPECIMEN_COLLECTION_SCHEMA.cast(),
     resolver: yupResolver(SPECIMEN_COLLECTION_SCHEMA),
   });
+
+  const specimenOneType = watch(
+    "specimen_collection_1_specimen_collection_type",
+    "sputum"
+  );
+  const specimenTwoType = watch(
+    "specimen_collection_2_specimen_collection_type",
+    "sputum"
+  );
 
   useEffect(() => {
     if (specimens.length) {
@@ -94,13 +105,21 @@ const SpecimenCollection = () => {
               <Stack gap={7}>
                 <FormGroup legendText="Collection 1">
                   <Stack gap={7}>
-                    <DatePicker datePickerType="single">
+                    <DatePicker
+                      datePickerType="single"
+                      maxDate={new Date()}
+                      onChange={(evt) => {
+                        handleSetValue(
+                          "specimen_collection_1_date",
+                          evt[0],
+                          setValue
+                        );
+                      }}
+                    >
                       <DatePickerInput
                         placeholder="mm/dd/yyyy"
                         labelText="Date"
                         id="specimen_collection_1_date"
-                        {...register("specimen_collection_1_date")}
-                        defaultValue={new Date()}
                         invalid={
                           errors.specimen_collection_1_date ? true : false
                         }
@@ -154,70 +173,85 @@ const SpecimenCollection = () => {
                           />
                         </RadioButtonGroup>
 
-                        <TextInput
-                          id="specimen_collection_1_other"
-                          labelText="Enter other"
-                          {...register("specimen_collection_1_other")}
-                          invalid={
-                            errors.specimen_collection_1_other ? true : false
-                          }
-                          invalidText={
-                            errors.specimen_collection_1_other?.message
-                          }
-                        />
+                        {specimenOneType === "other" && (
+                          <TextInput
+                            id="specimen_collection_1_other"
+                            labelText="Enter other"
+                            {...register("specimen_collection_1_other")}
+                            invalid={
+                              errors.specimen_collection_1_other ? true : false
+                            }
+                            invalidText={
+                              errors.specimen_collection_1_other?.message
+                            }
+                          />
+                        )}
 
-                        <RadioButtonGroup
-                          legendText="Period"
-                          name="specimen_collection_1_period"
-                          defaultSelected={
-                            specimens[0]?.specimen_collection_1_period || "spot"
-                          }
-                          onChange={(evt) =>
-                            setValue("specimen_collection_1_period", evt)
-                          }
-                        >
-                          <RadioButton
-                            labelText="Spot"
-                            value="spot"
-                            id="spot"
-                          />
-                          <RadioButton
-                            labelText="Morning"
-                            value="morning"
-                            id="morning"
-                          />
-                          <RadioButton labelText="N/A" value="n_a" id="n_a" />
-                        </RadioButtonGroup>
+                        {specimenOneType === "sputum" && (
+                          <Fragment>
+                            <RadioButtonGroup
+                              legendText="Period"
+                              name="specimen_collection_1_period"
+                              defaultSelected={
+                                specimens[0]?.specimen_collection_1_period ||
+                                "spot"
+                              }
+                              onChange={(evt) =>
+                                setValue("specimen_collection_1_period", evt)
+                              }
+                            >
+                              <RadioButton
+                                labelText="Spot"
+                                value="spot"
+                                id="spot"
+                              />
+                              <RadioButton
+                                labelText="Morning"
+                                value="morning"
+                                id="morning"
+                              />
+                              <RadioButton
+                                labelText="N/A"
+                                value="n_a"
+                                id="n_a"
+                              />
+                            </RadioButtonGroup>
 
-                        <RadioButtonGroup
-                          orientation="vertical"
-                          legendText="Aspect"
-                          name="specimen_collection_1_aspect"
-                          defaultSelected={
-                            specimens[0]?.specimen_collection_1_aspect ||
-                            "mucopurulent"
-                          }
-                          onChange={(evt) =>
-                            setValue("specimen_collection_1_aspect", evt)
-                          }
-                        >
-                          <RadioButton
-                            labelText="Mucopurulent"
-                            value="mucopurulent"
-                            id="mucopurulent"
-                          />
-                          <RadioButton
-                            labelText="Bloody"
-                            value="bloody"
-                            id="bloody"
-                          />
-                          <RadioButton
-                            labelText="Salivary"
-                            value="salivary"
-                            id="salivary"
-                          />
-                          <RadioButton labelText="N/A" value="n_a" id="n_a2" />
-                        </RadioButtonGroup>
+                            <RadioButtonGroup
+                              orientation="vertical"
+                              legendText="Aspect"
+                              name="specimen_collection_1_aspect"
+                              defaultSelected={
+                                specimens[0]?.specimen_collection_1_aspect ||
+                                "mucopurulent"
+                              }
+                              onChange={(evt) =>
+                                setValue("specimen_collection_1_aspect", evt)
+                              }
+                            >
+                              <RadioButton
+                                labelText="Mucopurulent"
+                                value="mucopurulent"
+                                id="mucopurulent"
+                              />
+                              <RadioButton
+                                labelText="Bloody"
+                                value="bloody"
+                                id="bloody"
+                              />
+                              <RadioButton
+                                labelText="Salivary"
+                                value="salivary"
+                                id="salivary"
+                              />
+                              <RadioButton
+                                labelText="N/A"
+                                value="n_a"
+                                id="n_a2"
+                              />
+                            </RadioButtonGroup>
+                          </Fragment>
+                        )}
                       </Stack>
                     </FormGroup>
 
@@ -237,13 +271,21 @@ const SpecimenCollection = () => {
 
                 <FormGroup legendText="Collection 2">
                   <Stack gap={7}>
-                    <DatePicker datePickerType="single">
+                    <DatePicker
+                      datePickerType="single"
+                      maxDate={new Date()}
+                      onChange={(evt) => {
+                        handleSetValue(
+                          "specimen_collection_2_date",
+                          evt[0],
+                          setValue
+                        );
+                      }}
+                    >
                       <DatePickerInput
                         placeholder="mm/dd/yyyy"
                         labelText="Date"
                         id="specimen_collection_2_date"
-                        {...register("specimen_collection_2_date")}
-                        defaultValue={new Date()}
                         invalid={
                           errors.specimen_collection_2_date ? true : false
                         }
@@ -260,7 +302,7 @@ const SpecimenCollection = () => {
                           defaultSelected={
                             specimens[0]
                               ?.specimen_collection_2_specimen_collection_type ||
-                            "sputum2"
+                            "sputum"
                           }
                           onChange={(evt) =>
                             setValue(
@@ -269,99 +311,80 @@ const SpecimenCollection = () => {
                             )
                           }
                         >
-                          <RadioButton
-                            labelText="sputum"
-                            value="sputum"
-                            id="sputum2"
-                          />
+                          <RadioButton labelText="sputum" value="sputum" />
                           <RadioButton labelText="CSF" value="csf" id="csf2" />
                           <RadioButton
                             labelText="Lymph node aspirate"
                             value="lymph_node_aspirate"
-                            id="lymph_node_aspirate2"
                           />
                           <RadioButton
                             labelText="Gastric aspirate"
                             value="gastric_aspirate"
-                            id="gastric_aspirate2"
                           />
-                          <RadioButton
-                            labelText="Urine"
-                            value="urine"
-                            id="urine2"
-                          />
-                          <RadioButton
-                            labelText="other"
-                            value="other"
-                            id="other2"
-                          />
+                          <RadioButton labelText="Urine" value="urine" />
+                          <RadioButton labelText="other" value="other" />
                         </RadioButtonGroup>
 
-                        <TextInput
-                          id="specimen_collection_2_other"
-                          labelText="Enter other"
-                          {...register("specimen_collection_2_other")}
-                          invalid={
-                            errors.specimen_collection_2_other ? true : false
-                          }
-                          invalidText={
-                            errors.specimen_collection_2_other?.message
-                          }
-                        />
+                        {specimenTwoType === "other" && (
+                          <TextInput
+                            id="specimen_collection_2_other"
+                            labelText="Enter other"
+                            {...register("specimen_collection_2_other")}
+                            invalid={
+                              errors.specimen_collection_2_other ? true : false
+                            }
+                            invalidText={
+                              errors.specimen_collection_2_other?.message
+                            }
+                          />
+                        )}
 
-                        <RadioButtonGroup
-                          legendText="Period"
-                          name="specimen_collection_2_period"
-                          defaultSelected={
-                            specimens[0]?.specimen_collection_2_period ||
-                            "spot2"
-                          }
-                          onChange={(evt) =>
-                            setValue("specimen_collection_2_period", evt)
-                          }
-                        >
-                          <RadioButton
-                            labelText="Spot"
-                            value="spot"
-                            id="spot2"
-                          />
-                          <RadioButton
-                            labelText="Morning"
-                            value="morning"
-                            id="morning2"
-                          />
-                          <RadioButton labelText="N/A" value="n_a" id="n_a3" />
-                        </RadioButtonGroup>
+                        {specimenTwoType === "sputum" && (
+                          <Fragment>
+                            <RadioButtonGroup
+                              legendText="Period"
+                              name="specimen_collection_2_period"
+                              defaultSelected={
+                                specimens[0]?.specimen_collection_2_period ||
+                                "spot"
+                              }
+                              onChange={(evt) =>
+                                setValue("specimen_collection_2_period", evt)
+                              }
+                            >
+                              <RadioButton labelText="Spot" value="spot" />
+                              <RadioButton
+                                labelText="Morning"
+                                value="morning"
+                              />
+                              <RadioButton labelText="N/A" value="n_a" />
+                            </RadioButtonGroup>
 
-                        <RadioButtonGroup
-                          orientation="vertical"
-                          legendText="Aspect"
-                          name="specimen_collection_2_aspect"
-                          defaultSelected={
-                            specimens[0]?.specimen_collection_2_aspect ||
-                            "mucopurulent2"
-                          }
-                          onChange={(evt) =>
-                            setValue("specimen_collection_2_aspect", evt)
-                          }
-                        >
-                          <RadioButton
-                            labelText="Mucopurulent"
-                            value="mucopurulent"
-                            id="mucopurulent"
-                          />
-                          <RadioButton
-                            labelText="Bloody"
-                            value="bloody"
-                            id="bloody2"
-                          />
-                          <RadioButton
-                            labelText="Salivary"
-                            value="salivary"
-                            id="salivary2"
-                          />
-                          <RadioButton labelText="N/A" value="n_a" id="n_a4" />
-                        </RadioButtonGroup>
+                            <RadioButtonGroup
+                              orientation="vertical"
+                              legendText="Aspect"
+                              name="specimen_collection_2_aspect"
+                              defaultSelected={
+                                specimens[0]?.specimen_collection_2_aspect ||
+                                "mucopurulent"
+                              }
+                              onChange={(evt) =>
+                                setValue("specimen_collection_2_aspect", evt)
+                              }
+                            >
+                              <RadioButton
+                                labelText="Mucopurulent"
+                                value="mucopurulent"
+                              />
+                              <RadioButton labelText="Bloody" value="bloody" />
+                              <RadioButton
+                                labelText="Salivary"
+                                value="salivary"
+                              />
+                              <RadioButton labelText="N/A" value="n_a" />
+                            </RadioButtonGroup>
+                          </Fragment>
+                        )}
                       </Stack>
                     </FormGroup>
 
