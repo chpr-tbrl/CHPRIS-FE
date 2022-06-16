@@ -43,6 +43,7 @@ const NewRecord = () => {
     handleSubmit,
     formState: { errors },
   } = useForm({
+    defaultValues: NEW_RECORD_SCHEMA.cast(),
     resolver: yupResolver(NEW_RECORD_SCHEMA),
   });
 
