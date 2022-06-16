@@ -5,14 +5,17 @@ export function formatUTCDate(date) {
 }
 
 export function getRegions(data) {
-  const regions = data.map((item) => item.region);
-  return regions.length ? regions : [];
+  if (!data) return [];
+  const ids = data.map((item) => item.region.id);
+  const filtered = data
+    .filter(({ region }, index) => !ids.includes(region.id, index + 1))
+    .map((item) => item.region);
+  return filtered;
 }
 
 export function getSites(id, data) {
   if (!id) return [];
-  const sites = data.filter((site) => site.region.id === id);
-  return sites;
+  return data.filter((site) => site.region.id === id);
 }
 export function getRegionName(id, regions) {
   const region = regions.find((region) => region.id === id);

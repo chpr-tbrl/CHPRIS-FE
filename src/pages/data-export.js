@@ -5,6 +5,7 @@ import {
   Stack,
   Button,
   Column,
+  Loading,
   FlexGrid,
   Dropdown,
   FormGroup,
@@ -22,17 +23,18 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { useDataExportMutation } from "services";
 import { format, subMonths, startOfMonth, endOfMonth } from "date-fns";
 import { useSelector } from "react-redux";
-import { accountSelector } from "features";
+import { authSelector } from "features";
 import { handleSetValue, getRegions, getSites } from "utils";
 import { PageHeader, Spacer, TabBar } from "components";
-import { useDeviceDetection } from "hooks";
+import { useDeviceDetection, useProfile } from "hooks";
 import { useGetRegionsQuery, useGetSitesQuery } from "services";
 import toast from "react-hot-toast";
 
 const DataExport = () => {
   const downloadRef = useRef(null);
   const isMobile = useDeviceDetection();
-  const account = useSelector(accountSelector);
+  const auth = useSelector(authSelector);
+  const { account, fetchingProfile } = useProfile(auth.uid);
   const isPriviledgedUser =
     account.account_type === (SUPER_ADMIN || ADMIN) ? true : false;
   const [dataExport, { isLoading: isExporting }] = useDataExportMutation();
@@ -49,6 +51,7 @@ const DataExport = () => {
     null,
     {
       skip: !isPriviledgedUser,
+      refetchOnMountOrArgChange: true,
     }
   );
   const { data: sites = [], isLoading: loadingSites } = useGetSitesQuery(
@@ -59,6 +62,7 @@ const DataExport = () => {
       refetchOnMountOrArgChange: true,
     }
   );
+
   const userRegions = getRegions(account.users_sites);
   const userSites = useMemo(() => {
     return getSites(regionId, account.users_sites);
@@ -133,6 +137,7 @@ const DataExport = () => {
     }
   }
 
+  if (fetchingProfile) return <Loading />;
   return (
     <FlexGrid fullWidth className="page">
       <Column sm={4} lg={{ span: 8, offset: 4 }}>
@@ -242,7 +247,7 @@ const DataExport = () => {
                 id="format"
                 titleText="Export format"
                 label="Select format"
-                items={["csv", "pdf"]}
+                items={account.permitted_export_types}
                 itemToString={(item) => item}
                 invalid={errors.format ? true : false}
                 invalidText={errors.format?.message}

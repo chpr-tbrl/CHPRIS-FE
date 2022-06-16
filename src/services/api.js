@@ -115,7 +115,6 @@ export const API = createApi({
         method: "GET",
       }),
     }),
-
     dataExport: builder.mutation({
       query: ({ region_id, site_id, format, start_date, end_date }) => ({
         url: `/regions/${region_id}/sites/${site_id}/exports/${format}?start_date=${start_date}&end_date=${end_date}`,
@@ -123,6 +122,12 @@ export const API = createApi({
         responseHandler: (response) => {
           return response.status === 200 ? response.text() : response.json();
         },
+      }),
+    }),
+    getProfile: builder.query({
+      query: () => ({
+        url: "/profile",
+        method: "GET",
       }),
     }),
   }),
@@ -134,6 +139,7 @@ export const {
   useLoginMutation,
   useSignupMutation,
   useGetRecordsQuery,
+  useGetProfileQuery,
   useGetRegionsQuery,
   useNewRecordMutation,
   useGetSpecimensQuery,
