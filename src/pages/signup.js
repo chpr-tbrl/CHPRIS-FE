@@ -211,7 +211,7 @@ const Signup = () => {
         }}
       >
         <Stack gap={7}>
-          <h4>Successfull signed in!</h4>
+          <h4>Account created</h4>
           <p> You will be notified when your acccount is approved </p>
         </Stack>
       </Modal>
