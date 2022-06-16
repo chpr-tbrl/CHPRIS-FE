@@ -37,6 +37,7 @@ const NewRecord = () => {
   const [newRecord, { isLoading }] = useNewRecordMutation();
 
   const {
+    watch,
     setValue,
     register,
     handleSubmit,
@@ -44,6 +45,10 @@ const NewRecord = () => {
   } = useForm({
     resolver: yupResolver(NEW_RECORD_SCHEMA),
   });
+
+  const isFemale = watch("records_sex", "female") === "female";
+  const hasARTCode = watch("records_has_art_unique_code", "no") === "yes";
+  const isHospitalized = watch("records_status", "outpatient") === "ward-bed";
 
   const { regions, sites, selectSite, selectRegion } =
     useFetchedRegionsAndSites(setValue);
@@ -160,11 +165,15 @@ const NewRecord = () => {
               <RadioButton labelText="unknown" value="unknown" id="unknown" />
             </RadioButtonGroup>
 
-            <TextInput
-              id="records_art_unique_code"
-              labelText="Record ART Unique code"
-              {...register("records_art_unique_code")}
-            />
+            {hasARTCode && (
+              <TextInput
+                id="records_art_unique_code"
+                labelText="Record ART Unique code"
+                {...register("records_art_unique_code")}
+                invalid={errors.records_art_unique_code ? true : false}
+                invalidText={errors.records_art_unique_code?.message}
+              />
+            )}
 
             <RadioButtonGroup
               legendText="Status"
@@ -188,11 +197,15 @@ const NewRecord = () => {
               />
             </RadioButtonGroup>
 
-            <TextInput
-              id="records_ward_bed_number"
-              labelText="Ward bed number"
-              {...register("records_ward_bed_number")}
-            />
+            {isHospitalized && (
+              <TextInput
+                id="records_ward_bed_number"
+                labelText="Ward bed number"
+                {...register("records_ward_bed_number")}
+                invalid={errors.records_ward_bed_number ? true : false}
+                invalidText={errors.records_ward_bed_number?.message}
+              />
+            )}
 
             <RadioButtonGroup
               legendText="Currently pregnant"
@@ -204,7 +217,12 @@ const NewRecord = () => {
                 })
               }
             >
-              <RadioButton labelText="yes" value="yes" id="cp-yes" />
+              <RadioButton
+                disabled={!isFemale}
+                labelText="yes"
+                value="yes"
+                id="cp-yes"
+              />
               <RadioButton labelText="no" value="no" id="cp-no" />
             </RadioButtonGroup>
 
