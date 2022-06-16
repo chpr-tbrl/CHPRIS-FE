@@ -6,10 +6,14 @@ import { useGetRegionsQuery, useGetSitesQuery } from "services";
 
 export const useRegionsAndSites = (setValue) => {
   const [regionId, setRegionId] = useState(null);
-  const { data: regions = [], isLoading: loadingRegions } =
-    useGetRegionsQuery();
+  const { data: regions = [], isFetching: loadingRegions } = useGetRegionsQuery(
+    null,
+    {
+      refetchOnMountOrArgChange: true,
+    }
+  );
 
-  const { data: sites = [], isLoading: loadingSites } = useGetSitesQuery(
+  const { data: sites = [], isFetching: loadingSites } = useGetSitesQuery(
     regionId,
     {
       skip: !regionId || regionId === "all" ? true : false,
@@ -22,6 +26,8 @@ export const useRegionsAndSites = (setValue) => {
     setValue("region_id", id, {
       shouldValidate: true,
     });
+    // this is only used for data-exports setting site to string
+    // will fail for signup schema
     if (regionId === "all") selectSite("all");
   }
 
