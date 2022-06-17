@@ -9,8 +9,13 @@ export const OUTCOME_RECORDED_SCHEMA = yup.object({
     .string()
     .when("outcome_recorded_started_tb_treatment_outcome", {
       is: "started_tb_treatment",
-      otherwise: (schema) => schema.required("Field is required"),
+      then: (schema) => schema.required("Field is required"),
     }),
-  outcome_recorded_other: yup.string(),
+  outcome_recorded_other: yup
+    .string()
+    .when("outcome_recorded_started_tb_treatment_outcome", {
+      is: "other",
+      then: (schema) => schema.required("Field is required"),
+    }),
   outcome_recorded_comments: yup.string(),
 });

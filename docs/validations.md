@@ -131,8 +131,8 @@ Create a new outcome recorded for a record.
 ```js
 {
     "outcome_recorded_started_tb_treatment_outcome":"string",
-    "outcome_recorded_tb_rx_number":"string",
-    "outcome_recorded_other":"string",
+    "outcome_recorded_tb_rx_number":"string" required if outcome_recorded_started_tb_treatment_outcome === "started_tb_treatment" ,
+    "outcome_recorded_other":"string" required if outcome_recorded_started_tb_treatment_outcome === "other" ,,
     "outcome_recorded_comments":"string"
 }
 ```

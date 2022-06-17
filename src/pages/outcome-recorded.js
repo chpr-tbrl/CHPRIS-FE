@@ -44,11 +44,10 @@ const OutcomeRecorded = () => {
     resolver: yupResolver(OUTCOME_RECORDED_SCHEMA),
   });
 
-  const treatmentStatus =
-    watch(
-      "outcome_recorded_started_tb_treatment_outcome",
-      "started_tb_treatment"
-    ) === "started_tb_treatment";
+  const status = watch(
+    "outcome_recorded_started_tb_treatment_outcome",
+    "started_tb_treatment"
+  );
 
   useEffect(() => {
     if (outcomes.length) {
@@ -140,7 +139,7 @@ const OutcomeRecorded = () => {
               <RadioButton labelText="other" value="other" id="other" />
             </RadioButtonGroup>
 
-            {!treatmentStatus && (
+            {status === "started_tb_treatment" && (
               <TextInput
                 id="outcome_recorded_tb_rx_number"
                 labelText="TB Rx number"
@@ -150,13 +149,15 @@ const OutcomeRecorded = () => {
               />
             )}
 
-            <TextInput
-              id="outcome_recorded_other"
-              labelText="Other"
-              {...register("outcome_recorded_other")}
-              invalid={errors.outcome_recorded_other ? true : false}
-              invalidText={errors.outcome_recorded_other?.message}
-            />
+            {status === "other" && (
+              <TextInput
+                id="outcome_recorded_other"
+                labelText="Other"
+                {...register("outcome_recorded_other")}
+                invalid={errors.outcome_recorded_other ? true : false}
+                invalidText={errors.outcome_recorded_other?.message}
+              />
+            )}
 
             <TextArea
               labelText="Comments"
