@@ -26,6 +26,7 @@ import { recordSelector } from "features";
 import { useSelector } from "react-redux";
 import { useNewFollowUpMutation, useGetFollowUpsQuery } from "services";
 import { useNavigate } from "react-router-dom";
+import { handleSetValue } from "utils";
 import toast from "react-hot-toast";
 
 const FollowUP = () => {
@@ -37,6 +38,7 @@ const FollowUP = () => {
 
   const {
     reset,
+    setValue,
     register,
     handleSubmit,
     formState: { errors },
@@ -131,13 +133,17 @@ const FollowUP = () => {
               invalidText={errors.follow_up_other_antibiotic?.message}
             />
 
-            <DatePicker datePickerType="single">
+            <DatePicker
+              datePickerType="single"
+              maxDate={new Date()}
+              onChange={(evt) => {
+                handleSetValue("follow_up_schedule_date", evt[0], setValue);
+              }}
+            >
               <DatePickerInput
                 placeholder="mm/dd/yyyy"
-                labelText="Follow up schedule date"
+                labelText="Date"
                 id="follow_up_schedule_date"
-                {...register("follow_up_schedule_date")}
-                defaultValue={new Date()}
                 invalid={errors.follow_up_schedule_date ? true : false}
                 invalidText={errors.follow_up_schedule_date?.message}
               />

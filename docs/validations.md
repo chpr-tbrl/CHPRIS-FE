@@ -114,10 +114,10 @@ Create a new follow-up for a record.
 
 ```js
 {
-    "follow_up_xray":"boolean",
-    "follow_up_amoxicillin":"boolean",
+    "follow_up_xray":"boolean" required,
+    "follow_up_amoxicillin":"boolean" required,
     "follow_up_other_antibiotic":"string",
-    "follow_up_schedule_date":"date",
+    "follow_up_schedule_date":"date" required,
     "follow_up_comments":"string"
 }
 ```
