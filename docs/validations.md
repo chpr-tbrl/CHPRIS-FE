@@ -88,21 +88,21 @@ Create a new labs for a record.
 
 ```js
 {
-    "lab_date_specimen_collection_received":"date",
-    "lab_received_by":"string",
-    "lab_registration_number":"string",
-    "lab_smear_microscopy_result_result_1":"string",
-    "lab_smear_microscopy_result_result_2":"string",
-    "lab_smear_microscopy_result_date":"string",
-    "lab_smear_microscopy_result_done_by":"string",
-    "lab_xpert_mtb_rif_assay_result":"string",
-    "lab_xpert_mtb_rif_assay_grades":"string",
-    "lab_xpert_mtb_rif_assay_rif_result":"string",
-    "lab_xpert_mtb_rif_assay_date":"string",
-    "lab_xpert_mtb_rif_assay_done_by":"string",
-    "lab_urine_lf_lam_result":"string",
-    "lab_urine_lf_lam_date":"string",
-    "lab_urine_lf_lam_done_by":"string"
+    "lab_date_specimen_collection_received":"date" required,
+    "lab_received_by":"string" required,
+    "lab_registration_number":"string" required,
+    "lab_smear_microscopy_result_result_1":"string" required,
+    "lab_smear_microscopy_result_result_2":"string" disabled if lab_smear_microscopy_result_result_1 === "not_done" ,
+    "lab_smear_microscopy_result_date":"string" required if lab_smear_microscopy_result_result_1 !== "not_done" ,
+    "lab_smear_microscopy_result_done_by":"string", required if lab_smear_microscopy_result_result_1 !== "not_done" ,
+    "lab_xpert_mtb_rif_assay_result":"string" required,
+    "lab_xpert_mtb_rif_assay_grades":"string" required if lab_xpert_mtb_rif_assay_result !== "not_done",
+    "lab_xpert_mtb_rif_assay_rif_result":"string" required if lab_xpert_mtb_rif_assay_result !== "not_done",
+    "lab_xpert_mtb_rif_assay_date":"string" required if lab_xpert_mtb_rif_assay_result !== "not_done" ,
+    "lab_xpert_mtb_rif_assay_done_by":"string" required if lab_xpert_mtb_rif_assay_result !== "not_done",
+    "lab_urine_lf_lam_result":"string" required,
+    "lab_urine_lf_lam_date":"string" required if lab_urine_lf_lam_result !== "not_done",,
+    "lab_urine_lf_lam_done_by":"string" required if lab_urine_lf_lam_result !== "not_done",
 }
 ```
 
