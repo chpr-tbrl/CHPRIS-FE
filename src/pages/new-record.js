@@ -86,7 +86,7 @@ const NewRecord = () => {
           <Stack gap={7}>
             <TextInput
               id="records_name"
-              labelText="Patient's Name"
+              labelText="Name"
               {...register("records_name")}
               invalid={errors.records_name ? true : false}
               invalidText={errors.records_name?.message}
