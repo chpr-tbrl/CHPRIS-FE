@@ -20,6 +20,7 @@ const Account = () => {
   
 
   const [open, setOpen] = useState(false);
+  const [show, showOpen] = useState(false);
 
   function closeActions() {}
 
@@ -82,7 +83,7 @@ const Account = () => {
         Change password
       </Button>
 
-      <Button type="button">Update account</Button>
+      <Button type="button"  onClick={() => showOpen(true)}>Update account</Button>
 
       <ComposedModal
         size="sm"
@@ -102,6 +103,34 @@ const Account = () => {
               <TextInput id="name" labelText="Enter old password" />
               <TextInput id="name" labelText="Enter new password" />
               <TextInput id="name" labelText="Confirm password" />
+            </Stack>
+          </ModalBody>
+
+          <ModalFooter>
+            <Button type="button" onClick={() => closeActions()}>
+              Save
+            </Button>
+          </ModalFooter>
+        </Form>
+      </ComposedModal>
+      <ComposedModal
+        size="sm"
+        open={show}
+        onRequestClose={() => {
+          setOpen(false);
+        }}
+      >
+        <ModalHeader
+          title="Password update"
+          buttonOnClick={() => showOpen(false)}
+        />
+        <Form>
+          <ModalBody aria-label="update account information">
+            <Stack gap={7}>
+              <p>Change account information</p>
+              <TextInput id="name" labelText="Phone number " />
+              <TextInput id="name" labelText="Occupation" />
+              
             </Stack>
           </ModalBody>
 
