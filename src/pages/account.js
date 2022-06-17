@@ -22,7 +22,12 @@ const Account = () => {
   const [open, setOpen] = useState(false);
   const [show, showOpen] = useState(false);
 
-  function closeActions() {}
+  function closeActions() {
+    showOpen(false);
+    
+    setOpen(false);
+  }
+
 
   return (
     <FlexGrid fullWidth className="page">
