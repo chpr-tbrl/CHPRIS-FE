@@ -12,22 +12,28 @@ import {
   ModalBody,
   ModalFooter,
   ComposedModal,
+  UnorderedList,
+  ListItem,
   ModalHeader,
+  Loading,
 } from "@carbon/react";
 import { User } from "@carbon/icons-react";
+import { authSelector } from "features";
+import { useSelector } from "react-redux";
+import { useProfile } from "hooks";
 
 const Account = () => {
-  
-
+  const auth = useSelector(authSelector);
+  const { account, fetchingProfile } = useProfile(auth.uid);
   const [open, setOpen] = useState(false);
   const [show, showOpen] = useState(false);
 
   function closeActions() {
     showOpen(false);
-    
     setOpen(false);
   }
 
+  if (fetchingProfile) return <Loading />;
 
   return (
     <FlexGrid fullWidth className="page">
@@ -42,42 +48,42 @@ const Account = () => {
           <Stack orientation="horizontal" gap={12}>
             <div>
               <FormLabel>ID</FormLabel>
-              <p>{"N/A"}</p>
+              <p>{account?.id || "N/A"}</p>
             </div>
             <div>
               <FormLabel>Name</FormLabel>
-              <p>{"N/A"}</p>
+              <p>{account?.name || "N/A"}</p>
             </div>
           </Stack>
           <Spacer h={5} />
           <FormLabel>Role</FormLabel>
-          <p>{"N/A"}</p>
+          <p>{account?.account_type || "N/A"}</p>
           <Spacer h={5} />
           <FormLabel>Export Type(s)</FormLabel>
-          <p>{"N/A"}</p>
+          <p>{account?.permitted_export_types.toString() || "N/A"}</p>
           <Spacer h={5} />
 
           <FormLabel>Occupation</FormLabel>
-          <p>{"N/A"}</p>
+          <p>{account?.occupation || "N/A"}</p>
           <Spacer h={5} />
 
           <FormLabel>Email</FormLabel>
-          <p>{"N/A"}</p>
+          <p>{account?.email || "N/A"}</p>
           <Spacer h={5} />
 
           <FormLabel>Phone number</FormLabel>
-          <p>{"N/A"}</p>
+          <p>{account?.phone_number || "N/A"}</p>
           <Spacer h={5} />
-          <Stack orientation="horizontal" gap={12}>
-            <div>
-              <FormLabel>region</FormLabel>
-              <p>{}</p>
-            </div>
-            <div>
-              <FormLabel>Site</FormLabel>
-              <p>{}</p>
-            </div>
-          </Stack>
+          <FormLabel>Sites</FormLabel>
+
+          {account?.users_sites?.map((site) => (
+            <UnorderedList>
+              <ListItem>{site.region.name}</ListItem>
+              <UnorderedList nested>
+                <ListItem>{site.name}</ListItem>
+              </UnorderedList>
+            </UnorderedList>
+          ))}
           <Spacer h={5} />
         </Column>
       </Row>
@@ -88,7 +94,9 @@ const Account = () => {
         Change password
       </Button>
 
-      <Button type="button"  onClick={() => showOpen(true)}>Update account</Button>
+      <Button type="button" onClick={() => showOpen(true)}>
+        Update account
+      </Button>
 
       <ComposedModal
         size="sm"
@@ -135,7 +143,6 @@ const Account = () => {
               <p>Change account information</p>
               <TextInput id="name" labelText="Phone number " />
               <TextInput id="name" labelText="Occupation" />
-              
             </Stack>
           </ModalBody>
 
