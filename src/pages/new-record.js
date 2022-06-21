@@ -27,7 +27,7 @@ import { useNavigate } from "react-router-dom";
 import { handleSetValue } from "utils";
 import { NEW_RECORD_SCHEMA } from "schemas";
 import { useNewRecordMutation } from "services";
-import { PageHeader, Spacer, TabBar } from "components";
+import { PageHeader, PhoneNumberInput, Spacer, TabBar } from "components";
 import { useFetchedRegionsAndSites, useDeviceDetection } from "hooks";
 
 const NewRecord = () => {
@@ -38,6 +38,7 @@ const NewRecord = () => {
 
   const {
     watch,
+    control,
     setValue,
     register,
     handleSubmit,
@@ -143,18 +144,20 @@ const NewRecord = () => {
               invalidText={errors.records_address?.message}
             />
 
-            <TextInput
+            <PhoneNumberInput
+              control={control}
               id="records_telephone"
               labelText="Telephone"
-              {...register("records_telephone")}
               invalid={errors.records_telephone ? true : false}
               invalidText={errors.records_telephone?.message}
             />
-            <TextInput
+
+            <PhoneNumberInput
+              control={control}
               id="records_telephone_2"
               labelText="Telephone(2)"
-              {...register("records_telephone_2")}
             />
+
             <RadioButtonGroup
               legendText="Has ART unique code"
               name="records_has_art_unique_code"

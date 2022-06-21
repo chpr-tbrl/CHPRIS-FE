@@ -7,3 +7,4 @@ export * from "./RequireAuth";
 export * from "./Cards";
 export * from "./TabBar";
 export * from "./Spacer";
+export * from "./PhoneNumberInput";

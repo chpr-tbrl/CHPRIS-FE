@@ -1,0 +1,17 @@
+/*
+  styling for components and pages following
+  BEM pattern: https://cssguidelin.es/#bem-like-naming
+*/
+
+@use "@carbon/layout";
+@use "@carbon/colors";
+@use "@carbon/themes";
+
+.PhoneInputCountry {
+  background: themes.$field-01;
+  margin-right: 0 !important;
+  padding-left: layout.$spacing-04;
+  border-bottom-width: 1px;
+  border-style: solid;
+  border-color: themes.$border-strong-01;
+}

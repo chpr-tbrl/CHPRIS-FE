@@ -20,6 +20,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { sIGNUP_SCHEMA } from "schemas";
 import { useSignupMutation } from "services";
 import { useRegionsAndSites } from "hooks";
+import { PhoneNumberInput } from "components";
 
 import toast from "react-hot-toast";
 
@@ -30,6 +31,7 @@ const Signup = () => {
   const [signup, { isLoading }] = useSignupMutation();
 
   const {
+    control,
     setValue,
     register,
     handleSubmit,
@@ -103,10 +105,11 @@ const Signup = () => {
                   invalid={errors.occupation ? true : false}
                   invalidText={errors.occupation?.message}
                 />
-                <TextInput
+
+                <PhoneNumberInput
+                  control={control}
                   id="phone_number"
-                  labelText="Phone Number"
-                  {...register("phone_number")}
+                  labelText="Phone number"
                   invalid={errors.phone_number ? true : false}
                   invalidText={errors.phone_number?.message}
                 />
