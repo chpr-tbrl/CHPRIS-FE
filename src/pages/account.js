@@ -1,5 +1,6 @@
-import React, { useState } from "react";
-import { PageHeader, Spacer } from "components";
+import React, { useRef, useState } from "react";
+import toast from "react-hot-toast";
+import { PageHeader, Spacer, TabBar } from "components";
 import {
   Button,
   FormLabel,
@@ -13,30 +14,66 @@ import {
   ModalFooter,
   ComposedModal,
   UnorderedList,
+  PasswordInput,
   ListItem,
   ModalHeader,
+  InlineLoading,
   Loading,
 } from "@carbon/react";
 import { User } from "@carbon/icons-react";
-import { authSelector } from "features";
-import { useSelector } from "react-redux";
-import { useProfile } from "hooks";
+
+import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { authSelector, logout } from "features";
+import { useSelector, useDispatch } from "react-redux";
+import { USER_UPDATE_SCHEMA } from "schemas";
+import { useProfile, useDeviceDetection } from "hooks";
+import { useUpdateProfileMutation } from "services";
 
 const Account = () => {
+  const submitBtnRef = useRef(null);
   const auth = useSelector(authSelector);
+  const dispatch = useDispatch();
   const { account, fetchingProfile } = useProfile(auth.uid);
-  const [open, setOpen] = useState(false);
-  const [show, showOpen] = useState(false);
+  const isMobile = useDeviceDetection();
+  const [modal, showModal] = useState(false);
+  const [modalTwo, showModalTwo] = useState(false);
+  const [updateProfile, { isLoading }] = useUpdateProfileMutation();
 
-  function closeActions() {
-    showOpen(false);
-    setOpen(false);
+  function togglePasswordModal() {
+    showModal(!modal);
+  }
+
+  function toggleAccountModal() {
+    showModalTwo(!modalTwo);
+  }
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    resolver: yupResolver(USER_UPDATE_SCHEMA),
+  });
+
+  async function handlePasswordUpdate(data) {
+    try {
+      await updateProfile(data).unwrap();
+      toast.success("Password updated");
+      if (modal) {
+        toast.success("Please login");
+        dispatch(logout());
+      }
+    } catch (error) {
+      // we handle errors with middleware
+    }
   }
 
   if (fetchingProfile) return <Loading />;
 
   return (
     <FlexGrid fullWidth className="page">
+      {isMobile && <TabBar />}
       <PageHeader
         title="Account"
         description="Your account information"
@@ -90,52 +127,83 @@ const Account = () => {
 
       <Spacer h={5} />
 
-      <Button kind="secondary" onClick={() => setOpen(true)}>
+      <Button kind="secondary" onClick={() => togglePasswordModal(true)}>
         Change password
       </Button>
 
-      <Button type="button" onClick={() => showOpen(true)}>
+      <Button type="button" onClick={() => toggleAccountModal(true)}>
         Update account
       </Button>
 
       <ComposedModal
         size="sm"
-        open={open}
-        onRequestClose={() => {
-          setOpen(false);
-        }}
+        open={modal}
+        onRequestClose={() => togglePasswordModal()}
+        preventCloseOnClickOutside
       >
         <ModalHeader
           title="Password update"
-          buttonOnClick={() => setOpen(false)}
+          buttonOnClick={() => togglePasswordModal()}
         />
-        <Form>
-          <ModalBody aria-label="create new password">
+        <ModalBody aria-label="create new password">
+          <Form onSubmit={handleSubmit(handlePasswordUpdate)}>
             <Stack gap={7}>
               <p>Create a new password</p>
-              <TextInput id="name" labelText="Enter old password" />
-              <TextInput id="name" labelText="Enter new password" />
-              <TextInput id="name" labelText="Confirm password" />
+              <PasswordInput
+                required
+                id="current_password"
+                labelText="Enter old password"
+                {...register("current_password")}
+                invalid={errors.current_password ? true : false}
+                invalidText={errors.current_password?.message}
+              />
+              <PasswordInput
+                id="new_password"
+                labelText="Enter new password"
+                {...register("new_password")}
+                invalid={errors.new_password ? true : false}
+                invalidText={errors.new_password?.message}
+              />
+              <PasswordInput
+                id="confirmPassword"
+                labelText="Confirm new password"
+                {...register("confirmPassword")}
+                invalid={errors.confirmPassword ? true : false}
+                invalidText={errors.confirmPassword?.message}
+              />
             </Stack>
-          </ModalBody>
-
-          <ModalFooter>
-            <Button type="button" onClick={() => closeActions()}>
+            <button
+              type="submit"
+              ref={submitBtnRef}
+              hidden
+              aria-label="submit"
+            ></button>
+          </Form>
+        </ModalBody>
+        <ModalFooter>
+          {!isLoading ? (
+            <Button type="button" onClick={() => submitBtnRef.current.click()}>
               Save
             </Button>
-          </ModalFooter>
-        </Form>
+          ) : (
+            <InlineLoading
+              status="active"
+              iconDescription="Active loading indicator"
+              description="processing ..."
+              style={{ justifyContent: "end", paddingRight: "20px" }}
+            />
+          )}
+        </ModalFooter>
       </ComposedModal>
       <ComposedModal
         size="sm"
-        open={show}
-        onRequestClose={() => {
-          setOpen(false);
-        }}
+        open={modalTwo}
+        onRequestClose={() => toggleAccountModal()}
+        preventCloseOnClickOutside
       >
         <ModalHeader
           title="Password update"
-          buttonOnClick={() => showOpen(false)}
+          buttonOnClick={() => toggleAccountModal()}
         />
         <Form>
           <ModalBody aria-label="update account information">
@@ -147,7 +215,7 @@ const Account = () => {
           </ModalBody>
 
           <ModalFooter>
-            <Button type="button" onClick={() => closeActions()}>
+            <Button type="button" onClick={() => submitBtnRef.current.click()}>
               Save
             </Button>
           </ModalFooter>

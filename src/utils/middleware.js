@@ -23,14 +23,20 @@ export const RequestErrorHandler = (store) => (next) => (action) => {
             default: {
               toast.error(
                 "Sorry you are not authorized to use this service. Please contact support"
-              );  
+              );
               store.dispatch(logout());
             }
           }
 
           break;
         case 403:
-          toast.error("Forbidden, you are not authorized");
+          switch (endpointName) {
+            case "updateProfile":
+              toast.error("Forbidden, current password is wrong");
+              break;
+            default:
+              toast.error("Forbidden, you are not authorized");
+          }
           break;
         case 404:
           toast.error(

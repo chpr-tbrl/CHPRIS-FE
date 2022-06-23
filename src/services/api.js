@@ -130,6 +130,13 @@ export const API = createApi({
         method: "GET",
       }),
     }),
+    updateProfile: builder.mutation({
+      query: (data) => ({
+        url: "/users",
+        method: "POST",
+        body: data,
+      }),
+    }),
   }),
 });
 // Export hooks for usage in functional components, which are
@@ -150,6 +157,7 @@ export const {
   useNewFollowUpMutation,
   useGetOutcomesQuery,
   useNewOutcomeMutation,
+  useUpdateProfileMutation,
   useGetTreatmentOutcomesQuery,
   useNewTreatmentOutcomeMutation,
   useDataExportMutation,
