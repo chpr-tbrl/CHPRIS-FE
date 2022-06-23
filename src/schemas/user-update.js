@@ -1,6 +1,9 @@
 import * as yup from "yup";
 
 export const USER_UPDATE_SCHEMA = yup.object().shape({
+  name: yup.string(),
+  phone_number: yup.string(),
+  occupation: yup.string(),
   current_password: yup.string(),
   new_password: yup.string().when("current_password", (current_password) => {
     if (current_password)

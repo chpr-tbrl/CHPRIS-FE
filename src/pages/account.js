@@ -1,6 +1,6 @@
 import React, { useRef, useState } from "react";
 import toast from "react-hot-toast";
-import { PageHeader, Spacer, TabBar } from "components";
+import { PageHeader, Spacer, TabBar, PhoneNumberInput } from "components";
 import {
   Button,
   FormLabel,
@@ -34,7 +34,7 @@ const Account = () => {
   const submitBtnRef = useRef(null);
   const auth = useSelector(authSelector);
   const dispatch = useDispatch();
-  const { account, fetchingProfile } = useProfile(auth.uid);
+  const { account, fetchingProfile, reloadProfile } = useProfile(auth.uid);
   const isMobile = useDeviceDetection();
   const [modal, showModal] = useState(false);
   const [modalTwo, showModalTwo] = useState(false);
@@ -48,7 +48,19 @@ const Account = () => {
     showModalTwo(!modalTwo);
   }
 
+  function preLoadForm() {
+    const { name, occupation, phone_number } = account;
+    reset({
+      name,
+      occupation,
+      phone_number,
+    });
+    toggleAccountModal();
+  }
+
   const {
+    reset,
+    control,
     register,
     handleSubmit,
     formState: { errors },
@@ -56,14 +68,22 @@ const Account = () => {
     resolver: yupResolver(USER_UPDATE_SCHEMA),
   });
 
-  async function handlePasswordUpdate(data) {
+  async function handleUpdate(data) {
+    const request = {
+      ...data,
+      method: modal ? "POST" : "PUT",
+    };
     try {
-      await updateProfile(data).unwrap();
-      toast.success("Password updated");
+      await updateProfile(request).unwrap();
       if (modal) {
+        toast.success("Password updated");
         toast.success("Please login");
         dispatch(logout());
+        togglePasswordModal();
       }
+      toast.success("Account updated");
+      reloadProfile();
+      toggleAccountModal();
     } catch (error) {
       // we handle errors with middleware
     }
@@ -127,100 +147,148 @@ const Account = () => {
 
       <Spacer h={5} />
 
-      <Button kind="secondary" onClick={() => togglePasswordModal(true)}>
+      <Button kind="secondary" onClick={() => togglePasswordModal()}>
         Change password
       </Button>
 
-      <Button type="button" onClick={() => toggleAccountModal(true)}>
+      <Button type="button" onClick={() => preLoadForm()}>
         Update account
       </Button>
 
-      <ComposedModal
-        size="sm"
-        open={modal}
-        onRequestClose={() => togglePasswordModal()}
-        preventCloseOnClickOutside
-      >
-        <ModalHeader
-          title="Password update"
-          buttonOnClick={() => togglePasswordModal()}
-        />
-        <ModalBody aria-label="create new password">
-          <Form onSubmit={handleSubmit(handlePasswordUpdate)}>
-            <Stack gap={7}>
-              <p>Create a new password</p>
-              <PasswordInput
-                required
-                id="current_password"
-                labelText="Enter old password"
-                {...register("current_password")}
-                invalid={errors.current_password ? true : false}
-                invalidText={errors.current_password?.message}
+      {modal && (
+        <ComposedModal
+          size="sm"
+          open={modal}
+          onRequestClose={() => togglePasswordModal()}
+          preventCloseOnClickOutside
+        >
+          <ModalHeader
+            title="Password update"
+            buttonOnClick={() => togglePasswordModal()}
+          />
+          <ModalBody aria-label="create new password">
+            <Form onSubmit={handleSubmit(handleUpdate)}>
+              <Stack gap={7}>
+                <p>Create a new password</p>
+                <PasswordInput
+                  required
+                  id="current_password"
+                  labelText="Enter old password"
+                  {...register("current_password")}
+                  invalid={errors.current_password ? true : false}
+                  invalidText={errors.current_password?.message}
+                />
+                <PasswordInput
+                  id="new_password"
+                  labelText="Enter new password"
+                  {...register("new_password")}
+                  invalid={errors.new_password ? true : false}
+                  invalidText={errors.new_password?.message}
+                />
+                <PasswordInput
+                  id="confirmPassword"
+                  labelText="Confirm new password"
+                  {...register("confirmPassword")}
+                  invalid={errors.confirmPassword ? true : false}
+                  invalidText={errors.confirmPassword?.message}
+                />
+              </Stack>
+              <button
+                type="submit"
+                ref={submitBtnRef}
+                hidden
+                aria-label="submit"
+              ></button>
+            </Form>
+          </ModalBody>
+          <ModalFooter>
+            {!isLoading ? (
+              <Button
+                type="button"
+                onClick={() => submitBtnRef.current.click()}
+              >
+                Save
+              </Button>
+            ) : (
+              <InlineLoading
+                status="active"
+                iconDescription="Active loading indicator"
+                description="processing ..."
+                style={{ justifyContent: "end", paddingRight: "20px" }}
               />
-              <PasswordInput
-                id="new_password"
-                labelText="Enter new password"
-                {...register("new_password")}
-                invalid={errors.new_password ? true : false}
-                invalidText={errors.new_password?.message}
-              />
-              <PasswordInput
-                id="confirmPassword"
-                labelText="Confirm new password"
-                {...register("confirmPassword")}
-                invalid={errors.confirmPassword ? true : false}
-                invalidText={errors.confirmPassword?.message}
-              />
-            </Stack>
-            <button
-              type="submit"
-              ref={submitBtnRef}
-              hidden
-              aria-label="submit"
-            ></button>
-          </Form>
-        </ModalBody>
-        <ModalFooter>
-          {!isLoading ? (
-            <Button type="button" onClick={() => submitBtnRef.current.click()}>
-              Save
-            </Button>
-          ) : (
-            <InlineLoading
-              status="active"
-              iconDescription="Active loading indicator"
-              description="processing ..."
-              style={{ justifyContent: "end", paddingRight: "20px" }}
-            />
-          )}
-        </ModalFooter>
-      </ComposedModal>
-      <ComposedModal
-        size="sm"
-        open={modalTwo}
-        onRequestClose={() => toggleAccountModal()}
-        preventCloseOnClickOutside
-      >
-        <ModalHeader
-          title="Password update"
-          buttonOnClick={() => toggleAccountModal()}
-        />
-        <Form>
+            )}
+          </ModalFooter>
+        </ComposedModal>
+      )}
+
+      {modalTwo && (
+        <ComposedModal
+          size="sm"
+          open={modalTwo}
+          onRequestClose={() => toggleAccountModal()}
+          preventCloseOnClickOutside
+        >
+          <ModalHeader
+            title="Password update"
+            buttonOnClick={() => toggleAccountModal()}
+          />
+
           <ModalBody aria-label="update account information">
-            <Stack gap={7}>
-              <p>Change account information</p>
-              <TextInput id="name" labelText="Phone number " />
-              <TextInput id="name" labelText="Occupation" />
-            </Stack>
+            <Form onSubmit={handleSubmit(handleUpdate)}>
+              <Stack gap={7}>
+                <p>Change account information</p>
+
+                <TextInput
+                  id="name"
+                  labelText="Name"
+                  {...register("name")}
+                  invalid={errors.name ? true : false}
+                  invalidText={errors.name?.message}
+                />
+
+                <PhoneNumberInput
+                  control={control}
+                  id="phone_number"
+                  labelText="Phone number"
+                  invalid={errors.phone_number ? true : false}
+                  invalidText={errors.phone_number?.message}
+                />
+                <TextInput
+                  id="occupation"
+                  labelText="Occupation"
+                  {...register("occupation")}
+                  invalid={errors.occupation ? true : false}
+                  invalidText={errors.occupation?.message}
+                />
+              </Stack>
+              <button
+                type="submit"
+                ref={submitBtnRef}
+                hidden
+                aria-label="submit"
+              ></button>
+            </Form>
           </ModalBody>
 
           <ModalFooter>
-            <Button type="button" onClick={() => submitBtnRef.current.click()}>
-              Save
-            </Button>
+            {!isLoading ? (
+              <Button
+                type="button"
+                onClick={() => submitBtnRef.current.click()}
+              >
+                Save
+              </Button>
+            ) : (
+              <InlineLoading
+                status="active"
+                iconDescription="Active loading indicator"
+                description="processing ..."
+                style={{ justifyContent: "end", paddingRight: "20px" }}
+              />
+            )}
           </ModalFooter>
-        </Form>
-      </ComposedModal>
+        </ComposedModal>
+      )}
     </FlexGrid>
   );
 };
