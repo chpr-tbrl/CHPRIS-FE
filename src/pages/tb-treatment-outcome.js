@@ -25,16 +25,25 @@ import { useNavigate } from "react-router-dom";
 import { TB_TREATMENT_OUTCOME_SCHEMA } from "schemas";
 import { recordSelector } from "features";
 import {
-  useNewTreatmentOutcomeMutation,
   useGetTreatmentOutcomesQuery,
+  useNewTreatmentOutcomeMutation,
+  useUpdateTreatmentOutcomeMutation,
 } from "services";
 
 const TBTreatmentOutcome = () => {
   const record = useSelector(recordSelector);
   const navigate = useNavigate();
-  const [newTreatmentOutcome, { isLoading }] = useNewTreatmentOutcomeMutation();
-  const { data: treatmentOutcomes = [], isLoading: fetchingTreatmentOutcomes } =
-    useGetTreatmentOutcomesQuery(record.record_id);
+  const [newTreatmentOutcome, { isLoading: isCreating }] =
+    useNewTreatmentOutcomeMutation();
+  const [updateTreatmentOutcome, { isLoading: isUpdating }] =
+    useUpdateTreatmentOutcomeMutation();
+  const {
+    data: treatmentOutcomes = [],
+    isFetching,
+    refetch,
+  } = useGetTreatmentOutcomesQuery(record.record_id);
+  const isUpdate = treatmentOutcomes[0]?.tb_treatment_outcome_id ? true : false;
+
   const {
     reset,
     setValue,
@@ -65,7 +74,17 @@ const TBTreatmentOutcome = () => {
     }
   }
 
-  if (fetchingTreatmentOutcomes) return <Loading />;
+  async function handleUpdate(data) {
+    try {
+      await updateTreatmentOutcome(data).unwrap();
+      toast.success("Treatment outcome updated");
+      refetch();
+    } catch (error) {
+      // we handle errors with middleware
+    }
+  }
+
+  if (isFetching) return <Loading />;
   return (
     <FlexGrid fullWidth className="page">
       <Column sm={4} lg={{ span: 8, offset: 4 }}>
@@ -88,7 +107,13 @@ const TBTreatmentOutcome = () => {
         </Stack>
         <Spacer h={7} />
 
-        <Form onSubmit={handleSubmit(handleTreatmentOutcome)}>
+        <Form
+          onSubmit={
+            isUpdate
+              ? handleSubmit(handleUpdate)
+              : handleSubmit(handleTreatmentOutcome)
+          }
+        >
           <Stack gap={7}>
             <br />
             <div className="accordion--row">
@@ -192,15 +217,15 @@ const TBTreatmentOutcome = () => {
               {...register("tb_treatment_outcome_close_patient_file")}
             />
 
-            {!isLoading ? (
-              <Button kind="primary" type="submit">
-                Save
+            {!isCreating || isUpdating ? (
+              <Button kind={isUpdate ? "secondary" : "primary"} type="submit">
+                {isUpdate ? "Update" : "Save"}
               </Button>
             ) : (
               <InlineLoading
                 status="active"
                 iconDescription="Active loading indicator"
-                description="processing ..."
+                description="Loading data..."
               />
             )}
           </Stack>
