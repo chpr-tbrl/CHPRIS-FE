@@ -33,7 +33,7 @@ const RecordDetails = () => {
           </Fragment>
         ))}
 
-        <Button onClick={() => navigate(`/records/${record.record_id}`)}>
+        <Button onClick={() => navigate(`../${record.record_id}`)}>
           Edit record
         </Button>
       </Column>
