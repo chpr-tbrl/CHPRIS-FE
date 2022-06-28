@@ -105,6 +105,13 @@ export const API = createApi({
         body: data,
       }),
     }),
+    updateOutcome: builder.mutation({
+      query: (data) => ({
+        url: `/outcome_recorded/${data.outcome_recorded_id}`,
+        method: "PUT",
+        body: data,
+      }),
+    }),
     getOutcomes: builder.query({
       query: (id) => ({
         url: `/records/${id}/outcome_recorded`,
@@ -181,6 +188,7 @@ export const {
   useUpdateFollowUpMutation,
   useGetOutcomesQuery,
   useNewOutcomeMutation,
+  useUpdateOutcomeMutation,
   useUpdateProfileMutation,
   useGetTreatmentOutcomesQuery,
   useNewTreatmentOutcomeMutation,

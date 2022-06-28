@@ -22,16 +22,26 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { OUTCOME_RECORDED_SCHEMA } from "schemas";
 import { useSelector } from "react-redux";
 import { recordSelector } from "features";
-import { useNewOutcomeMutation, useGetOutcomesQuery } from "services";
+import {
+  useGetOutcomesQuery,
+  useNewOutcomeMutation,
+  useUpdateOutcomeMutation,
+} from "services";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 
 const OutcomeRecorded = () => {
   const navigate = useNavigate();
   const record = useSelector(recordSelector);
-  const [newOutcome, { isLoading }] = useNewOutcomeMutation();
-  const { data: outcomes = [], isLoading: fetchingOutcomes } =
-    useGetOutcomesQuery(record.record_id);
+  const [newOutcome, { isLoading: isCreating }] = useNewOutcomeMutation();
+  const [updateOutcome, { isLoading: isUpdating }] = useUpdateOutcomeMutation();
+  const {
+    data: outcomes = [],
+    isFetching,
+    refetch,
+  } = useGetOutcomesQuery(record.record_id);
+
+  const isUpdate = outcomes[0]?.outcome_recorded_id ? true : false;
 
   const {
     reset,
@@ -70,7 +80,17 @@ const OutcomeRecorded = () => {
     }
   }
 
-  if (fetchingOutcomes) return <Loading />;
+  async function handleOutcomeUpdate(data) {
+    try {
+      await updateOutcome(data).unwrap();
+      toast.success("Outcome recorded");
+      refetch();
+    } catch (error) {
+      // we handle errors with middleware
+    }
+  }
+
+  if (isFetching) return <Loading />;
 
   return (
     <FlexGrid fullWidth className="page">
@@ -93,7 +113,13 @@ const OutcomeRecorded = () => {
           </div>
         </Stack>
         <Spacer h={7} />
-        <Form onSubmit={handleSubmit(handleOutcome)}>
+        <Form
+          onSubmit={
+            isUpdate
+              ? handleSubmit(handleOutcomeUpdate)
+              : handleSubmit(handleOutcome)
+          }
+        >
           <Stack gap={7}>
             <Accordion>
               <AccordionItem
@@ -120,7 +146,10 @@ const OutcomeRecorded = () => {
               orientation="vertical"
               legendText="Treatment"
               name="outcome_recorded_started_tb_treatment_outcome"
-              defaultSelected="started_tb_treatment"
+              defaultSelected={
+                outcomes[0]?.outcome_recorded_started_tb_treatment_outcome ||
+                "started_tb_treatment"
+              }
               onChange={(evt) =>
                 setValue("outcome_recorded_started_tb_treatment_outcome", evt, {
                   shouldValidate: true,
@@ -169,15 +198,15 @@ const OutcomeRecorded = () => {
               invalidText={errors.outcome_recorded_comments?.message}
             />
 
-            {!isLoading ? (
-              <Button kind="primary" type="submit">
-                Save
+            {!isCreating || isUpdating ? (
+              <Button kind={isUpdate ? "secondary" : "primary"} type="submit">
+                {isUpdate ? "Update" : "Save"}
               </Button>
             ) : (
               <InlineLoading
                 status="active"
                 iconDescription="Active loading indicator"
-                description="processing ..."
+                description="Loading data..."
               />
             )}
           </Stack>
