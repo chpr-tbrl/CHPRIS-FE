@@ -38,6 +38,12 @@ export const API = createApi({
         method: "GET",
       }),
     }),
+    getRecord: builder.query({
+      query: (id) => ({
+        url: `/records/${id}`,
+        method: "GET",
+      }),
+    }),
     newSpecimen: builder.mutation({
       query: (data) => ({
         url: `/records/${data.record_id}/specimen_collections`,
@@ -179,6 +185,7 @@ export const API = createApi({
 export const {
   useGetSitesQuery,
   useLoginMutation,
+  useGetRecordQuery,
   useSignupMutation,
   useGetRecordsQuery,
   useGetProfileQuery,
