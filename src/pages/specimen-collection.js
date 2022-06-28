@@ -1,6 +1,6 @@
 import React, { Fragment, useEffect } from "react";
 import toast from "react-hot-toast";
-import { PageHeader, Spacer, TabBar } from "components";
+import { PageHeader, Spacer, TabBar, DatePicker } from "components";
 import {
   Stack,
   Form,
@@ -11,8 +11,6 @@ import {
   RadioButton,
   FormLabel,
   RadioButtonGroup,
-  DatePicker,
-  DatePickerInput,
   InlineLoading,
   FlexGrid,
   Loading,
@@ -23,21 +21,31 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { SPECIMEN_COLLECTION_SCHEMA } from "schemas";
 import { useSelector } from "react-redux";
 import { recordSelector } from "features";
-import { useNewSpecimenMutation, useGetSpecimensQuery } from "services";
+import {
+  useGetSpecimensQuery,
+  useNewSpecimenMutation,
+  useUpdateSpecimenMutation,
+} from "services";
 import { useNavigate } from "react-router-dom";
-import { handleSetValue } from "utils";
 
 const SpecimenCollection = () => {
   const record = useSelector(recordSelector);
   const navigate = useNavigate();
-  const [newSpecimen, { isLoading }] = useNewSpecimenMutation();
+  const [newSpecimen, { isLoading: isCreating }] = useNewSpecimenMutation();
+  const [updateSpecimen, { isLoading: isUpdating }] =
+    useUpdateSpecimenMutation();
+  const {
+    data: specimens = [],
+    isFetching,
+    refetch,
+  } = useGetSpecimensQuery(record.record_id);
 
-  const { data: specimens = [], isLoading: fetchingSpecimens } =
-    useGetSpecimensQuery(record.record_id);
+  const isUpdate = specimens[0]?.specimen_collection_id ? true : false;
 
   const {
     reset,
     watch,
+    control,
     setValue,
     register,
     handleSubmit,
@@ -62,7 +70,7 @@ const SpecimenCollection = () => {
     }
   }, [specimens, reset]);
 
-  async function handleSpecimenRecording(data) {
+  async function handleSpecimenCreation(data) {
     const request = {
       ...data,
       record_id: record.record_id,
@@ -71,6 +79,16 @@ const SpecimenCollection = () => {
       await newSpecimen(request).unwrap();
       toast.success("specimen created");
       navigate("/dashboard");
+    } catch (error) {
+      // we handle errors with middleware
+    }
+  }
+
+  async function handleSpecimenUpdate(data) {
+    try {
+      await updateSpecimen(data).unwrap();
+      toast.success("specimen updated");
+      refetch();
     } catch (error) {
       // we handle errors with middleware
     }
@@ -86,7 +104,7 @@ const SpecimenCollection = () => {
           renderIcon={<PillsAdd size={42} />}
         />
         <Spacer h={7} />
-        {fetchingSpecimens ? (
+        {isFetching ? (
           <Loading />
         ) : (
           <Fragment>
@@ -101,31 +119,23 @@ const SpecimenCollection = () => {
               </div>
             </Stack>
             <Spacer h={7} />
-            <Form onSubmit={handleSubmit(handleSpecimenRecording)}>
+            <Form
+              onSubmit={
+                isUpdate
+                  ? handleSubmit(handleSpecimenUpdate)
+                  : handleSubmit(handleSpecimenCreation)
+              }
+            >
               <Stack gap={7}>
                 <FormGroup legendText="Collection 1">
                   <Stack gap={7}>
                     <DatePicker
-                      datePickerType="single"
-                      maxDate={new Date()}
-                      onChange={(evt) => {
-                        handleSetValue(
-                          "specimen_collection_1_date",
-                          evt[0],
-                          setValue
-                        );
-                      }}
-                    >
-                      <DatePickerInput
-                        placeholder="mm/dd/yyyy"
-                        labelText="Date"
-                        id="specimen_collection_1_date"
-                        invalid={
-                          errors.specimen_collection_1_date ? true : false
-                        }
-                        invalidText={errors.specimen_collection_1_date?.message}
-                      />
-                    </DatePicker>
+                      control={control}
+                      labelText="Date"
+                      id="specimen_collection_1_date"
+                      invalid={errors.specimen_collection_1_date ? true : false}
+                      invalidText={errors.specimen_collection_1_date?.message}
+                    />
 
                     <FormGroup legendText="Specimen type">
                       <Stack gap={7}>
@@ -272,26 +282,12 @@ const SpecimenCollection = () => {
                 <FormGroup legendText="Collection 2">
                   <Stack gap={7}>
                     <DatePicker
-                      datePickerType="single"
-                      maxDate={new Date()}
-                      onChange={(evt) => {
-                        handleSetValue(
-                          "specimen_collection_2_date",
-                          evt[0],
-                          setValue
-                        );
-                      }}
-                    >
-                      <DatePickerInput
-                        placeholder="mm/dd/yyyy"
-                        labelText="Date"
-                        id="specimen_collection_2_date"
-                        invalid={
-                          errors.specimen_collection_2_date ? true : false
-                        }
-                        invalidText={errors.specimen_collection_2_date?.message}
-                      />
-                    </DatePicker>
+                      control={control}
+                      labelText="Date"
+                      id="specimen_collection_2_date"
+                      invalid={errors.specimen_collection_2_date ? true : false}
+                      invalidText={errors.specimen_collection_2_date?.message}
+                    />
 
                     <FormGroup legendText="Specimen type">
                       <Stack gap={7}>
@@ -402,9 +398,12 @@ const SpecimenCollection = () => {
                   </Stack>
                 </FormGroup>
 
-                {!isLoading ? (
-                  <Button kind="primary" type="submit">
-                    Save
+                {!isCreating || isUpdating ? (
+                  <Button
+                    kind={isUpdate ? "secondary" : "primary"}
+                    type="submit"
+                  >
+                    {isUpdate ? "Update" : "Save"}
                   </Button>
                 ) : (
                   <InlineLoading

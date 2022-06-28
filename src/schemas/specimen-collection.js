@@ -1,7 +1,10 @@
 import * as yup from "yup";
 
 export const SPECIMEN_COLLECTION_SCHEMA = yup.object({
-  specimen_collection_1_date: yup.date().required("Field is required"),
+  specimen_collection_1_date: yup
+    .date()
+    .typeError("Field is required")
+    .required("Field is required"),
   specimen_collection_1_specimen_collection_type: yup
     .string()
     .oneOf([
@@ -38,7 +41,10 @@ export const SPECIMEN_COLLECTION_SCHEMA = yup.object({
       then: (schema) => schema.required("Field is required"),
     }),
   specimen_collection_1_received_by: yup.string().required("Field is required"),
-  specimen_collection_2_date: yup.date().required("Field is required"),
+  specimen_collection_2_date: yup
+    .date()
+    .typeError("Field is required")
+    .required("Field is required"),
 
   specimen_collection_2_specimen_collection_type: yup
     .string()
