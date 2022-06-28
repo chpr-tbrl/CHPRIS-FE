@@ -32,20 +32,22 @@ export const LAB_RESULTS_SCHEMA = yup.object({
       "tb_lamp_negative",
       "not_done",
     ])
-    // .default("not_done")
     .when("lab_smear_microscopy_result_result_1", {
       is: "not_done",
       otherwise: (schema) =>
         schema.default("not_done").required("Field is required"),
     }),
   lab_smear_microscopy_result_date: yup
-    .date()
+    .string()
+    .default("")
+    .typeError("Field is required")
     .when("lab_smear_microscopy_result_result_1", {
       is: "not_done",
-      otherwise: (schema) => schema.required("Field is required"),
+      otherwise: () => yup.date().required("Field is required"),
     }),
   lab_smear_microscopy_result_done_by: yup
     .string()
+    .default("")
     .when("lab_smear_microscopy_result_result_1", {
       is: "not_done",
       otherwise: (schema) => schema.required("Field is required"),
@@ -57,28 +59,34 @@ export const LAB_RESULTS_SCHEMA = yup.object({
     .required("Field is required"),
   lab_xpert_mtb_rif_assay_grades: yup
     .string()
-    .oneOf(["high", "medium", "low", "very_low"])
+    .default("")
     .when("lab_xpert_mtb_rif_assay_result", {
       is: "detected",
       then: (schema) =>
-        schema.default("very_low").required("Field is required"),
+        schema
+          .oneOf(["high", "medium", "low", "very_low"])
+          .default("very_low")
+          .required("Field is required"),
     }),
   lab_xpert_mtb_rif_assay_rif_result: yup
     .string()
+    .default("not_done")
     .oneOf(["detected", "indeterminate", "not_detected", "not_done"])
     .when("lab_xpert_mtb_rif_assay_result", {
       is: "detected",
-      then: (schema) =>
-        schema.default("not_done").required("Field is required"),
+      then: (schema) => schema.required("Field is required"),
     }),
   lab_xpert_mtb_rif_assay_date: yup
-    .date()
+    .string()
+    .default("")
+    .typeError("Field is required")
     .when("lab_xpert_mtb_rif_assay_result", {
       is: "not_done",
-      otherwise: (schema) => schema.required("Field is required"),
+      otherwise: () => yup.date().required("Field is required"),
     }),
   lab_xpert_mtb_rif_assay_done_by: yup
     .string()
+    .default("")
     .when("lab_xpert_mtb_rif_assay_result", {
       is: "not_done",
       otherwise: (schema) => schema.required("Field is required"),
@@ -88,12 +96,19 @@ export const LAB_RESULTS_SCHEMA = yup.object({
     .oneOf(["negative", "positive", "error_invalid", "not_done"])
     .default("not_done")
     .required("Field is required"),
-  lab_urine_lf_lam_date: yup.date().when("lab_urine_lf_lam_result", {
-    is: "not_done",
-    otherwise: (schema) => schema.required("Field is required"),
-  }),
-  lab_urine_lf_lam_done_by: yup.string().when("lab_urine_lf_lam_result", {
-    is: "not_done",
-    otherwise: (schema) => schema.required("Field is required"),
-  }),
+  lab_urine_lf_lam_date: yup
+    .string()
+    .default("")
+    .typeError("Field is required")
+    .when("lab_urine_lf_lam_result", {
+      is: "not_done",
+      otherwise: () => yup.date().required("Field is required"),
+    }),
+  lab_urine_lf_lam_done_by: yup
+    .string()
+    .default("")
+    .when("lab_urine_lf_lam_result", {
+      is: "not_done",
+      otherwise: (schema) => schema.required("Field is required"),
+    }),
 });

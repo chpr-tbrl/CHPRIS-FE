@@ -41,6 +41,7 @@ const OutcomeRecorded = () => {
     handleSubmit,
     formState: { errors },
   } = useForm({
+    defaultValues: OUTCOME_RECORDED_SCHEMA.cast(),
     resolver: yupResolver(OUTCOME_RECORDED_SCHEMA),
   });
 

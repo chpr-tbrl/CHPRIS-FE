@@ -40,7 +40,9 @@ const Records = () => {
     isLoading,
     isFetching,
     refetch,
-  } = useGetRecordsQuery();
+  } = useGetRecordsQuery(null, {
+    refetchOnMountOrArgChange: true,
+  });
 
   function showActions(record) {
     dispatch(saveRecord(record));
