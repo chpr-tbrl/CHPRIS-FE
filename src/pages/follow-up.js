@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { PageHeader, Spacer, TabBar } from "components";
+import { PageHeader, Spacer, TabBar, DatePicker } from "components";
 import {
   Stack,
   Form,
@@ -12,8 +12,6 @@ import {
   Checkbox,
   Accordion,
   AccordionItem,
-  DatePicker,
-  DatePickerInput,
   InlineLoading,
   FormLabel,
   TextArea,
@@ -24,21 +22,31 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { FOLLOW_UP_SCHEMA } from "schemas";
 import { recordSelector } from "features";
 import { useSelector } from "react-redux";
-import { useNewFollowUpMutation, useGetFollowUpsQuery } from "services";
+import {
+  useGetFollowUpsQuery,
+  useNewFollowUpMutation,
+  useUpdateFollowUpMutation,
+} from "services";
 import { useNavigate } from "react-router-dom";
-import { handleSetValue } from "utils";
 import toast from "react-hot-toast";
 
 const FollowUP = () => {
   const record = useSelector(recordSelector);
   const navigate = useNavigate();
-  const [newFollowUp, { isLoading }] = useNewFollowUpMutation();
-  const { data: followUps = [], isLoading: fetchingfollowUps } =
-    useGetFollowUpsQuery(record.record_id);
+  const [newFollowUp, { isLoading: isCreating }] = useNewFollowUpMutation();
+  const [updateFollowUp, { isLoading: isUpdating }] =
+    useUpdateFollowUpMutation();
+  const {
+    data: followUps = [],
+    isFetching,
+    refetch,
+  } = useGetFollowUpsQuery(record.record_id);
+
+  const isUpdate = followUps[0]?.follow_up_id ? true : false;
 
   const {
     reset,
-    setValue,
+    control,
     register,
     handleSubmit,
     formState: { errors },
@@ -52,7 +60,7 @@ const FollowUP = () => {
     }
   }, [followUps, reset]);
 
-  async function handleFollowUpRecording(data) {
+  async function handleFollowUpCreation(data) {
     const request = {
       ...data,
       record_id: record.record_id,
@@ -66,7 +74,17 @@ const FollowUP = () => {
     }
   }
 
-  if (fetchingfollowUps) return <Loading />;
+  async function handleFollowUpdate(data) {
+    try {
+      await updateFollowUp(data).unwrap();
+      toast.success("Follow up updated");
+      refetch();
+    } catch (error) {
+      // we handle errors with middleware
+    }
+  }
+
+  if (isFetching) return <Loading />;
 
   return (
     <FlexGrid fullWidth className="page">
@@ -89,7 +107,13 @@ const FollowUP = () => {
           </div>
         </Stack>
         <Spacer h={7} />
-        <Form onSubmit={handleSubmit(handleFollowUpRecording)}>
+        <Form
+          onSubmit={
+            isUpdate
+              ? handleSubmit(handleFollowUpdate)
+              : handleSubmit(handleFollowUpCreation)
+          }
+        >
           <Stack gap={7}>
             <Accordion>
               <AccordionItem
@@ -134,20 +158,12 @@ const FollowUP = () => {
             />
 
             <DatePicker
-              datePickerType="single"
-              maxDate={new Date()}
-              onChange={(evt) => {
-                handleSetValue("follow_up_schedule_date", evt[0], setValue);
-              }}
-            >
-              <DatePickerInput
-                placeholder="mm/dd/yyyy"
-                labelText="Date"
-                id="follow_up_schedule_date"
-                invalid={errors.follow_up_schedule_date ? true : false}
-                invalidText={errors.follow_up_schedule_date?.message}
-              />
-            </DatePicker>
+              control={control}
+              labelText="Date"
+              id="follow_up_schedule_date"
+              invalid={errors.follow_up_schedule_date ? true : false}
+              invalidText={errors.follow_up_schedule_date?.message}
+            />
 
             <TextArea
               labelText="Comments"
@@ -158,15 +174,15 @@ const FollowUP = () => {
               invalidText={errors.follow_up_comments?.message}
             />
 
-            {!isLoading ? (
-              <Button kind="primary" type="submit">
-                Save
+            {!isCreating || isUpdating ? (
+              <Button kind={isUpdate ? "secondary" : "primary"} type="submit">
+                {isUpdate ? "Update" : "Save"}
               </Button>
             ) : (
               <InlineLoading
                 status="active"
                 iconDescription="Active loading indicator"
-                description="processing ..."
+                description="Loading data..."
               />
             )}
           </Stack>

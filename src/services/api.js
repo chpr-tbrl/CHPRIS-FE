@@ -78,6 +78,13 @@ export const API = createApi({
         body: data,
       }),
     }),
+    updateFollowUp: builder.mutation({
+      query: (data) => ({
+        url: `/follow_ups/${data.follow_up_id}`,
+        method: "PUT",
+        body: data,
+      }),
+    }),
     getFollowUps: builder.query({
       query: (id) => ({
         url: `/records/${id}/follow_ups`,
@@ -163,6 +170,7 @@ export const {
   useNewLabResultMutation,
   useGetFollowUpsQuery,
   useNewFollowUpMutation,
+  useUpdateFollowUpMutation,
   useGetOutcomesQuery,
   useNewOutcomeMutation,
   useUpdateProfileMutation,
