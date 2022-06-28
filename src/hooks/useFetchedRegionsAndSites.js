@@ -1,5 +1,5 @@
 import PropTypes from "prop-types";
-import { useState, useMemo } from "react";
+import { useState, useMemo, useCallback } from "react";
 import { useSelector } from "react-redux";
 import { accountSelector } from "features";
 import { getRegions, getSites } from "utils";
@@ -15,18 +15,24 @@ export const useFetchedRegionsAndSites = (setValue) => {
     return getSites(regionId, account.users_sites);
   }, [account, regionId]);
 
-  function selectRegion(id) {
-    setRegionId(id);
-    setValue("region_id", id, {
-      shouldValidate: true,
-    });
-  }
+  const selectRegion = useCallback(
+    (id) => {
+      setRegionId(id);
+      setValue("region_id", id, {
+        shouldValidate: true,
+      });
+    },
+    [setValue]
+  );
 
-  function selectSite(id) {
-    setValue("site_id", id, {
-      shouldValidate: true,
-    });
-  }
+  const selectSite = useCallback(
+    (id) => {
+      setValue("site_id", id, {
+        shouldValidate: true,
+      });
+    },
+    [setValue]
+  );
 
   return {
     regionId,

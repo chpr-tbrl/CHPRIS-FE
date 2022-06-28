@@ -18,7 +18,7 @@ export const NEW_RECORD_SCHEMA = yup.object({
   records_date_of_test_request: yup.date().required("Field is required"),
   records_address: yup.string().required("Field is required"),
   records_telephone: yup.string().required("Field is required"),
-  records_telephone_2: yup.string(),
+  records_telephone_2: yup.string().nullable(),
   records_has_art_unique_code: yup
     .string()
     .oneOf(["yes", "no", "unknown"])
@@ -27,6 +27,7 @@ export const NEW_RECORD_SCHEMA = yup.object({
   records_art_unique_code: yup
     .string()
     .default("")
+    .nullable()
     .when("records_has_art_unique_code", {
       is: "yes",
       then: (schema) => schema.required("Field is required"),
@@ -39,6 +40,7 @@ export const NEW_RECORD_SCHEMA = yup.object({
   records_ward_bed_number: yup
     .string()
     .default("")
+    .nullable()
     .when("records_status", {
       is: "ward-bed",
       then: (schema) => schema.required("Field is required"),
@@ -67,5 +69,5 @@ export const NEW_RECORD_SCHEMA = yup.object({
     .oneOf(["new", "relapse", "after_loss_to_follow_up", "failure"])
     .default("new")
     .required("Field is required"),
-  records_tb_treatment_history_contact_of_tb_patient: yup.string(),
+  records_tb_treatment_history_contact_of_tb_patient: yup.string().nullable(),
 });

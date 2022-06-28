@@ -44,6 +44,13 @@ export const API = createApi({
         method: "GET",
       }),
     }),
+    updateRecord: builder.mutation({
+      query: (data) => ({
+        url: `regions/${data.region_id}/sites/${data.site_id}/records/${data.record_id}`,
+        method: "PUT",
+        body: data,
+      }),
+    }),
     newSpecimen: builder.mutation({
       query: (data) => ({
         url: `/records/${data.record_id}/specimen_collections`,
@@ -201,6 +208,7 @@ export const {
   useNewFollowUpMutation,
   useUpdateFollowUpMutation,
   useGetOutcomesQuery,
+  useUpdateRecordMutation,
   useNewOutcomeMutation,
   useUpdateOutcomeMutation,
   useUpdateProfileMutation,

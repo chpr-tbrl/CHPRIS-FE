@@ -9,3 +9,4 @@ export * from "./TabBar";
 export * from "./Spacer";
 export * from "./PhoneNumberInput";
 export * from "./DatePicker";
+export * from "./ScrollToTop";

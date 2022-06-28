@@ -26,3 +26,8 @@ export function getSiteName(id, sites) {
   const site = sites.find((site) => site.id === id);
   return site ? site.name : "N/A";
 }
+
+export function getSelectedItem(data, id) {
+  const index = data.findIndex((item) => item.id === id);
+  return data[index];
+}
