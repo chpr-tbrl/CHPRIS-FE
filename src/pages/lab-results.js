@@ -1,5 +1,5 @@
 import React, { Fragment, useEffect } from "react";
-import { PageHeader, Spacer, TabBar } from "components";
+import { PageHeader, Spacer, TabBar, DatePicker } from "components";
 import {
   Stack,
   Form,
@@ -12,9 +12,7 @@ import {
   TextInput,
   RadioButton,
   RadioButtonGroup,
-  DatePicker,
   InlineLoading,
-  DatePickerInput,
 } from "@carbon/react";
 import { Hospital } from "@carbon/icons-react";
 import { useForm } from "react-hook-form";
@@ -22,21 +20,31 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { LAB_RESULTS_SCHEMA } from "schemas";
 import { useSelector } from "react-redux";
 import { recordSelector } from "features";
-import { useNewLabResultMutation, useGetLabResultsQuery } from "services";
+import {
+  useGetLabResultsQuery,
+  useNewLabResultMutation,
+  useUpdateLabResultMutation,
+} from "services";
 import { useNavigate } from "react-router-dom";
-import { handleSetValue } from "utils";
 import toast from "react-hot-toast";
 
 const LabResults = () => {
   const record = useSelector(recordSelector);
   const navigate = useNavigate();
-  const [newLabResult, { isLoading }] = useNewLabResultMutation();
-  const { data: results = [], isLoading: fetchingResults } =
-    useGetLabResultsQuery(record.record_id);
+  const [newLabResult, { isLoading: isCreating }] = useNewLabResultMutation();
+  const [updateLabResult, { isLoading: isUpdating }] =
+    useUpdateLabResultMutation();
+  const {
+    data: results = [],
+    isFetching,
+    refetch,
+  } = useGetLabResultsQuery(record.record_id);
+  const isUpdate = results[0]?.lab_id ? true : false;
 
   const {
     reset,
     watch,
+    control,
     setValue,
     register,
     handleSubmit,
@@ -57,7 +65,7 @@ const LabResults = () => {
     }
   }, [results, reset]);
 
-  async function handleResultRecording(data) {
+  async function handleResultCreation(data) {
     const request = {
       ...data,
       record_id: record.record_id,
@@ -72,7 +80,17 @@ const LabResults = () => {
     }
   }
 
-  if (fetchingResults) return <Loading />;
+  async function handleResultUpdate(data) {
+    try {
+      await updateLabResult(data).unwrap();
+      toast.success("Lab result updated");
+      refetch();
+    } catch (error) {
+      // we handle errors with middleware
+    }
+  }
+
+  if (isFetching) return <Loading />;
 
   return (
     <FlexGrid fullWidth className="page">
@@ -95,31 +113,24 @@ const LabResults = () => {
           </div>
         </Stack>
         <Spacer h={7} />
-        <Form onSubmit={handleSubmit(handleResultRecording)}>
+        <Form
+          onSubmit={
+            isUpdate
+              ? handleSubmit(handleResultUpdate)
+              : handleSubmit(handleResultCreation)
+          }
+        >
           <Stack gap={7}>
             <DatePicker
-              datePickerType="single"
-              maxDate={new Date()}
-              onChange={(evt) => {
-                handleSetValue(
-                  "lab_date_specimen_collection_received",
-                  evt[0],
-                  setValue
-                );
-              }}
-            >
-              <DatePickerInput
-                placeholder="mm/dd/yyyy"
-                labelText="Date"
-                id="lab_date_specimen_collection_received"
-                invalid={
-                  errors.lab_date_specimen_collection_received ? true : false
-                }
-                invalidText={
-                  errors.lab_date_specimen_collection_received?.message
-                }
-              />
-            </DatePicker>
+              control={control}
+              id="lab_date_specimen_collection_received"
+              invalid={
+                errors.lab_date_specimen_collection_received ? true : false
+              }
+              invalidText={
+                errors.lab_date_specimen_collection_received?.message
+              }
+            />
 
             <TextInput
               id="lab_received_by"
@@ -205,28 +216,16 @@ const LabResults = () => {
                     </RadioButtonGroup>
 
                     <DatePicker
-                      datePickerType="single"
-                      maxDate={new Date()}
-                      onChange={(evt) => {
-                        handleSetValue(
-                          "lab_smear_microscopy_result_date",
-                          evt[0],
-                          setValue
-                        );
-                      }}
-                    >
-                      <DatePickerInput
-                        placeholder="mm/dd/yyyy"
-                        labelText="Date"
-                        id="lab_smear_microscopy_result_date"
-                        invalid={
-                          errors.lab_smear_microscopy_result_date ? true : false
-                        }
-                        invalidText={
-                          errors.lab_smear_microscopy_result_date?.message
-                        }
-                      />
-                    </DatePicker>
+                      control={control}
+                      labelText="Date"
+                      id="lab_smear_microscopy_result_date"
+                      invalid={
+                        errors.lab_smear_microscopy_result_date ? true : false
+                      }
+                      invalidText={
+                        errors.lab_smear_microscopy_result_date?.message
+                      }
+                    />
 
                     <TextInput
                       id="lab_smear_microscopy_result_done_by"
@@ -325,28 +324,14 @@ const LabResults = () => {
                 {MTBResult !== "not_done" && (
                   <Fragment>
                     <DatePicker
-                      datePickerType="single"
-                      maxDate={new Date()}
-                      onChange={(evt) => {
-                        handleSetValue(
-                          "lab_xpert_mtb_rif_assay_date",
-                          evt[0],
-                          setValue
-                        );
-                      }}
-                    >
-                      <DatePickerInput
-                        placeholder="mm/dd/yyyy"
-                        labelText="Date"
-                        id="lab_xpert_mtb_rif_assay_date"
-                        invalid={
-                          errors.lab_xpert_mtb_rif_assay_date ? true : false
-                        }
-                        invalidText={
-                          errors.lab_xpert_mtb_rif_assay_date?.message
-                        }
-                      />
-                    </DatePicker>
+                      control={control}
+                      labelText="Date"
+                      id="lab_xpert_mtb_rif_assay_date"
+                      invalid={
+                        errors.lab_xpert_mtb_rif_assay_date ? true : false
+                      }
+                      invalidText={errors.lab_xpert_mtb_rif_assay_date?.message}
+                    />
 
                     <TextInput
                       id="lab_xpert_mtb_rif_assay_done_by"
@@ -387,24 +372,12 @@ const LabResults = () => {
                 {isLFDone && (
                   <Fragment>
                     <DatePicker
-                      datePickerType="single"
-                      maxDate={new Date()}
-                      onChange={(evt) => {
-                        handleSetValue(
-                          "lab_urine_lf_lam_date",
-                          evt[0],
-                          setValue
-                        );
-                      }}
-                    >
-                      <DatePickerInput
-                        placeholder="mm/dd/yyyy"
-                        labelText="Date"
-                        id="lab_urine_lf_lam_date"
-                        invalid={errors.lab_urine_lf_lam_date ? true : false}
-                        invalidText={errors.lab_urine_lf_lam_date?.message}
-                      />
-                    </DatePicker>
+                      control={control}
+                      labelText="Date"
+                      id="lab_urine_lf_lam_date"
+                      invalid={errors.lab_urine_lf_lam_date ? true : false}
+                      invalidText={errors.lab_urine_lf_lam_date?.message}
+                    />
 
                     <TextInput
                       id="lab_urine_lf_lam_done_by"
@@ -418,15 +391,15 @@ const LabResults = () => {
               </Stack>
             </FormGroup>
 
-            {!isLoading ? (
-              <Button kind="primary" type="submit">
-                Save
+            {!isCreating || isUpdating ? (
+              <Button kind={isUpdate ? "secondary" : "primary"} type="submit">
+                {isUpdate ? "Update" : "Save"}
               </Button>
             ) : (
               <InlineLoading
                 status="active"
                 iconDescription="Active loading indicator"
-                description="processing ..."
+                description="Loading data..."
               />
             )}
           </Stack>

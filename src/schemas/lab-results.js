@@ -41,6 +41,7 @@ export const LAB_RESULTS_SCHEMA = yup.object({
     .string()
     .default("")
     .typeError("Field is required")
+    .nullable()
     .when("lab_smear_microscopy_result_result_1", {
       is: "not_done",
       otherwise: () => yup.date().required("Field is required"),
@@ -80,6 +81,7 @@ export const LAB_RESULTS_SCHEMA = yup.object({
     .string()
     .default("")
     .typeError("Field is required")
+    .nullable()
     .when("lab_xpert_mtb_rif_assay_result", {
       is: "not_done",
       otherwise: () => yup.date().required("Field is required"),
@@ -100,6 +102,7 @@ export const LAB_RESULTS_SCHEMA = yup.object({
     .string()
     .default("")
     .typeError("Field is required")
+    .nullable()
     .when("lab_urine_lf_lam_result", {
       is: "not_done",
       otherwise: () => yup.date().required("Field is required"),
