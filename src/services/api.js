@@ -33,9 +33,10 @@ export const API = createApi({
       }),
     }),
     getRecords: builder.query({
-      query: () => ({
+      query: (params) => ({
         url: "/records",
         method: "GET",
+        params
       }),
     }),
     getRecord: builder.query({

@@ -197,3 +197,13 @@ footer {
     text-align: center;
   }
 }
+
+.search--container {
+  display: flex;
+  .search--option {
+    flex-grow: 1;
+    @include grid.breakpoint(lg) {
+      width: 10rem;
+    }
+  }
+}

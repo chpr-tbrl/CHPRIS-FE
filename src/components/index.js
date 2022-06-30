@@ -11,3 +11,4 @@ export * from "./PhoneNumberInput";
 export * from "./DatePicker";
 export * from "./ScrollToTop";
 export * from "./Footer";
+export * from "./SearchBar";
