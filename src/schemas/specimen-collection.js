@@ -13,6 +13,12 @@ export const SPECIMEN_COLLECTION_SCHEMA = yup.object({
       "lymph_node_aspirate",
       "gastric_aspirate",
       "urine",
+      "abscess",
+      "bronchoalveolar_aspirate",
+      "isolate_from_sputum",
+      "isolate_from_specimen_not_sputum",
+      "pleural_fluid",
+      "unk_unknown",
       "other",
     ])
     .default("sputum")
@@ -54,7 +60,13 @@ export const SPECIMEN_COLLECTION_SCHEMA = yup.object({
       "lymph_node_aspirate",
       "gastric_aspirate",
       "urine",
-      "other",
+      "abscess",
+      "bronchoalveolar_aspirate",
+      "isolate_from_sputum",
+      "isolate_from_specimen_not_sputum",
+      "pleural_fluid",
+      "unk_unknown",
+      "other"
     ])
     .default("sputum")
     .required("Field is required"),
