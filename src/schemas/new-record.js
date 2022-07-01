@@ -12,8 +12,8 @@ export const NEW_RECORD_SCHEMA = yup.object({
   records_name: yup.string().required("Field is required"),
   records_sex: yup
     .string()
-    .oneOf(["male", "female"])
-    .default("female")
+    .oneOf(["male", "female", "unknown"])
+    .default("unknown")
     .required("Field is required"),
   records_date_of_test_request: yup.date().required("Field is required"),
   records_address: yup.string().required("Field is required"),
@@ -55,6 +55,15 @@ export const NEW_RECORD_SCHEMA = yup.object({
   records_symptoms_night_sweats: yup.bool(),
   records_symptoms_weight_loss: yup.bool(),
   records_symptoms_none_of_the_above: yup.bool(),
+  records_tb_type: yup
+    .string()
+    .oneOf([
+      "pulmonary",
+      "extrapulmonary",
+      "pulmonary_and_extrapulmonary",
+      "unknown",
+    ])
+    .default("unknown"),
   records_patient_category_hospitalized: yup.bool(),
   records_patient_category_child: yup.bool(),
   records_patient_category_to_initiate_art: yup.bool(),
@@ -66,8 +75,24 @@ export const NEW_RECORD_SCHEMA = yup.object({
   records_reason_for_test_presumptive_tb: yup.bool(),
   records_tb_treatment_history: yup
     .string()
-    .oneOf(["new", "relapse", "after_loss_to_follow_up", "failure"])
-    .default("new")
+    .oneOf([
+      "new",
+      "after_loss_to_follow_up",
+      "relapse_after_retreatment_regimen",
+      "failure_after_retreatment_regimen",
+      "default_after_retreatment_regimen",
+      "currently_on_mdr_regimen",
+      "relapse_after_mdr_regimen",
+      "failure_after_mdr_regimen",
+      "default_after_mdr_regimen",
+      "mdr_tb_contact",
+      "prisoner_tb_treatment_history_unknown",
+      "unknown",
+      "other",
+    ])
+    .default("unknown")
     .required("Field is required"),
   records_tb_treatment_history_contact_of_tb_patient: yup.string().nullable(),
+  records_tb_treatment_number: yup.string(),
+  records_sms_notifications: yup.bool().default(false),
 });
