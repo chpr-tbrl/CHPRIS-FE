@@ -19,7 +19,14 @@ export const DatePicker = ({ id, control, ...rest }) => {
       options={{ maxDate: new Date() }}
       render={(props, ref) => {
         return (
-          <TextInput id={id} {...props} ref={ref} placeholder="yyyy-mm-dd" />
+          <TextInput
+            id={id}
+            {...props}
+            ref={ref}
+            aria-label="date"
+            placeholder="yyyy-mm-dd"
+            labelText=""
+          />
         );
       }}
     />
