@@ -105,7 +105,7 @@ const NewRecord = () => {
             <RadioButtonGroup
               legendText="Sex"
               name="records_sex"
-              defaultSelected="female"
+              defaultSelected="unknown"
               onChange={(evt) =>
                 setValue("records_sex", evt, {
                   shouldValidate: true,
@@ -114,11 +114,12 @@ const NewRecord = () => {
             >
               <RadioButton labelText="Female" value="female" id="female" />
               <RadioButton labelText="Male" value="male" id="male" />
+              <RadioButton labelText="Unkown" value="unknown" id="unknown" />
             </RadioButtonGroup>
 
             <DatePicker
               datePickerType="single"
-              maxDate={new Date()}
+              maxDate={new Date().toString()}
               onChange={(evt) => {
                 handleSetValue(
                   "records_date_of_test_request",
@@ -258,6 +259,35 @@ const NewRecord = () => {
               />
             </FormGroup>
 
+            <RadioButtonGroup
+              legendText="TB type"
+              name="records_tb_type"
+              orientation="vertical"
+              defaultSelected="unknown"
+              onChange={(evt) =>
+                setValue("records_tb_type", evt, {
+                  shouldValidate: true,
+                })
+              }
+            >
+              <RadioButton
+                labelText="Pulmonary"
+                id="pulmonary"
+                value="pulmonary"
+              />
+              <RadioButton
+                labelText=" Extrapulmonary"
+                id="extrapulmonary"
+                value="extrapulmonary"
+              />
+              <RadioButton
+                labelText="Pulmonary and Extrapulmonary"
+                id="pulmonary_and_extrapulmonary"
+                value="pulmonary_and_extrapulmonary"
+              />
+              <RadioButton labelText="Unknown" id="unknown" value="unknown" />
+            </RadioButtonGroup>
+
             <FormGroup legendText="Patient Category">
               <Checkbox
                 labelText="Hospitalized (HOS)"
@@ -312,7 +342,7 @@ const NewRecord = () => {
             </FormGroup>
 
             <FormGroup legendText="TB Treatment history">
-              <Stack gap={4}>
+              <Stack gap={5}>
                 <RadioButtonGroup
                   legendText=""
                   name="tth"
@@ -327,25 +357,72 @@ const NewRecord = () => {
                     value="new"
                     id="new"
                   />
-                  <RadioButton
+                  {/* <RadioButton
                     labelText="Relapse (completed previous TB Rx)"
                     value="relapse"
                     id="relapse"
-                  />
+                  /> */}
                   <RadioButton
                     labelText="After loss to follow up(>= 2 months of Tx interruption)"
                     value="after_loss_to_follow_up"
                     id="after_loss_to_follow_up"
                   />
-                  <RadioButton
+                  {/* <RadioButton
                     labelText="Failure (2 smears AFB positive at >= 5 months on Rx)"
                     value="failure"
                     id="failure"
+                  /> */}
+                  <RadioButton
+                    labelText="Relapse after retreatment regimen"
+                    id="relapse_after_retreatment_regimen"
+                    value="relapse_after_retreatment_regimen"
                   />
+                  <RadioButton
+                    labelText="Failure after retreatment regimen"
+                    id="failure_after_retreatment_regimen"
+                    value="failure_after_retreatment_regimen"
+                  />
+                  <RadioButton
+                    labelText="Default after retreatment regimen"
+                    id="default_after_retreatment_regimen"
+                    value="default_after_retreatment_regimen"
+                  />
+                  <RadioButton
+                    labelText="Currently on MDR regimen"
+                    id="currently_on_mdr_regimen"
+                    value="currently_on_mdr_regimen"
+                  />
+                  <RadioButton
+                    labelText="Relapse after MDR regimen"
+                    id="relapse_after_mdr_regimen"
+                    value="relapse_after_mdr_regimen"
+                  />
+                  <RadioButton
+                    labelText="Failure after MDR regimen"
+                    id="failure_after_mdr_regimen"
+                    value="failure_after_mdr_regimen"
+                  />
+                  <RadioButton
+                    labelText="Default after MDR regimen"
+                    id="default_after_mdr_regimen"
+                    value="default_after_mdr_regimen"
+                  />
+                  <RadioButton
+                    labelText="MDR-TB Contact"
+                    id="mdr_tb_contact"
+                    value="mdr_tb_contact"
+                  />
+                  <RadioButton
+                    labelText="Prisoner, TB treatment history unknown"
+                    id="prisoner_tb_treatment_history_unknown"
+                    value="prisoner_tb_treatment_history_unknown"
+                  />
+                  <RadioButton labelText="Unknown" id="unknown" value="unknown" />
+                  <RadioButton labelText="Other" id="other" value="other" />
                 </RadioButtonGroup>
-                <Checkbox labelText="contact of TB patient" id="contact" />
+
                 <TextInput
-                  labelText="Other"
+                  labelText="Contact of TB patient"
                   id="records_tb_treatment_history_contact_of_tb_patient"
                   {...register(
                     "records_tb_treatment_history_contact_of_tb_patient"
@@ -353,6 +430,14 @@ const NewRecord = () => {
                 />
               </Stack>
             </FormGroup>
+
+            <TextInput
+              id="records_tb_treatment_number"
+              labelText="TB treatment number"
+              {...register("records_tb_treatment_number")}
+              invalid={errors.records_tb_treatment_number ? true : false}
+              invalidText={errors.records_tb_treatment_number?.message}
+            />
 
             <FormGroup legendText="Community">
               <Stack gap={7}>
@@ -378,6 +463,14 @@ const NewRecord = () => {
                   onChange={(evt) => selectSite(evt.selectedItem.id)}
                 />
               </Stack>
+            </FormGroup>
+
+            <FormGroup legendText="SMS notifications">
+              <Checkbox
+                labelText="Do you want to be notified when results are ready by an automated SMS message"
+                id="records_sms_notifications"
+                {...register("records_sms_notifications")}
+              />
             </FormGroup>
 
             {!isLoading ? (
