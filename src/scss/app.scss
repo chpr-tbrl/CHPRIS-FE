@@ -188,6 +188,14 @@ form {
     font-size: type.type-scale(3);
     margin-bottom: layout.$spacing-04;
   }
+  .form--group__description {
+    font-size: type.type-scale(2);
+  }
+  .indented--group {
+    @include grid.breakpoint(lg) {
+      margin-left: layout.rem(18px);
+    }
+  }
 }
 
 footer {
@@ -203,7 +211,7 @@ footer {
   .search--option {
     flex-grow: 1;
     @include grid.breakpoint(lg) {
-      width: 10rem;
+      width: layout.rem(160px);
     }
   }
 }
