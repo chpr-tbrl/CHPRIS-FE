@@ -11,6 +11,8 @@ import {
   InlineLoading,
   PasswordInput,
   DropdownSkeleton,
+  RadioButtonGroup,
+  RadioButton,
   InlineNotification,
   Modal,
 } from "@carbon/react";
@@ -188,6 +190,24 @@ const Signup = () => {
                   invalid={errors.confirm_password ? true : false}
                   invalidText={errors.confirm_password?.message}
                 />
+
+                <RadioButtonGroup
+                  legendText="SMS notification type"
+                  name="sms_notifications_type"
+                  defaultSelected="all"
+                  onChange={(evt) =>
+                    setValue("sms_notifications_type", evt, {
+                      shouldValidate: true,
+                    })
+                  }
+                >
+                  <RadioButton labelText="all" value="all" id="all" />
+                  <RadioButton
+                    labelText="negative"
+                    value="negative"
+                    id="negative"
+                  />
+                </RadioButtonGroup>
               </Stack>
             </FormGroup>
 

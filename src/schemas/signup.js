@@ -19,4 +19,10 @@ export const sIGNUP_SCHEMA = yup.object({
   occupation: yup.string().required("please enter your occupation"),
   site_id: yup.number().required("please please select a site"),
   region_id: yup.number().required("please select a region"),
+  sms_notifications_type: yup
+    .string()
+    .oneOf(["all", "negative"])
+    .default("all")
+    .nullable()
+    .required("Field is required"),
 });
