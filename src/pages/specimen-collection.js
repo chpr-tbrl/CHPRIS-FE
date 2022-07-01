@@ -177,6 +177,36 @@ const SpecimenCollection = () => {
                             id="urine"
                           />
                           <RadioButton
+                            labelText="Abscess"
+                            id="abscess"
+                            value="abscess"
+                          />
+                          <RadioButton
+                            labelText="Bronchoalveolar aspirate"
+                            id="bronchoalveolar_aspirate"
+                            value="bronchoalveolar_aspirate"
+                          />
+                          <RadioButton
+                            labelText="Isolate from sputum"
+                            id="isolate_from_sputum"
+                            value="isolate_from_sputum"
+                          />
+                          <RadioButton
+                            labelText="Isolate from specimen not sputum"
+                            id="isolate_from_specimen_not_sputum"
+                            value="isolate_from_specimen_not_sputum"
+                          />
+                          <RadioButton
+                            labelText="Pleural fluid"
+                            id="pleural_fluid"
+                            value="pleural_fluid"
+                          />
+                          <RadioButton
+                            labelText="unknown"
+                            value="unk_unknown"
+                            id="unk_unknown"
+                          />
+                          <RadioButton
                             labelText="other"
                             value="other"
                             id="other"
