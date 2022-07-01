@@ -349,6 +349,372 @@ const LabResults = () => {
               </Stack>
             </FormGroup>
 
+            <FormGroup legendText="Culture">
+              <Stack gap={7}>
+                <RadioButtonGroup
+                  orientation="vertical"
+                  legendText="MGIT Culture"
+                  name="lab_culture_mgit_culture"
+                  defaultSelected={
+                    results[0]?.lab_culture_mgit_culture || "not_done"
+                  }
+                  onChange={(evt) => setValue("lab_culture_mgit_culture", evt)}
+                >
+                  <RadioButton labelText="NTM" value="ntm" />
+                  <RadioButton labelText="TBC" value="tbc" />
+                  <RadioButton labelText="Negative" value="negative" />
+                  <RadioButton labelText="Contaminated" value="contaminated" />
+                  <RadioButton labelText="Not done" value="not_done" />
+                </RadioButtonGroup>
+
+                <RadioButtonGroup
+                  orientation="vertical"
+                  legendText="LJ Culture"
+                  name="lab_culture_lj_culture"
+                  defaultSelected={
+                    results[0]?.lab_culture_lj_culture || "not_done"
+                  }
+                  onChange={(evt) => setValue("lab_culture_lj_culture", evt)}
+                >
+                  <RadioButton labelText="NTM" value="ntm" />
+                  <RadioButton labelText="TBC" value="tbc" />
+                  <RadioButton labelText="Negative" value="negative" />
+                  <RadioButton labelText="Contaminated" value="contaminated" />
+                  <RadioButton labelText="Not done" value="not_done" />
+                </RadioButtonGroup>
+              </Stack>
+            </FormGroup>
+
+            <FormGroup legendText="Line probe assay (LPA)">
+              <p className="form--group__description">
+                TB drug susceptibility testing (DST)
+              </p>
+              <br />
+              <Stack gap={7} className="indented--group">
+                <FormGroup legendText="First line LPA (MTBDRplus)">
+                  <Stack gap={6}>
+                    <RadioButtonGroup
+                      orientation="vertical"
+                      legendText="Isoniazid"
+                      name="lab_lpa_mtbdrplus_isoniazid"
+                      defaultSelected={results[0]?.lab_lpa_mtbdrplus_isoniazid}
+                      onChange={(evt) =>
+                        setValue("lab_lpa_mtbdrplus_isoniazid", evt)
+                      }
+                      invalid={
+                        errors.lab_lpa_mtbdrplus_isoniazid ? true : false
+                      }
+                      invalidText={errors.lab_lpa_mtbdrplus_isoniazid?.message}
+                    >
+                      <RadioButton labelText="resistant" value="resistant" />
+                      <RadioButton
+                        labelText="susceptible"
+                        value="susceptible"
+                      />
+                      <RadioButton
+                        labelText="indeterminate"
+                        value="indeterminate"
+                      />
+                    </RadioButtonGroup>
+
+                    <RadioButtonGroup
+                      orientation="vertical"
+                      legendText="Rifampin"
+                      name="lab_lpa_mtbdrplus_rifampin"
+                      defaultSelected={results[0]?.lab_lpa_mtbdrplus_rifampin}
+                      onChange={(evt) =>
+                        setValue("lab_lpa_mtbdrplus_rifampin", evt)
+                      }
+                      invalid={errors.lab_lpa_mtbdrplus_rifampin ? true : false}
+                      invalidText={errors.lab_lpa_mtbdrplus_rifampin?.message}
+                    >
+                      <RadioButton labelText="resistant" value="resistant" />
+                      <RadioButton
+                        labelText="susceptible"
+                        value="susceptible"
+                      />
+                      <RadioButton
+                        labelText="indeterminate"
+                        value="indeterminate"
+                      />
+                    </RadioButtonGroup>
+                  </Stack>
+                </FormGroup>
+
+                <FormGroup legendText="Second line LPA (MTBDRsl)">
+                  <Stack gap={6}>
+                    <RadioButtonGroup
+                      orientation="vertical"
+                      legendText="Flouoroquinolones"
+                      name="lab_lpa_mtbdrs_flouoroquinolones"
+                      defaultSelected={
+                        results[0]?.lab_lpa_mtbdrs_flouoroquinolones
+                      }
+                      onChange={(evt) =>
+                        setValue("lab_lpa_mtbdrs_flouoroquinolones", evt)
+                      }
+                      invalid={
+                        errors.lab_lpa_mtbdrs_flouoroquinolones ? true : false
+                      }
+                      invalidText={
+                        errors.lab_lpa_mtbdrs_flouoroquinolones?.message
+                      }
+                    >
+                      <RadioButton labelText="resistant" value="resistant" />
+                      <RadioButton
+                        labelText="susceptible"
+                        value="susceptible"
+                      />
+                      <RadioButton
+                        labelText="indeterminate"
+                        value="indeterminate"
+                      />
+                    </RadioButtonGroup>
+
+                    <RadioButtonGroup
+                      orientation="vertical"
+                      legendText="Kanamycin"
+                      name="lab_lpa_mtbdrs_kanamycin"
+                      defaultSelected={results[0]?.lab_lpa_mtbdrs_kanamycin}
+                      onChange={(evt) =>
+                        setValue("lab_lpa_mtbdrs_kanamycin", evt)
+                      }
+                      invalid={errors.lab_lpa_mtbdrs_kanamycin ? true : false}
+                      invalidText={errors.lab_lpa_mtbdrs_kanamycin?.message}
+                    >
+                      <RadioButton labelText="resistant" value="resistant" />
+                      <RadioButton
+                        labelText="susceptible"
+                        value="susceptible"
+                      />
+                      <RadioButton
+                        labelText="indeterminate"
+                        value="indeterminate"
+                      />
+                    </RadioButtonGroup>
+
+                    <RadioButtonGroup
+                      orientation="vertical"
+                      legendText="Amikacin"
+                      name="lab_lpa_mtbdrs_amikacin"
+                      defaultSelected={results[0]?.lab_lpa_mtbdrs_amikacin}
+                      onChange={(evt) =>
+                        setValue("lab_lpa_mtbdrs_amikacin", evt)
+                      }
+                      invalid={errors.lab_lpa_mtbdrs_amikacin ? true : false}
+                      invalidText={errors.lab_lpa_mtbdrs_amikacin?.message}
+                    >
+                      <RadioButton labelText="resistant" value="resistant" />
+                      <RadioButton
+                        labelText="susceptible"
+                        value="susceptible"
+                      />
+                      <RadioButton
+                        labelText="indeterminate"
+                        value="indeterminate"
+                      />
+                    </RadioButtonGroup>
+
+                    <RadioButtonGroup
+                      orientation="vertical"
+                      legendText="Capreomycin"
+                      name="lab_lpa_mtbdrs_capreomycin"
+                      defaultSelected={results[0]?.lab_lpa_mtbdrs_capreomycin}
+                      onChange={(evt) =>
+                        setValue("lab_lpa_mtbdrs_capreomycin", evt)
+                      }
+                      invalid={errors.lab_lpa_mtbdrs_capreomycin ? true : false}
+                      invalidText={errors.lab_lpa_mtbdrs_capreomycin?.message}
+                    >
+                      <RadioButton labelText="resistant" value="resistant" />
+                      <RadioButton
+                        labelText="susceptible"
+                        value="susceptible"
+                      />
+                      <RadioButton
+                        labelText="indeterminate"
+                        value="indeterminate"
+                      />
+                    </RadioButtonGroup>
+
+                    <RadioButtonGroup
+                      orientation="vertical"
+                      legendText="Low-level Kanamycin"
+                      name="lab_lpa_mtbdrs_low_level_kanamycin"
+                      defaultSelected={
+                        results[0]?.lab_lpa_mtbdrs_low_level_kanamycin
+                      }
+                      onChange={(evt) =>
+                        setValue("lab_lpa_mtbdrs_low_level_kanamycin", evt)
+                      }
+                      invalid={
+                        errors.lab_lpa_mtbdrs_low_level_kanamycin ? true : false
+                      }
+                      invalidText={
+                        errors.lab_lpa_mtbdrs_low_level_kanamycin?.message
+                      }
+                    >
+                      <RadioButton labelText="resistant" value="resistant" />
+                      <RadioButton
+                        labelText="susceptible"
+                        value="susceptible"
+                      />
+                      <RadioButton
+                        labelText="indeterminate"
+                        value="indeterminate"
+                      />
+                    </RadioButtonGroup>
+                  </Stack>
+                </FormGroup>
+              </Stack>
+            </FormGroup>
+
+            <FormGroup legendText="Proportion method drug susceptibility testing (DST) ">
+              <Stack gap={6} className="indented--group">
+                <RadioButtonGroup
+                  orientation="vertical"
+                  legendText="Isoniazid"
+                  name="lab_dst_isonazid"
+                  defaultSelected={results[0]?.lab_dst_isonazid}
+                  onChange={(evt) => setValue("lab_dst_isonazid", evt)}
+                  invalid={errors.lab_dst_isonazid ? true : false}
+                  invalidText={errors.lab_dst_isonazid?.message}
+                >
+                  <RadioButton labelText="resistant" value="resistant" />
+                  <RadioButton labelText="susceptible" value="susceptible" />
+                  <RadioButton
+                    labelText="indeterminate"
+                    value="indeterminate"
+                  />
+                </RadioButtonGroup>
+
+                <RadioButtonGroup
+                  orientation="vertical"
+                  legendText="Rifampin"
+                  name="lab_dst_rifampin"
+                  defaultSelected={results[0]?.lab_dst_rifampin}
+                  onChange={(evt) => setValue("lab_dst_rifampin", evt)}
+                  invalid={errors.lab_dst_rifampin ? true : false}
+                  invalidText={errors.lab_dst_rifampin?.message}
+                >
+                  <RadioButton labelText="resistant" value="resistant" />
+                  <RadioButton labelText="susceptible" value="susceptible" />
+                  <RadioButton
+                    labelText="indeterminate"
+                    value="indeterminate"
+                  />
+                </RadioButtonGroup>
+
+                <RadioButtonGroup
+                  orientation="vertical"
+                  legendText="Ethambutol"
+                  name="lab_dst_ethambutol"
+                  defaultSelected={results[0]?.lab_dst_ethambutol}
+                  onChange={(evt) => setValue("lab_dst_ethambutol", evt)}
+                  invalid={errors.lab_dst_ethambutol ? true : false}
+                  invalidText={errors.lab_dst_ethambutol?.message}
+                >
+                  <RadioButton labelText="resistant" value="resistant" />
+                  <RadioButton labelText="susceptible" value="susceptible" />
+                  <RadioButton
+                    labelText="indeterminate"
+                    value="indeterminate"
+                  />
+                </RadioButtonGroup>
+
+                <RadioButtonGroup
+                  orientation="vertical"
+                  legendText="Kanamycin"
+                  name="lab_dst_kanamycin"
+                  defaultSelected={results[0]?.lab_dst_kanamycin}
+                  onChange={(evt) => setValue("lab_dst_kanamycin", evt)}
+                  invalid={errors.lab_dst_kanamycin ? true : false}
+                  invalidText={errors.lab_dst_kanamycin?.message}
+                >
+                  <RadioButton labelText="resistant" value="resistant" />
+                  <RadioButton labelText="susceptible" value="susceptible" />
+                  <RadioButton
+                    labelText="indeterminate"
+                    value="indeterminate"
+                  />
+                </RadioButtonGroup>
+
+                <RadioButtonGroup
+                  orientation="vertical"
+                  legendText="Ofloxacin"
+                  name="lab_dst_ofloxacin"
+                  defaultSelected={results[0]?.lab_dst_ofloxacin}
+                  onChange={(evt) => setValue("lab_dst_ofloxacin", evt)}
+                  invalid={errors.lab_dst_ofloxacin ? true : false}
+                  invalidText={errors.lab_dst_ofloxacin?.message}
+                >
+                  <RadioButton labelText="resistant" value="resistant" />
+                  <RadioButton labelText="susceptible" value="susceptible" />
+                  <RadioButton
+                    labelText="indeterminate"
+                    value="indeterminate"
+                  />
+                </RadioButtonGroup>
+
+                <RadioButtonGroup
+                  orientation="vertical"
+                  legendText="LevofloxacineKanamycin"
+                  name="lab_dst_levofloxacinekanamycin"
+                  defaultSelected={results[0]?.lab_dst_levofloxacinekanamycin}
+                  onChange={(evt) =>
+                    setValue("lab_dst_levofloxacinekanamycin", evt)
+                  }
+                  invalid={errors.lab_dst_levofloxacinekanamycin ? true : false}
+                  invalidText={errors.lab_dst_levofloxacinekanamycin?.message}
+                >
+                  <RadioButton labelText="resistant" value="resistant" />
+                  <RadioButton labelText="susceptible" value="susceptible" />
+                  <RadioButton
+                    labelText="indeterminate"
+                    value="indeterminate"
+                  />
+                </RadioButtonGroup>
+
+                <RadioButtonGroup
+                  orientation="vertical"
+                  legendText="MoxifloxacineKanamycin"
+                  name="lab_dst_moxifloxacinekanamycin"
+                  defaultSelected={results[0]?.lab_dst_moxifloxacinekanamycin}
+                  onChange={(evt) =>
+                    setValue("lab_dst_moxifloxacinekanamycin", evt)
+                  }
+                  invalid={errors.lab_dst_moxifloxacinekanamycin ? true : false}
+                  invalidText={errors.lab_dst_moxifloxacinekanamycin?.message}
+                >
+                  <RadioButton labelText="resistant" value="resistant" />
+                  <RadioButton labelText="susceptible" value="susceptible" />
+                  <RadioButton
+                    labelText="indeterminate"
+                    value="indeterminate"
+                  />
+                </RadioButtonGroup>
+
+                <RadioButtonGroup
+                  orientation="vertical"
+                  legendText="AmikacineKanamycin"
+                  name="lab_dst_amikacinekanamycin"
+                  defaultSelected={results[0]?.lab_dst_amikacinekanamycin}
+                  onChange={(evt) =>
+                    setValue("lab_dst_amikacinekanamycin", evt)
+                  }
+                  invalid={errors.lab_dst_amikacinekanamycin ? true : false}
+                  invalidText={errors.lab_dst_amikacinekanamycin?.message}
+                >
+                  <RadioButton labelText="resistant" value="resistant" />
+                  <RadioButton labelText="susceptible" value="susceptible" />
+                  <RadioButton
+                    labelText="indeterminate"
+                    value="indeterminate"
+                  />
+                </RadioButtonGroup>
+              </Stack>
+            </FormGroup>
+
             <FormGroup legendText="Urine LF-LAM">
               <Stack gap={7}>
                 <RadioButtonGroup
