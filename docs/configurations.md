@@ -10,7 +10,7 @@ yarn install
 
 ## Configure environment variables
 
-Create development and production .env configuration files from the env.example template
+Create development and production .env configuration fiBelow are the defaultsles from the env.example template
 
 ```bash
 cp env.example .env.development.local
@@ -19,14 +19,16 @@ cp env.example .env.production.local
 
 ```
 
-The .env file(s) contains all modifiable variables for each environment. Below are the defaults
+**.env.development.local** is used in development environments and **.env.production.local** is used when creating production builds.
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app), which specifies variable naming conventions
+
+Below are the defaults
 
 - PORT -> development port
 - SASS_PATH -> location of sass files
 - REACT_APP_API_URL -> Backend API URL
-* REACT_APP_API_VERSION -> API version
+- REACT_APP_API_VERSION -> API version
 - HTTPS -> Enable or disable https
 - SSL_CRT_FILE -> Location of SSL CRT file
 - SSL_KEY_FILE -> Location of SSL Key file
@@ -45,11 +47,13 @@ You will also see any lint errors in the console.
 
 ## Create a production build
 
+Create an optimized production build that can be hosted on servers. This step uses the variables in **.env.production.local**
+
 ```bash
 yarn build
 ```
 
-Builds the app for production. Check the `build` folder for deployable files once complete.
+Check the `build` folder for deployable files once complete.
 
 ## Deployment
 
