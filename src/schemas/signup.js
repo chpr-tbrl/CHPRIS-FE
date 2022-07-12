@@ -21,8 +21,8 @@ export const sIGNUP_SCHEMA = yup.object({
   region_id: yup.number().required("please select a region"),
   sms_notifications_type: yup
     .string()
-    .oneOf(["all", "negative"])
-    .default("all")
+    .oneOf(["all", "positive"])
+    .default("positive")
     .nullable()
     .required("Field is required"),
 });

@@ -194,19 +194,19 @@ const Signup = () => {
                 <RadioButtonGroup
                   legendText="SMS notification type"
                   name="sms_notifications_type"
-                  defaultSelected="all"
+                  defaultSelected="positive"
                   onChange={(evt) =>
                     setValue("sms_notifications_type", evt, {
                       shouldValidate: true,
                     })
                   }
                 >
-                  <RadioButton labelText="all" value="all" id="all" />
                   <RadioButton
-                    labelText="negative"
-                    value="negative"
-                    id="negative"
+                    labelText="Positive"
+                    value="positive"
+                    id="positive"
                   />
+                  <RadioButton labelText="All" value="all" id="all" />
                 </RadioButtonGroup>
               </Stack>
             </FormGroup>
