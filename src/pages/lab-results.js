@@ -349,6 +349,48 @@ const LabResults = () => {
               </Stack>
             </FormGroup>
 
+            <FormGroup legendText="Urine LF-LAM">
+              <Stack gap={7}>
+                <RadioButtonGroup
+                  orientation="vertical"
+                  legendText=""
+                  name="lab_urine_lf_lam_result"
+                  defaultSelected={
+                    results[0]?.lab_urine_lf_lam_result || "not_done"
+                  }
+                  onChange={(evt) => setValue("lab_urine_lf_lam_result", evt)}
+                >
+                  <RadioButton labelText="Negative" value="negative" />
+                  <RadioButton labelText="Positive" value="positive" />
+                  <RadioButton
+                    labelText="Error/invalid"
+                    value="error_invalid"
+                  />
+                  <RadioButton labelText="Not done" value="not_done" />
+                </RadioButtonGroup>
+
+                {isLFDone && (
+                  <Fragment>
+                    <DatePicker
+                      control={control}
+                      labelText="Date"
+                      id="lab_urine_lf_lam_date"
+                      invalid={errors.lab_urine_lf_lam_date ? true : false}
+                      invalidText={errors.lab_urine_lf_lam_date?.message}
+                    />
+
+                    <TextInput
+                      id="lab_urine_lf_lam_done_by"
+                      labelText="Done by"
+                      {...register("lab_urine_lf_lam_done_by")}
+                      invalid={errors.lab_urine_lf_lam_done_by ? true : false}
+                      invalidText={errors.lab_urine_lf_lam_done_by?.message}
+                    />
+                  </Fragment>
+                )}
+              </Stack>
+            </FormGroup>
+
             <FormGroup legendText="Culture">
               <Stack gap={7}>
                 <RadioButtonGroup
@@ -712,48 +754,6 @@ const LabResults = () => {
                     value="indeterminate"
                   />
                 </RadioButtonGroup>
-              </Stack>
-            </FormGroup>
-
-            <FormGroup legendText="Urine LF-LAM">
-              <Stack gap={7}>
-                <RadioButtonGroup
-                  orientation="vertical"
-                  legendText=""
-                  name="lab_urine_lf_lam_result"
-                  defaultSelected={
-                    results[0]?.lab_urine_lf_lam_result || "not_done"
-                  }
-                  onChange={(evt) => setValue("lab_urine_lf_lam_result", evt)}
-                >
-                  <RadioButton labelText="Negative" value="negative" />
-                  <RadioButton labelText="Positive" value="positive" />
-                  <RadioButton
-                    labelText="Error/invalid"
-                    value="error_invalid"
-                  />
-                  <RadioButton labelText="Not done" value="not_done" />
-                </RadioButtonGroup>
-
-                {isLFDone && (
-                  <Fragment>
-                    <DatePicker
-                      control={control}
-                      labelText="Date"
-                      id="lab_urine_lf_lam_date"
-                      invalid={errors.lab_urine_lf_lam_date ? true : false}
-                      invalidText={errors.lab_urine_lf_lam_date?.message}
-                    />
-
-                    <TextInput
-                      id="lab_urine_lf_lam_done_by"
-                      labelText="Done by"
-                      {...register("lab_urine_lf_lam_done_by")}
-                      invalid={errors.lab_urine_lf_lam_done_by ? true : false}
-                      invalidText={errors.lab_urine_lf_lam_done_by?.message}
-                    />
-                  </Fragment>
-                )}
               </Stack>
             </FormGroup>
 
