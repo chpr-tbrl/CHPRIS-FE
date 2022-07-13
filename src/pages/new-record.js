@@ -469,9 +469,13 @@ const NewRecord = () => {
               </Stack>
             </FormGroup>
 
-            <TextInput labelText="Requester name" />
+            <FormGroup legendText="Requester">
+              <Stack gap={5}>
+                <TextInput labelText="Name" />
 
-            <TextInput labelText="Requester phone number" />
+                <TextInput labelText="Phone number" />
+              </Stack>
+            </FormGroup>
 
             <FormGroup legendText="SMS notifications">
               <Checkbox
