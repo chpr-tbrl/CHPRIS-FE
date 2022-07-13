@@ -27,6 +27,7 @@ import {
 } from "services";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
+import { getResultType } from "utils";
 
 const LabResults = () => {
   const record = useSelector(recordSelector);
@@ -38,7 +39,9 @@ const LabResults = () => {
     data: results = [],
     isFetching,
     refetch,
-  } = useGetLabResultsQuery(record.record_id);
+  } = useGetLabResultsQuery(record.record_id, {
+    refetchOnMountOrArgChange: true,
+  });
   const isUpdate = results[0]?.lab_id ? true : false;
 
   const {
@@ -69,8 +72,8 @@ const LabResults = () => {
     const request = {
       ...data,
       record_id: record.record_id,
+      lab_result_type: getResultType(data),
     };
-
     try {
       await newLabResult(request).unwrap();
       toast.success("Lab result recorded");
@@ -81,8 +84,13 @@ const LabResults = () => {
   }
 
   async function handleResultUpdate(data) {
+    const request = {
+      ...data,
+      lab_result_type: getResultType(data),
+    };
+
     try {
-      await updateLabResult(data).unwrap();
+      await updateLabResult(request).unwrap();
       toast.success("Lab result updated");
       refetch();
     } catch (error) {
@@ -396,6 +404,7 @@ const LabResults = () => {
                 <RadioButtonGroup
                   orientation="vertical"
                   legendText="MGIT Culture"
+                  id="lab_culture_mgit_culture"
                   name="lab_culture_mgit_culture"
                   defaultSelected={
                     results[0]?.lab_culture_mgit_culture || "not_done"
