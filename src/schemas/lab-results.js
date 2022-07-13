@@ -3,7 +3,8 @@ import * as yup from "yup";
 export const LAB_RESULTS_SCHEMA = yup.object({
   lab_date_specimen_collection_received: yup
     .date()
-    .required("Field is required"),
+    .required("Field is required")
+    .typeError("Field is required"),
   lab_received_by: yup.string().required("Field is required"),
   lab_registration_number: yup.string().required("Field is required"),
   lab_smear_microscopy_result_result_1: yup
@@ -39,12 +40,17 @@ export const LAB_RESULTS_SCHEMA = yup.object({
     }),
   lab_smear_microscopy_result_date: yup
     .string()
-    .default("")
-    .typeError("Field is required")
     .nullable()
+    .default("")
     .when("lab_smear_microscopy_result_result_1", {
       is: "not_done",
-      otherwise: () => yup.date().required("Field is required"),
+      otherwise: () =>
+        yup
+          .date()
+          .nullable()
+          .required("Field is required")
+          .typeError("Field is required")
+          .transform((v) => (v instanceof Date && !isNaN(v) ? v : null)),
     }),
   lab_smear_microscopy_result_done_by: yup
     .string()
@@ -79,12 +85,17 @@ export const LAB_RESULTS_SCHEMA = yup.object({
     }),
   lab_xpert_mtb_rif_assay_date: yup
     .string()
-    .default("")
-    .typeError("Field is required")
     .nullable()
+    .default("")
     .when("lab_xpert_mtb_rif_assay_result", {
       is: "not_done",
-      otherwise: () => yup.date().required("Field is required"),
+      otherwise: () =>
+        yup
+          .date()
+          .nullable()
+          .required("Field is required")
+          .typeError("Field is required")
+          .transform((v) => (v instanceof Date && !isNaN(v) ? v : null)),
     }),
   lab_xpert_mtb_rif_assay_done_by: yup
     .string()
@@ -199,7 +210,13 @@ export const LAB_RESULTS_SCHEMA = yup.object({
     .nullable()
     .when("lab_urine_lf_lam_result", {
       is: "not_done",
-      otherwise: () => yup.date().required("Field is required"),
+      otherwise: () =>
+        yup
+          .date()
+          .nullable()
+          .required("Field is required")
+          .typeError("Field is required")
+          .transform((v) => (v instanceof Date && !isNaN(v) ? v : null)),
     }),
   lab_urine_lf_lam_done_by: yup
     .string()
