@@ -38,7 +38,9 @@ const SpecimenCollection = () => {
     data: specimens = [],
     isFetching,
     refetch,
-  } = useGetSpecimensQuery(record.record_id);
+  } = useGetSpecimensQuery(record.record_id, {
+    refetchOnMountOrArgChange: true,
+  });
 
   const isUpdate = specimens[0]?.specimen_collection_id ? true : false;
 
@@ -327,8 +329,7 @@ const SpecimenCollection = () => {
                           name="specimen_collection_2_specimen_collection_type"
                           defaultSelected={
                             specimens[0]
-                              ?.specimen_collection_2_specimen_collection_type ||
-                            "sputum"
+                              ?.specimen_collection_2_specimen_collection_type
                           }
                           onChange={(evt) =>
                             setValue(
