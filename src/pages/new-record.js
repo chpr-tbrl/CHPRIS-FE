@@ -417,7 +417,11 @@ const NewRecord = () => {
                     id="prisoner_tb_treatment_history_unknown"
                     value="prisoner_tb_treatment_history_unknown"
                   />
-                  <RadioButton labelText="Unknown" id="unknown" value="unknown" />
+                  <RadioButton
+                    labelText="Unknown"
+                    id="unknown"
+                    value="unknown"
+                  />
                   <RadioButton labelText="Other" id="other" value="other" />
                 </RadioButtonGroup>
 
@@ -462,6 +466,14 @@ const NewRecord = () => {
                   invalidText={errors.site_id?.message}
                   onChange={(evt) => selectSite(evt.selectedItem.id)}
                 />
+              </Stack>
+            </FormGroup>
+
+            <FormGroup legendText="Requester">
+              <Stack gap={5}>
+                <TextInput labelText="Name" />
+
+                <TextInput labelText="Phone number" />
               </Stack>
             </FormGroup>
 
