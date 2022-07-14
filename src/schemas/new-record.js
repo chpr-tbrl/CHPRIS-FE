@@ -95,4 +95,6 @@ export const NEW_RECORD_SCHEMA = yup.object({
   records_tb_treatment_history_contact_of_tb_patient: yup.string().nullable(),
   records_tb_treatment_number: yup.string(),
   records_sms_notifications: yup.bool().default(false),
+  records_requester_name: yup.string(),
+  records_requester_telephone: yup.string(),
 });

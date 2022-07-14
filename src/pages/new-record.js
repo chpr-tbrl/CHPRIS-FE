@@ -357,21 +357,11 @@ const NewRecord = () => {
                     value="new"
                     id="new"
                   />
-                  {/* <RadioButton
-                    labelText="Relapse (completed previous TB Rx)"
-                    value="relapse"
-                    id="relapse"
-                  /> */}
                   <RadioButton
                     labelText="After loss to follow up(>= 2 months of Tx interruption)"
                     value="after_loss_to_follow_up"
                     id="after_loss_to_follow_up"
                   />
-                  {/* <RadioButton
-                    labelText="Failure (2 smears AFB positive at >= 5 months on Rx)"
-                    value="failure"
-                    id="failure"
-                  /> */}
                   <RadioButton
                     labelText="Relapse after retreatment regimen"
                     id="relapse_after_retreatment_regimen"
@@ -470,10 +460,17 @@ const NewRecord = () => {
             </FormGroup>
 
             <FormGroup legendText="Requester">
-              <Stack gap={5}>
-                <TextInput labelText="Name" />
-
-                <TextInput labelText="Phone number" />
+              <Stack gap={7}>
+                <TextInput
+                  id="records_requester_name"
+                  labelText="Name"
+                  {...register("records_requester_name")}
+                />
+                <PhoneNumberInput
+                  control={control}
+                  id="records_requester_telephone"
+                  labelText="Phone number"
+                />
               </Stack>
             </FormGroup>
 
