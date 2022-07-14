@@ -417,7 +417,11 @@ const NewRecord = () => {
                     id="prisoner_tb_treatment_history_unknown"
                     value="prisoner_tb_treatment_history_unknown"
                   />
-                  <RadioButton labelText="Unknown" id="unknown" value="unknown" />
+                  <RadioButton
+                    labelText="Unknown"
+                    id="unknown"
+                    value="unknown"
+                  />
                   <RadioButton labelText="Other" id="other" value="other" />
                 </RadioButtonGroup>
 
@@ -464,6 +468,10 @@ const NewRecord = () => {
                 />
               </Stack>
             </FormGroup>
+
+            <TextInput labelText="Requester name" />
+
+            <TextInput labelText="Requester phone number" />
 
             <FormGroup legendText="SMS notifications">
               <Checkbox
