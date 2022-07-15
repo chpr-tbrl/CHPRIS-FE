@@ -49,6 +49,7 @@ const TBTreatmentOutcome = () => {
 
   const {
     reset,
+    watch,
     setValue,
     register,
     handleSubmit,
@@ -177,9 +178,7 @@ const TBTreatmentOutcome = () => {
               orientation="vertical"
               legendText="Treatment outcome"
               name="tb_treatment_outcome_result"
-              defaultSelected={
-                treatmentOutcomes[0]?.tb_treatment_outcome_result || "cured"
-              }
+              valueSelected={watch("tb_treatment_outcome_result")}
               onChange={(evt) =>
                 setValue("tb_treatment_outcome_result", evt, {
                   shouldValidate: true,

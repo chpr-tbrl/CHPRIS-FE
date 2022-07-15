@@ -148,15 +148,17 @@ const OutcomeRecorded = () => {
               orientation="vertical"
               legendText="Treatment"
               name="outcome_recorded_started_tb_treatment_outcome"
-              defaultSelected={
-                outcomes[0]?.outcome_recorded_started_tb_treatment_outcome ||
-                "started_tb_treatment"
-              }
-              onChange={(evt) =>
+              valueSelected={watch(
+                "outcome_recorded_started_tb_treatment_outcome"
+              )}
+              onChange={(evt) => {
+                if (evt !== "started_tb_treatment") {
+                  setValue("outcome_recorded_tb_rx_number", "");
+                }
                 setValue("outcome_recorded_started_tb_treatment_outcome", evt, {
                   shouldValidate: true,
-                })
-              }
+                });
+              }}
             >
               <RadioButton
                 labelText="Started TB treatment"

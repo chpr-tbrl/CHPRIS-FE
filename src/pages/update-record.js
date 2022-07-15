@@ -111,7 +111,7 @@ const UpdateRecord = () => {
             <RadioButtonGroup
               legendText="Sex"
               name="records_sex"
-              defaultSelected="unknown"
+              valueSelected={watch("records_sex")}
               onChange={(evt) =>
                 setValue("records_sex", evt, {
                   shouldValidate: true,
@@ -156,7 +156,7 @@ const UpdateRecord = () => {
             <RadioButtonGroup
               legendText="Has ART unique code"
               name="records_has_art_unique_code"
-              defaultSelected="unknown"
+              valueSelected={watch("records_has_art_unique_code")}
               onChange={(evt) => setValue("records_has_art_unique_code", evt)}
             >
               <RadioButton labelText="yes" value="yes" id="yes" />
@@ -177,7 +177,7 @@ const UpdateRecord = () => {
             <RadioButtonGroup
               legendText="Status"
               name="records_status"
-              defaultSelected="outpatient"
+              valueSelected={watch("records_status")}
               onChange={(evt) =>
                 setValue("records_status", evt, {
                   shouldValidate: true,
@@ -209,7 +209,7 @@ const UpdateRecord = () => {
             <RadioButtonGroup
               legendText="Currently pregnant"
               name="records_currently_pregnant"
-              defaultSelected="no"
+              valueSelected={watch("records_currently_pregnant")}
               onChange={(evt) =>
                 setValue("records_currently_pregnant", evt, {
                   shouldValidate: true,
@@ -252,6 +252,35 @@ const UpdateRecord = () => {
                 {...register("records_symptoms_none_of_the_above")}
               />
             </FormGroup>
+
+            <RadioButtonGroup
+              legendText="TB type"
+              name="records_tb_type"
+              orientation="vertical"
+              valueSelected={watch("records_tb_type")}
+              onChange={(evt) =>
+                setValue("records_tb_type", evt, {
+                  shouldValidate: true,
+                })
+              }
+            >
+              <RadioButton
+                labelText="Pulmonary"
+                id="pulmonary"
+                value="pulmonary"
+              />
+              <RadioButton
+                labelText=" Extrapulmonary"
+                id="extrapulmonary"
+                value="extrapulmonary"
+              />
+              <RadioButton
+                labelText="Pulmonary and Extrapulmonary"
+                id="pulmonary_and_extrapulmonary"
+                value="pulmonary_and_extrapulmonary"
+              />
+              <RadioButton labelText="Unknown" id="unknown" value="unknown" />
+            </RadioButtonGroup>
 
             <FormGroup legendText="Patient Category">
               <Checkbox
@@ -310,10 +339,7 @@ const UpdateRecord = () => {
               <Stack gap={5}>
                 <RadioButtonGroup
                   legendText=""
-                  name="tth"
-                  defaultSelected={
-                    record[0]?.records_tb_treatment_history || "new"
-                  }
+                  valueSelected={watch("records_tb_treatment_history")}
                   orientation="vertical"
                   onChange={(evt) =>
                     setValue("records_tb_treatment_history", evt)
@@ -374,7 +400,11 @@ const UpdateRecord = () => {
                     id="prisoner_tb_treatment_history_unknown"
                     value="prisoner_tb_treatment_history_unknown"
                   />
-                  <RadioButton labelText="Unknown" value="unknown" />
+                  <RadioButton
+                    labelText="Unknown"
+                    id="unknown"
+                    value="unknown"
+                  />
                   <RadioButton labelText="Other" id="other" value="other" />
                 </RadioButtonGroup>
 
@@ -387,6 +417,14 @@ const UpdateRecord = () => {
                 />
               </Stack>
             </FormGroup>
+
+            <TextInput
+              id="records_tb_treatment_number"
+              labelText="TB treatment number"
+              {...register("records_tb_treatment_number")}
+              invalid={errors.records_tb_treatment_number ? true : false}
+              invalidText={errors.records_tb_treatment_number?.message}
+            />
 
             <FormGroup legendText="Community">
               <Stack gap={7}>

@@ -86,7 +86,7 @@ export const SPECIMEN_COLLECTION_SCHEMA = yup.object({
   specimen_collection_2_period: yup
     .string()
     .nullable()
-    .default("")
+    .default("n_a")
     .when("specimen_collection_2_specimen_collection_type", {
       is: "sputum",
       then: (schema) =>
@@ -95,7 +95,7 @@ export const SPECIMEN_COLLECTION_SCHEMA = yup.object({
   specimen_collection_2_aspect: yup
     .string()
     .nullable()
-    .default("")
+    .default("n_a")
     .when("specimen_collection_2_specimen_collection_type", {
       is: "sputum",
       then: (schema) =>

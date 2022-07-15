@@ -145,11 +145,9 @@ const SpecimenCollection = () => {
                           orientation="vertical"
                           legendText="Type"
                           name="specimen_collection_1_specimen_collection_type"
-                          defaultSelected={
-                            specimens[0]
-                              ?.specimen_collection_1_specimen_collection_type ||
-                            "sputum"
-                          }
+                          valueSelected={watch(
+                            "specimen_collection_1_specimen_collection_type"
+                          )}
                           onChange={(evt) =>
                             setValue(
                               "specimen_collection_1_specimen_collection_type",
@@ -234,10 +232,9 @@ const SpecimenCollection = () => {
                             <RadioButtonGroup
                               legendText="Period"
                               name="specimen_collection_1_period"
-                              defaultSelected={
-                                specimens[0]?.specimen_collection_1_period ||
-                                "spot"
-                              }
+                              valueSelected={watch(
+                                "specimen_collection_1_period"
+                              )}
                               onChange={(evt) =>
                                 setValue("specimen_collection_1_period", evt)
                               }
@@ -263,10 +260,9 @@ const SpecimenCollection = () => {
                               orientation="vertical"
                               legendText="Aspect"
                               name="specimen_collection_1_aspect"
-                              defaultSelected={
-                                specimens[0]?.specimen_collection_1_aspect ||
-                                "mucopurulent"
-                              }
+                              valueSelected={watch(
+                                "specimen_collection_1_aspect"
+                              )}
                               onChange={(evt) =>
                                 setValue("specimen_collection_1_aspect", evt)
                               }
@@ -327,10 +323,9 @@ const SpecimenCollection = () => {
                           orientation="vertical"
                           legendText="Type"
                           name="specimen_collection_2_specimen_collection_type"
-                          defaultSelected={
-                            specimens[0]
-                              ?.specimen_collection_2_specimen_collection_type
-                          }
+                          valueSelected={watch(
+                            "specimen_collection_2_specimen_collection_type"
+                          )}
                           onChange={(evt) =>
                             setValue(
                               "specimen_collection_2_specimen_collection_type",
@@ -371,10 +366,9 @@ const SpecimenCollection = () => {
                             <RadioButtonGroup
                               legendText="Period"
                               name="specimen_collection_2_period"
-                              defaultSelected={
-                                specimens[0]?.specimen_collection_2_period ||
-                                "spot"
-                              }
+                              valueSelected={watch(
+                                "specimen_collection_2_period"
+                              )}
                               onChange={(evt) =>
                                 setValue("specimen_collection_2_period", evt)
                               }
@@ -391,10 +385,9 @@ const SpecimenCollection = () => {
                               orientation="vertical"
                               legendText="Aspect"
                               name="specimen_collection_2_aspect"
-                              defaultSelected={
-                                specimens[0]?.specimen_collection_2_aspect ||
-                                "mucopurulent"
-                              }
+                              valueSelected={watch(
+                                "specimen_collection_2_aspect"
+                              )}
                               onChange={(evt) =>
                                 setValue("specimen_collection_2_aspect", evt)
                               }
