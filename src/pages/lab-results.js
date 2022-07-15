@@ -260,10 +260,8 @@ const LabResults = () => {
                   name="lab_xpert_mtb_rif_assay_result"
                   valueSelected={watch("lab_xpert_mtb_rif_assay_result")}
                   onChange={(evt) => {
-                    if (evt === NOT_DONE) {
-                      setValue("lab_xpert_mtb_rif_assay_grades", null);
-                      setValue("lab_xpert_mtb_rif_assay_rif_result", null);
-                    }
+                    setValue("lab_xpert_mtb_rif_assay_grades", NOT_DONE);
+                    setValue("lab_xpert_mtb_rif_assay_rif_result", NOT_DONE);
                     setValue("lab_xpert_mtb_rif_assay_result", evt);
                   }}
                 >
@@ -300,6 +298,7 @@ const LabResults = () => {
                         value="very_low"
                         id="very_low"
                       />
+                      <RadioButton labelText="Not done" value="not_done" />
                     </RadioButtonGroup>
 
                     <RadioButtonGroup
@@ -364,8 +363,8 @@ const LabResults = () => {
                   valueSelected={watch("lab_urine_lf_lam_result")}
                   onChange={(evt) => {
                     if (evt === NOT_DONE) {
-                      setValue("lab_urine_lf_lam_date", null);
-                      setValue("lab_urine_lf_lam_done_by ", null);
+                      setValue("lab_urine_lf_lam_date", "");
+                      setValue("lab_urine_lf_lam_done_by ", "");
                     }
                     setValue("lab_urine_lf_lam_result", evt);
                   }}
