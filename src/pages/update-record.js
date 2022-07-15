@@ -460,6 +460,23 @@ const UpdateRecord = () => {
               </Stack>
             </FormGroup>
 
+            <FormGroup legendText="Requester">
+              <Stack gap={7}>
+                <TextInput
+                  disabled
+                  id="records_requester_name"
+                  labelText="Name"
+                  {...register("records_requester_name")}
+                />
+                <PhoneNumberInput
+                  disabled
+                  control={control}
+                  id="records_requester_telephone"
+                  labelText="Phone number"
+                />
+              </Stack>
+            </FormGroup>
+
             <FormGroup legendText="SMS notifications">
               <Checkbox
                 labelText="Do you want to be notified when results are ready by an automated SMS message"
