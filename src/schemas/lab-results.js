@@ -66,13 +66,12 @@ export const LAB_RESULTS_SCHEMA = yup.object({
     .required("Field is required"),
   lab_xpert_mtb_rif_assay_grades: yup
     .string()
-    .default("")
+    .default("not_done")
     .when("lab_xpert_mtb_rif_assay_result", {
       is: "detected",
       then: (schema) =>
         schema
-          .oneOf(["high", "medium", "low", "very_low"])
-          .default("very_low")
+          .oneOf(["high", "medium", "low", "very_low", "not_done"])
           .required("Field is required"),
     }),
   lab_xpert_mtb_rif_assay_rif_result: yup
