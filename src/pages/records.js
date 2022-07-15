@@ -52,7 +52,15 @@ const Records = () => {
     refetchOnMountOrArgChange: true,
   });
 
+  function reset() {
+    setOption("");
+    setParams({});
+    setSite({});
+    refetch();
+  }
+
   function handleSearch(query) {
+    reset();
     if (!query) return;
     if (!option) {
       alert("please select a search option");
@@ -71,13 +79,6 @@ const Records = () => {
     setParams({
       [option]: query,
     });
-  }
-
-  function reset() {
-    setOption("");
-    setParams({});
-    setSite({});
-    refetch();
   }
 
   function showActions(record) {
