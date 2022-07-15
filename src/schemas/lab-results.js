@@ -33,10 +33,10 @@ export const LAB_RESULTS_SCHEMA = yup.object({
       "tb_lamp_negative",
       "not_done",
     ])
+    .default("not_done")
     .when("lab_smear_microscopy_result_result_1", {
       is: "not_done",
-      otherwise: (schema) =>
-        schema.default("not_done").required("Field is required"),
+      otherwise: (schema) => schema.required("Field is required"),
     }),
   lab_smear_microscopy_result_date: yup
     .string()

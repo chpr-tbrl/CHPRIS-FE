@@ -17,7 +17,7 @@ import {
 import { Hospital } from "@carbon/icons-react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { LAB_RESULTS_SCHEMA } from "schemas";
+import { LAB_RESULTS_SCHEMA, NOT_DONE } from "schemas";
 import { useSelector } from "react-redux";
 import { recordSelector } from "features";
 import {
@@ -58,9 +58,9 @@ const LabResults = () => {
   });
 
   const isResultOneDone =
-    watch("lab_smear_microscopy_result_result_1", "not_done") !== "not_done";
-  const MTBResult = watch("lab_xpert_mtb_rif_assay_result", "not_done");
-  const isLFDone = watch("lab_urine_lf_lam_result", "not_done") !== "not_done";
+    watch("lab_smear_microscopy_result_result_1", NOT_DONE) !== NOT_DONE;
+  const MTBResult = watch("lab_xpert_mtb_rif_assay_result", NOT_DONE);
+  const isLFDone = watch("lab_urine_lf_lam_result", NOT_DONE) !== NOT_DONE;
 
   useEffect(() => {
     if (results.length) {
@@ -162,13 +162,13 @@ const LabResults = () => {
                   orientation="vertical"
                   legendText="Result 1"
                   name="lab_smear_microscopy_result_result_1"
-                  defaultSelected={
-                    results[0]?.lab_smear_microscopy_result_result_1 ||
-                    "not_done"
-                  }
-                  onChange={(evt) =>
-                    setValue("lab_smear_microscopy_result_result_1", evt)
-                  }
+                  valueSelected={watch("lab_smear_microscopy_result_result_1")}
+                  onChange={(evt) => {
+                    if (evt === NOT_DONE) {
+                      setValue("lab_smear_microscopy_result_result_2", evt);
+                    }
+                    setValue("lab_smear_microscopy_result_result_1", evt);
+                  }}
                 >
                   <RadioButton labelText="No AFB seen" value="no_afb_seen" />
                   <RadioButton labelText="Scanty" value="scanty" />
@@ -192,10 +192,9 @@ const LabResults = () => {
                       orientation="vertical"
                       legendText="Result 2"
                       name="lab_smear_microscopy_result_result_2"
-                      defaultSelected={
-                        results[0]?.lab_smear_microscopy_result_result_2 ||
-                        "not_done"
-                      }
+                      valueSelected={watch(
+                        "lab_smear_microscopy_result_result_2"
+                      )}
                       onChange={(evt) =>
                         setValue("lab_smear_microscopy_result_result_2", evt)
                       }
@@ -259,12 +258,14 @@ const LabResults = () => {
                   orientation="vertical"
                   legendText="MTB result"
                   name="lab_xpert_mtb_rif_assay_result"
-                  defaultSelected={
-                    results[0]?.lab_xpert_mtb_rif_assay_result || "not_done"
-                  }
-                  onChange={(evt) =>
-                    setValue("lab_xpert_mtb_rif_assay_result", evt)
-                  }
+                  valueSelected={watch("lab_xpert_mtb_rif_assay_result")}
+                  onChange={(evt) => {
+                    if (evt === NOT_DONE) {
+                      setValue("lab_xpert_mtb_rif_assay_grades", null);
+                      setValue("lab_xpert_mtb_rif_assay_rif_result", null);
+                    }
+                    setValue("lab_xpert_mtb_rif_assay_result", evt);
+                  }}
                 >
                   <RadioButton labelText="Detected" value="detected" />
                   <RadioButton labelText="Trace" value="trace" id="trace" />
@@ -282,9 +283,7 @@ const LabResults = () => {
                       orientation="vertical"
                       legendText="Grades"
                       name="lab_xpert_mtb_rif_assay_grades"
-                      defaultSelected={
-                        results[0]?.lab_xpert_mtb_rif_assay_grades || "very_low"
-                      }
+                      valueSelected={watch("lab_xpert_mtb_rif_assay_grades")}
                       onChange={(evt) =>
                         setValue("lab_xpert_mtb_rif_assay_grades", evt)
                       }
@@ -307,10 +306,9 @@ const LabResults = () => {
                       orientation="vertical"
                       legendText="RIF result"
                       name="lab_xpert_mtb_rif_assay_rif_result"
-                      defaultSelected={
-                        results[0]?.lab_xpert_mtb_rif_assay_rif_result ||
-                        "not_done"
-                      }
+                      valueSelected={watch(
+                        "lab_xpert_mtb_rif_assay_rif_result"
+                      )}
                       onChange={(evt) =>
                         setValue("lab_xpert_mtb_rif_assay_rif_result", evt)
                       }
@@ -329,7 +327,7 @@ const LabResults = () => {
                   </Fragment>
                 )}
 
-                {MTBResult !== "not_done" && (
+                {MTBResult !== NOT_DONE && (
                   <Fragment>
                     <DatePicker
                       control={control}
@@ -363,10 +361,14 @@ const LabResults = () => {
                   orientation="vertical"
                   legendText=""
                   name="lab_urine_lf_lam_result"
-                  defaultSelected={
-                    results[0]?.lab_urine_lf_lam_result || "not_done"
-                  }
-                  onChange={(evt) => setValue("lab_urine_lf_lam_result", evt)}
+                  valueSelected={watch("lab_urine_lf_lam_result")}
+                  onChange={(evt) => {
+                    if (evt === NOT_DONE) {
+                      setValue("lab_urine_lf_lam_date", null);
+                      setValue("lab_urine_lf_lam_done_by ", null);
+                    }
+                    setValue("lab_urine_lf_lam_result", evt);
+                  }}
                 >
                   <RadioButton labelText="Negative" value="negative" />
                   <RadioButton labelText="Positive" value="positive" />
@@ -406,9 +408,7 @@ const LabResults = () => {
                   legendText="MGIT Culture"
                   id="lab_culture_mgit_culture"
                   name="lab_culture_mgit_culture"
-                  defaultSelected={
-                    results[0]?.lab_culture_mgit_culture || "not_done"
-                  }
+                  valueSelected={watch("lab_culture_mgit_culture")}
                   onChange={(evt) => setValue("lab_culture_mgit_culture", evt)}
                 >
                   <RadioButton labelText="NTM" value="ntm" />
@@ -422,9 +422,7 @@ const LabResults = () => {
                   orientation="vertical"
                   legendText="LJ Culture"
                   name="lab_culture_lj_culture"
-                  defaultSelected={
-                    results[0]?.lab_culture_lj_culture || "not_done"
-                  }
+                  valueSelected={watch("lab_culture_lj_culture")}
                   onChange={(evt) => setValue("lab_culture_lj_culture", evt)}
                 >
                   <RadioButton labelText="NTM" value="ntm" />
@@ -448,7 +446,7 @@ const LabResults = () => {
                       orientation="vertical"
                       legendText="Isoniazid"
                       name="lab_lpa_mtbdrplus_isoniazid"
-                      defaultSelected={results[0]?.lab_lpa_mtbdrplus_isoniazid}
+                      valueSelected={watch("lab_lpa_mtbdrplus_isoniazid")}
                       onChange={(evt) =>
                         setValue("lab_lpa_mtbdrplus_isoniazid", evt)
                       }
@@ -472,7 +470,7 @@ const LabResults = () => {
                       orientation="vertical"
                       legendText="Rifampin"
                       name="lab_lpa_mtbdrplus_rifampin"
-                      defaultSelected={results[0]?.lab_lpa_mtbdrplus_rifampin}
+                      valueSelected={watch("lab_lpa_mtbdrplus_rifampin")}
                       onChange={(evt) =>
                         setValue("lab_lpa_mtbdrplus_rifampin", evt)
                       }
@@ -498,9 +496,7 @@ const LabResults = () => {
                       orientation="vertical"
                       legendText="Flouoroquinolones"
                       name="lab_lpa_mtbdrs_flouoroquinolones"
-                      defaultSelected={
-                        results[0]?.lab_lpa_mtbdrs_flouoroquinolones
-                      }
+                      valueSelected={watch("lab_lpa_mtbdrs_flouoroquinolones")}
                       onChange={(evt) =>
                         setValue("lab_lpa_mtbdrs_flouoroquinolones", evt)
                       }
@@ -526,7 +522,7 @@ const LabResults = () => {
                       orientation="vertical"
                       legendText="Kanamycin"
                       name="lab_lpa_mtbdrs_kanamycin"
-                      defaultSelected={results[0]?.lab_lpa_mtbdrs_kanamycin}
+                      valueSelected={watch("lab_lpa_mtbdrs_kanamycin")}
                       onChange={(evt) =>
                         setValue("lab_lpa_mtbdrs_kanamycin", evt)
                       }
@@ -548,7 +544,7 @@ const LabResults = () => {
                       orientation="vertical"
                       legendText="Amikacin"
                       name="lab_lpa_mtbdrs_amikacin"
-                      defaultSelected={results[0]?.lab_lpa_mtbdrs_amikacin}
+                      valueSelected={watch("lab_lpa_mtbdrs_amikacin")}
                       onChange={(evt) =>
                         setValue("lab_lpa_mtbdrs_amikacin", evt)
                       }
@@ -570,7 +566,7 @@ const LabResults = () => {
                       orientation="vertical"
                       legendText="Capreomycin"
                       name="lab_lpa_mtbdrs_capreomycin"
-                      defaultSelected={results[0]?.lab_lpa_mtbdrs_capreomycin}
+                      valueSelected={watch("lab_lpa_mtbdrs_capreomycin")}
                       onChange={(evt) =>
                         setValue("lab_lpa_mtbdrs_capreomycin", evt)
                       }
@@ -592,9 +588,9 @@ const LabResults = () => {
                       orientation="vertical"
                       legendText="Low-level Kanamycin"
                       name="lab_lpa_mtbdrs_low_level_kanamycin"
-                      defaultSelected={
-                        results[0]?.lab_lpa_mtbdrs_low_level_kanamycin
-                      }
+                      valueSelected={watch(
+                        "lab_lpa_mtbdrs_low_level_kanamycin"
+                      )}
                       onChange={(evt) =>
                         setValue("lab_lpa_mtbdrs_low_level_kanamycin", evt)
                       }
@@ -626,7 +622,7 @@ const LabResults = () => {
                   orientation="vertical"
                   legendText="Isoniazid"
                   name="lab_dst_isonazid"
-                  defaultSelected={results[0]?.lab_dst_isonazid}
+                  valueSelected={watch("lab_dst_isonazid")}
                   onChange={(evt) => setValue("lab_dst_isonazid", evt)}
                   invalid={errors.lab_dst_isonazid ? true : false}
                   invalidText={errors.lab_dst_isonazid?.message}
@@ -643,7 +639,7 @@ const LabResults = () => {
                   orientation="vertical"
                   legendText="Rifampin"
                   name="lab_dst_rifampin"
-                  defaultSelected={results[0]?.lab_dst_rifampin}
+                  valueSelected={watch("lab_dst_rifampin")}
                   onChange={(evt) => setValue("lab_dst_rifampin", evt)}
                   invalid={errors.lab_dst_rifampin ? true : false}
                   invalidText={errors.lab_dst_rifampin?.message}
@@ -660,7 +656,7 @@ const LabResults = () => {
                   orientation="vertical"
                   legendText="Ethambutol"
                   name="lab_dst_ethambutol"
-                  defaultSelected={results[0]?.lab_dst_ethambutol}
+                  valueSelected={watch("lab_dst_ethambutol")}
                   onChange={(evt) => setValue("lab_dst_ethambutol", evt)}
                   invalid={errors.lab_dst_ethambutol ? true : false}
                   invalidText={errors.lab_dst_ethambutol?.message}
@@ -677,7 +673,7 @@ const LabResults = () => {
                   orientation="vertical"
                   legendText="Kanamycin"
                   name="lab_dst_kanamycin"
-                  defaultSelected={results[0]?.lab_dst_kanamycin}
+                  valueSelected={watch("lab_dst_kanamycin")}
                   onChange={(evt) => setValue("lab_dst_kanamycin", evt)}
                   invalid={errors.lab_dst_kanamycin ? true : false}
                   invalidText={errors.lab_dst_kanamycin?.message}
@@ -694,7 +690,7 @@ const LabResults = () => {
                   orientation="vertical"
                   legendText="Ofloxacin"
                   name="lab_dst_ofloxacin"
-                  defaultSelected={results[0]?.lab_dst_ofloxacin}
+                  valueSelected={watch("lab_dst_ofloxacin")}
                   onChange={(evt) => setValue("lab_dst_ofloxacin", evt)}
                   invalid={errors.lab_dst_ofloxacin ? true : false}
                   invalidText={errors.lab_dst_ofloxacin?.message}
@@ -711,7 +707,7 @@ const LabResults = () => {
                   orientation="vertical"
                   legendText="LevofloxacineKanamycin"
                   name="lab_dst_levofloxacinekanamycin"
-                  defaultSelected={results[0]?.lab_dst_levofloxacinekanamycin}
+                  valueSelected={watch("lab_dst_levofloxacinekanamycin")}
                   onChange={(evt) =>
                     setValue("lab_dst_levofloxacinekanamycin", evt)
                   }
@@ -730,7 +726,7 @@ const LabResults = () => {
                   orientation="vertical"
                   legendText="MoxifloxacineKanamycin"
                   name="lab_dst_moxifloxacinekanamycin"
-                  defaultSelected={results[0]?.lab_dst_moxifloxacinekanamycin}
+                  valueSelected={watch("lab_dst_moxifloxacinekanamycin")}
                   onChange={(evt) =>
                     setValue("lab_dst_moxifloxacinekanamycin", evt)
                   }
@@ -749,7 +745,7 @@ const LabResults = () => {
                   orientation="vertical"
                   legendText="AmikacineKanamycin"
                   name="lab_dst_amikacinekanamycin"
-                  defaultSelected={results[0]?.lab_dst_amikacinekanamycin}
+                  valueSelected={watch("lab_dst_amikacinekanamycin")}
                   onChange={(evt) =>
                     setValue("lab_dst_amikacinekanamycin", evt)
                   }
