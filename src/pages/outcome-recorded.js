@@ -39,7 +39,9 @@ const OutcomeRecorded = () => {
     data: outcomes = [],
     isFetching,
     refetch,
-  } = useGetOutcomesQuery(record.record_id);
+  } = useGetOutcomesQuery(record.record_id, {
+    refetchOnMountOrArgChange: true,
+  });
 
   const isUpdate = outcomes[0]?.outcome_recorded_id ? true : false;
 

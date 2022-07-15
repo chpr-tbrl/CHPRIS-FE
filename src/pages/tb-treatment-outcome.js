@@ -41,7 +41,10 @@ const TBTreatmentOutcome = () => {
     data: treatmentOutcomes = [],
     isFetching,
     refetch,
-  } = useGetTreatmentOutcomesQuery(record.record_id);
+  } = useGetTreatmentOutcomesQuery(record.record_id, {
+    refetchOnMountOrArgChange: true,
+  });
+
   const isUpdate = treatmentOutcomes[0]?.tb_treatment_outcome_id ? true : false;
 
   const {
