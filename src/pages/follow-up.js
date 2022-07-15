@@ -40,7 +40,9 @@ const FollowUP = () => {
     data: followUps = [],
     isFetching,
     refetch,
-  } = useGetFollowUpsQuery(record.record_id);
+  } = useGetFollowUpsQuery(record.record_id, {
+    refetchOnMountOrArgChange: true,
+  });
 
   const isUpdate = followUps[0]?.follow_up_id ? true : false;
 
