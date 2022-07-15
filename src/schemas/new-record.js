@@ -15,7 +15,10 @@ export const NEW_RECORD_SCHEMA = yup.object({
     .oneOf(["male", "female", "unknown"])
     .default("unknown")
     .required("Field is required"),
-  records_date_of_test_request: yup.date().required("Field is required"),
+  records_date_of_test_request: yup
+    .date()
+    .required("Field is required")
+    .typeError("Field is required"),
   records_address: yup.string().required("Field is required"),
   records_telephone: yup.string().required("Field is required"),
   records_telephone_2: yup.string().nullable(),

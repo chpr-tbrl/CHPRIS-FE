@@ -105,7 +105,7 @@ const NewRecord = () => {
             <RadioButtonGroup
               legendText="Sex"
               name="records_sex"
-              defaultSelected="unknown"
+              valueSelected={watch("records_sex")}
               onChange={(evt) =>
                 setValue("records_sex", evt, {
                   shouldValidate: true,
@@ -162,7 +162,7 @@ const NewRecord = () => {
             <RadioButtonGroup
               legendText="Has ART unique code"
               name="records_has_art_unique_code"
-              defaultSelected="unknown"
+              valueSelected={watch("records_has_art_unique_code")}
               onChange={(evt) => setValue("records_has_art_unique_code", evt)}
             >
               <RadioButton labelText="yes" value="yes" id="yes" />
@@ -183,7 +183,7 @@ const NewRecord = () => {
             <RadioButtonGroup
               legendText="Status"
               name="records_status"
-              defaultSelected="outpatient"
+              valueSelected={watch("records_status")}
               onChange={(evt) =>
                 setValue("records_status", evt, {
                   shouldValidate: true,
@@ -215,7 +215,7 @@ const NewRecord = () => {
             <RadioButtonGroup
               legendText="Currently pregnant"
               name="records_currently_pregnant"
-              defaultSelected="no"
+              valueSelected={watch("records_currently_pregnant")}
               onChange={(evt) =>
                 setValue("records_currently_pregnant", evt, {
                   shouldValidate: true,
@@ -263,7 +263,7 @@ const NewRecord = () => {
               legendText="TB type"
               name="records_tb_type"
               orientation="vertical"
-              defaultSelected="unknown"
+              valueSelected={watch("records_tb_type")}
               onChange={(evt) =>
                 setValue("records_tb_type", evt, {
                   shouldValidate: true,
@@ -345,8 +345,7 @@ const NewRecord = () => {
               <Stack gap={5}>
                 <RadioButtonGroup
                   legendText=""
-                  name="tth"
-                  defaultSelected="new"
+                  valueSelected={watch("records_tb_treatment_history")}
                   orientation="vertical"
                   onChange={(evt) =>
                     setValue("records_tb_treatment_history", evt)
