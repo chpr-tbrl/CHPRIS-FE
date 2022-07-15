@@ -77,7 +77,13 @@ export const LAB_RESULTS_SCHEMA = yup.object({
   lab_xpert_mtb_rif_assay_rif_result: yup
     .string()
     .default("not_done")
-    .oneOf(["detected", "indeterminate", "not_detected", "not_done"])
+    .oneOf([
+      "detected",
+      "indeterminate",
+      "not_done",
+      "not_detected",
+      "not_done",
+    ])
     .when("lab_xpert_mtb_rif_assay_result", {
       is: "detected",
       then: (schema) => schema.required("Field is required"),
@@ -115,85 +121,100 @@ export const LAB_RESULTS_SCHEMA = yup.object({
     .required("Field is required"),
   lab_lpa_mtbdrplus_isoniazid: yup
     .string()
-    .oneOf(["resistant", "susceptible", "indeterminate"])
+    .oneOf(["resistant", "susceptible", "indeterminate", "not_done"])
+    .default("not_done")
     .nullable()
     .required("Field is required"),
   lab_lpa_mtbdrplus_rifampin: yup
     .string()
-    .oneOf(["resistant", "susceptible", "indeterminate"])
+    .oneOf(["resistant", "susceptible", "indeterminate", "not_done"])
+    .default("not_done")
     .nullable()
     .required("Field is required"),
   lab_lpa_mtbdrs_flouoroquinolones: yup
     .string()
-    .oneOf(["resistant", "susceptible", "indeterminate"])
+    .oneOf(["resistant", "susceptible", "indeterminate", "not_done"])
+    .default("not_done")
     .nullable()
     .required("Field is required"),
   lab_lpa_mtbdrs_kanamycin: yup
     .string()
-    .oneOf(["resistant", "susceptible", "indeterminate"])
+    .oneOf(["resistant", "susceptible", "indeterminate", "not_done"])
+    .default("not_done")
     .nullable()
     .required("Field is required"),
   lab_lpa_mtbdrs_amikacin: yup
     .string()
-    .oneOf(["resistant", "susceptible", "indeterminate"])
+    .oneOf(["resistant", "susceptible", "indeterminate", "not_done"])
+    .default("not_done")
     .nullable()
     .required("Field is required"),
   lab_lpa_mtbdrs_capreomycin: yup
     .string()
-    .oneOf(["resistant", "susceptible", "indeterminate"])
+    .oneOf(["resistant", "susceptible", "indeterminate", "not_done"])
+    .default("not_done")
     .nullable()
     .required("Field is required"),
   lab_lpa_mtbdrs_low_level_kanamycin: yup
     .string()
-    .oneOf(["resistant", "susceptible", "indeterminate"])
+    .oneOf(["resistant", "susceptible", "indeterminate", "not_done"])
+    .default("not_done")
     .nullable()
     .required("Field is required"),
 
   lab_dst_isonazid: yup
     .string()
-    .oneOf(["resistant", "susceptible", "indeterminate"])
+    .oneOf(["resistant", "susceptible", "indeterminate", "not_done"])
+    .default("not_done")
     .nullable()
     .required("Field is required"),
 
   lab_dst_rifampin: yup
     .string()
-    .oneOf(["resistant", "susceptible", "indeterminate"])
+    .oneOf(["resistant", "susceptible", "indeterminate", "not_done"])
+    .default("not_done")
     .nullable()
     .required("Field is required"),
 
   lab_dst_ethambutol: yup
     .string()
-    .oneOf(["resistant", "susceptible", "indeterminate"])
+    .oneOf(["resistant", "susceptible", "indeterminate", "not_done"])
+    .default("not_done")
     .nullable()
     .required("Field is required"),
 
   lab_dst_kanamycin: yup
     .string()
-    .oneOf(["resistant", "susceptible", "indeterminate"])
+    .oneOf(["resistant", "susceptible", "indeterminate", "not_done"])
+    .default("not_done")
     .nullable()
     .required("Field is required"),
 
   lab_dst_ofloxacin: yup
     .string()
-    .oneOf(["resistant", "susceptible", "indeterminate"])
+    .oneOf(["resistant", "susceptible", "indeterminate", "not_done"])
+    .default("not_done")
     .nullable()
     .required("Field is required"),
 
   lab_dst_levofloxacinekanamycin: yup
     .string()
-    .oneOf(["resistant", "susceptible", "indeterminate"])
+    .oneOf(["resistant", "susceptible", "indeterminate", "not_done"])
+    .default("not_done")
     .nullable()
     .required("Field is required"),
 
   lab_dst_moxifloxacinekanamycin: yup
     .string()
-    .oneOf(["resistant", "susceptible", "indeterminate"])
+    .oneOf(["resistant", "susceptible", "indeterminate", "not_done"])
+    .default("not_done")
     .nullable()
     .required("Field is required"),
 
   lab_dst_amikacinekanamycin: yup
     .string()
-    .oneOf(["resistant", "susceptible", "indeterminate"])
+    .oneOf(["resistant", "susceptible", "indeterminate", "not_done"])
+    .default("not_done")
     .nullable()
     .required("Field is required"),
 

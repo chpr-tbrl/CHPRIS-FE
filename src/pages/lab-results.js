@@ -463,6 +463,7 @@ const LabResults = () => {
                         labelText="indeterminate"
                         value="indeterminate"
                       />
+                      <RadioButton labelText="Not done" value="not_done" />
                     </RadioButtonGroup>
 
                     <RadioButtonGroup
@@ -485,6 +486,7 @@ const LabResults = () => {
                         labelText="indeterminate"
                         value="indeterminate"
                       />
+                      <RadioButton labelText="Not done" value="not_done" />
                     </RadioButtonGroup>
                   </Stack>
                 </FormGroup>
@@ -515,6 +517,7 @@ const LabResults = () => {
                         labelText="indeterminate"
                         value="indeterminate"
                       />
+                      <RadioButton labelText="Not done" value="not_done" />
                     </RadioButtonGroup>
 
                     <RadioButtonGroup
@@ -537,6 +540,7 @@ const LabResults = () => {
                         labelText="indeterminate"
                         value="indeterminate"
                       />
+                      <RadioButton labelText="Not done" value="not_done" />
                     </RadioButtonGroup>
 
                     <RadioButtonGroup
@@ -559,6 +563,7 @@ const LabResults = () => {
                         labelText="indeterminate"
                         value="indeterminate"
                       />
+                      <RadioButton labelText="Not done" value="not_done" />
                     </RadioButtonGroup>
 
                     <RadioButtonGroup
@@ -581,6 +586,7 @@ const LabResults = () => {
                         labelText="indeterminate"
                         value="indeterminate"
                       />
+                      <RadioButton labelText="Not done" value="not_done" />
                     </RadioButtonGroup>
 
                     <RadioButtonGroup
@@ -609,6 +615,7 @@ const LabResults = () => {
                         labelText="indeterminate"
                         value="indeterminate"
                       />
+                      <RadioButton labelText="Not done" value="not_done" />
                     </RadioButtonGroup>
                   </Stack>
                 </FormGroup>
@@ -632,6 +639,7 @@ const LabResults = () => {
                     labelText="indeterminate"
                     value="indeterminate"
                   />
+                  <RadioButton labelText="Not done" value="not_done" />
                 </RadioButtonGroup>
 
                 <RadioButtonGroup
@@ -649,6 +657,7 @@ const LabResults = () => {
                     labelText="indeterminate"
                     value="indeterminate"
                   />
+                  <RadioButton labelText="Not done" value="not_done" />
                 </RadioButtonGroup>
 
                 <RadioButtonGroup
@@ -666,6 +675,7 @@ const LabResults = () => {
                     labelText="indeterminate"
                     value="indeterminate"
                   />
+                  <RadioButton labelText="Not done" value="not_done" />
                 </RadioButtonGroup>
 
                 <RadioButtonGroup
@@ -683,6 +693,7 @@ const LabResults = () => {
                     labelText="indeterminate"
                     value="indeterminate"
                   />
+                  <RadioButton labelText="Not done" value="not_done" />
                 </RadioButtonGroup>
 
                 <RadioButtonGroup
@@ -700,6 +711,7 @@ const LabResults = () => {
                     labelText="indeterminate"
                     value="indeterminate"
                   />
+                  <RadioButton labelText="Not done" value="not_done" />
                 </RadioButtonGroup>
 
                 <RadioButtonGroup
@@ -719,6 +731,7 @@ const LabResults = () => {
                     labelText="indeterminate"
                     value="indeterminate"
                   />
+                  <RadioButton labelText="Not done" value="not_done" />
                 </RadioButtonGroup>
 
                 <RadioButtonGroup
@@ -738,6 +751,7 @@ const LabResults = () => {
                     labelText="indeterminate"
                     value="indeterminate"
                   />
+                  <RadioButton labelText="Not done" value="not_done" />
                 </RadioButtonGroup>
 
                 <RadioButtonGroup
@@ -757,6 +771,7 @@ const LabResults = () => {
                     labelText="indeterminate"
                     value="indeterminate"
                   />
+                  <RadioButton labelText="Not done" value="not_done" />
                 </RadioButtonGroup>
               </Stack>
             </FormGroup>
