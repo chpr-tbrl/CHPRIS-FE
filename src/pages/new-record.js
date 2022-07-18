@@ -167,7 +167,7 @@ const NewRecord = () => {
             >
               <RadioButton labelText="yes" value="yes" id="yes" />
               <RadioButton labelText="no" value="no" id="no" />
-              <RadioButton labelText="unknown" value="unknown" id="unknown" />
+              <RadioButton labelText="unknown" value="unknown" />
             </RadioButtonGroup>
 
             {hasARTCode && (

@@ -120,7 +120,7 @@ const UpdateRecord = () => {
             >
               <RadioButton labelText="Female" value="female" id="female" />
               <RadioButton labelText="Male" value="male" id="male" />
-              <RadioButton labelText="Unkown" value="unknown" id="unknown" />
+              <RadioButton labelText="Unkown" value="unknown" />
             </RadioButtonGroup>
 
             <DatePicker
