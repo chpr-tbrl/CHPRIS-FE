@@ -53,11 +53,11 @@ export const NEW_RECORD_SCHEMA = yup.object({
     .oneOf(["yes", "no"])
     .default("no")
     .required("Field is required"),
-  records_symptoms_current_cough: yup.bool(),
-  records_symptoms_fever: yup.bool(),
-  records_symptoms_night_sweats: yup.bool(),
-  records_symptoms_weight_loss: yup.bool(),
-  records_symptoms_none_of_the_above: yup.bool(),
+  records_symptoms_current_cough: yup.bool().default(false),
+  records_symptoms_fever: yup.bool().default(false),
+  records_symptoms_night_sweats: yup.bool().default(false),
+  records_symptoms_weight_loss: yup.bool().default(false),
+  records_symptoms_none_of_the_above: yup.bool().default(true),
   records_tb_type: yup
     .string()
     .oneOf([
@@ -67,15 +67,15 @@ export const NEW_RECORD_SCHEMA = yup.object({
       "unknown",
     ])
     .default("unknown"),
-  records_patient_category_hospitalized: yup.bool(),
-  records_patient_category_child: yup.bool(),
-  records_patient_category_to_initiate_art: yup.bool(),
-  records_patient_category_on_art_symptomatic: yup.bool(),
-  records_patient_category_outpatient: yup.bool(),
-  records_patient_category_anc: yup.bool(),
-  records_patient_category_diabetes_clinic: yup.bool(),
+  records_patient_category_hospitalized: yup.bool().default(false),
+  records_patient_category_child: yup.bool().default(false),
+  records_patient_category_to_initiate_art: yup.bool().default(false),
+  records_patient_category_on_art_symptomatic: yup.bool().default(false),
+  records_patient_category_outpatient: yup.bool().default(false),
+  records_patient_category_anc: yup.bool().default(false),
+  records_patient_category_diabetes_clinic: yup.bool().default(false),
   records_patient_category_other: yup.string(),
-  records_reason_for_test_presumptive_tb: yup.bool(),
+  records_reason_for_test_presumptive_tb: yup.bool().default(false),
   records_tb_treatment_history: yup
     .string()
     .oneOf([
@@ -96,8 +96,8 @@ export const NEW_RECORD_SCHEMA = yup.object({
     .default("unknown")
     .required("Field is required"),
   records_tb_treatment_history_contact_of_tb_patient: yup.string().nullable(),
-  records_tb_treatment_number: yup.string(),
+  records_tb_treatment_number: yup.string().nullable(),
   records_sms_notifications: yup.bool().default(false),
-  records_requester_name: yup.string(),
-  records_requester_telephone: yup.string(),
+  records_requester_name: yup.string().nullable(),
+  records_requester_telephone: yup.string().nullable(),
 });
