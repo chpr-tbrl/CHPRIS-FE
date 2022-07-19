@@ -43,7 +43,7 @@ const Records = () => {
   const [params, setParams] = useState({});
   const [option, setOption] = useState("");
   const [site, setSite] = useState({});
-
+  const [title, showTitle] = useState(false);
   const {
     data: records = [],
     isFetching,
@@ -74,11 +74,20 @@ const Records = () => {
         site_id: site.id,
         region_id: site.region.id,
       });
+      showTitle(true);
       return;
     }
     setParams({
       [option]: query,
     });
+  }
+
+  function reset() {
+    setOption("");
+    setParams({});
+    setSite({});
+    refetch();
+    showTitle(false);
   }
 
   function showActions(record) {
@@ -235,6 +244,19 @@ const Records = () => {
         </Column>
       </Row>
       <Spacer h={7} />
+
+      <Column>
+        <Spacer h={5} />
+        <h5
+          style={{
+            textAlign: "start",
+          }}
+        >
+          {title ? "Search results available for" : null}
+        </h5>
+        <Spacer h={5} />
+      </Column>
+
       <Row>
         {records.length ? (
           records.map((record) => (
