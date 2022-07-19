@@ -1,0 +1,19 @@
+name: Frontend CI
+on:
+  pull_request:
+    branches:
+    - testing
+jobs:
+  build:
+    name: Build the repo
+    runs-on: ubuntu-latest    
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Install Dependencies
+        run: yarn install
+
+      - name: Build
+        run: yarn build
+
+
