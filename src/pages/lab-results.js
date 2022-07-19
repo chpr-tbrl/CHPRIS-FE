@@ -253,6 +253,9 @@ const LabResults = () => {
             </FormGroup>
 
             <FormGroup legendText="Xpert MTB/RIF assay">
+              <p className="form--group__description">Result 1</p>
+              <br />
+
               <Stack gap={7}>
                 <RadioButtonGroup
                   orientation="vertical"
@@ -277,6 +280,82 @@ const LabResults = () => {
 
                 {MTBResult === "detected" && (
                   <Fragment>
+                    <RadioButtonGroup
+                      orientation="vertical"
+                      legendText="Grades"
+                      name="lab_xpert_mtb_rif_assay_grades"
+                      valueSelected={watch("lab_xpert_mtb_rif_assay_grades")}
+                      onChange={(evt) =>
+                        setValue("lab_xpert_mtb_rif_assay_grades", evt)
+                      }
+                    >
+                      <RadioButton labelText="High" value="high" id="high" />
+                      <RadioButton
+                        labelText="Medium"
+                        value="medium"
+                        id="medium"
+                      />
+                      <RadioButton labelText="Low" value="low" id="low" />
+                      <RadioButton
+                        labelText="Very low"
+                        value="very_low"
+                        id="very_low"
+                      />
+                      <RadioButton labelText="Not done" value="not_done" />
+                    </RadioButtonGroup>
+
+                    <RadioButtonGroup
+                      orientation="vertical"
+                      legendText="RIF result"
+                      name="lab_xpert_mtb_rif_assay_rif_result"
+                      valueSelected={watch(
+                        "lab_xpert_mtb_rif_assay_rif_result"
+                      )}
+                      onChange={(evt) =>
+                        setValue("lab_xpert_mtb_rif_assay_rif_result", evt)
+                      }
+                    >
+                      <RadioButton labelText="Detected" value="detected" />
+                      <RadioButton
+                        labelText="Indeterminate"
+                        value="indeterminate"
+                      />
+                      <RadioButton
+                        labelText="Not detected"
+                        value="not_detected"
+                      />
+                      <RadioButton labelText="Not done" value="not_done" />
+                    </RadioButtonGroup>
+
+                    <p className="form--group__description">Result 2</p>
+
+                    <RadioButtonGroup
+                      orientation="vertical"
+                      legendText="MTB result"
+                      name="lab_xpert_mtb_rif_assay_result"
+                      valueSelected={watch("lab_xpert_mtb_rif_assay_result")}
+                      onChange={(evt) => {
+                        setValue("lab_xpert_mtb_rif_assay_grades", NOT_DONE);
+                        setValue(
+                          "lab_xpert_mtb_rif_assay_rif_result",
+                          NOT_DONE
+                        );
+                        setValue("lab_xpert_mtb_rif_assay_result", evt);
+                      }}
+                    >
+                      <RadioButton labelText="Detected" value="detected" />
+                      <RadioButton labelText="Trace" value="trace" id="trace" />
+                      <RadioButton
+                        labelText="Not detected"
+                        value="not_detected"
+                      />
+                      <RadioButton
+                        labelText="Error/invalid"
+                        value="error_invalid"
+                      />
+                      <RadioButton labelText="Not done" value="not_done" />
+                    </RadioButtonGroup>
+
                     <RadioButtonGroup
                       orientation="vertical"
                       legendText="Grades"
