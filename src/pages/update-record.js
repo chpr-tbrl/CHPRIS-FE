@@ -56,6 +56,15 @@ const UpdateRecord = () => {
   const isFemale = watch("records_sex", "female") === "female";
   const hasARTCode = watch("records_has_art_unique_code", "no") === "yes";
   const isHospitalized = watch("records_status", "outpatient") === "ward-bed";
+  const isChild = watch("records_age") <= 15;
+  const hasStartedART = watch("records_patient_category_to_initiate_art");
+  const isOnART = watch("records_patient_category_on_art_symptomatic");
+  const hasSymptoms = watch([
+    "records_symptoms_current_cough",
+    "records_symptoms_fever",
+    "records_symptoms_night_sweats",
+    "records_symptoms_weight_loss",
+  ]);
 
   const { regions, sites, selectSite, selectRegion } =
     useFetchedRegionsAndSites(setValue);
@@ -229,27 +238,52 @@ const UpdateRecord = () => {
               <Checkbox
                 labelText="Current cough"
                 id="records_symptoms_current_cough"
-                {...register("records_symptoms_current_cough")}
+                {...register("records_symptoms_current_cough", {
+                  onChange: () => {
+                    setValue("records_symptoms_none_of_the_above", false, {
+                      shouldValidate: true,
+                    });
+                  },
+                })}
               />
               <Checkbox
                 labelText="Fever"
                 id="records_symptoms_fever"
-                {...register("records_symptoms_fever")}
+                {...register("records_symptoms_fever", {
+                  onChange: () => {
+                    setValue("records_symptoms_none_of_the_above", false, {
+                      shouldValidate: true,
+                    });
+                  },
+                })}
               />
               <Checkbox
                 labelText="Night sweats"
                 id="records_symptoms_night_sweats"
-                {...register("records_symptoms_night_sweats")}
+                {...register("records_symptoms_night_sweats", {
+                  onChange: () => {
+                    setValue("records_symptoms_none_of_the_above", false, {
+                      shouldValidate: true,
+                    });
+                  },
+                })}
               />
               <Checkbox
                 labelText="Weight loss"
                 id="records_symptoms_weight_loss"
-                {...register("records_symptoms_weight_loss")}
+                {...register("records_symptoms_weight_loss", {
+                  onChange: () => {
+                    setValue("records_symptoms_none_of_the_above", false, {
+                      shouldValidate: true,
+                    });
+                  },
+                })}
               />
               <Checkbox
                 labelText="None of the above"
                 id="records_symptoms_none_of_the_above"
                 {...register("records_symptoms_none_of_the_above")}
+                disabled={hasSymptoms.includes(true)}
               />
             </FormGroup>
 
@@ -287,27 +321,31 @@ const UpdateRecord = () => {
                 labelText="Hospitalized (HOS)"
                 id="records_patient_category_hospitalized"
                 {...register("records_patient_category_hospitalized")}
+                disabled={!isHospitalized}
               />
               <Checkbox
                 labelText="Child (CHI)"
                 id="records_patient_category_child"
                 {...register("records_patient_category_child")}
+                disabled={!isChild}
               />
               <Checkbox
                 labelText="To initiate ART(ART)"
                 id="records_patient_category_to_initiate_art"
                 {...register("records_patient_category_to_initiate_art")}
+                disabled={isOnART}
               />
               <Checkbox
                 labelText="On ART symptomatic (PLH)"
-                id="records_patient_category_on_art_symptoma
-                    tic"
+                id="records_patient_category_on_art_symptomatic"
                 {...register("records_patient_category_on_art_symptomatic")}
+                disabled={hasStartedART}
               />
               <Checkbox
                 labelText="Out Patient"
                 id="records_patient_category_outpatient"
                 {...register("records_patient_category_outpatient")}
+                disabled={isHospitalized}
               />
               <Checkbox
                 labelText="ANC"
@@ -319,7 +357,7 @@ const UpdateRecord = () => {
                 id="records_patient_category_diabetes_clinic"
                 {...register("records_patient_category_diabetes_clinic")}
               />
-              <Checkbox labelText="Other" id="has_orther" />
+              <Spacer h={4} />
               <TextInput
                 id="records_patient_category_other"
                 labelText="Other"
