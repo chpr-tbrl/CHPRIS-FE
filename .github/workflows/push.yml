@@ -16,9 +16,10 @@ jobs:
         password: ${{ secrets.PASSWORD }}
         port: ${{ secrets.PORT }}
         script: |
-          cd /var/ww/repos/CHPR-BE
+          cd /var/www/repos/CHPRIS-FE
           git pull origin testing
           yarn install
           yarn build
           cp -r build/. /var/www/html/
+
           
