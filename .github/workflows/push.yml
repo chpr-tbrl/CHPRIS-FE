@@ -17,10 +17,12 @@ jobs:
         port: ${{ secrets.PORT }}
         script: |
           cd /var/www/repos/CHPRIS-FE
+          git checkout testing
           git pull origin testing
+          rm -rf build
           yarn install
           yarn build
           cp -r build/. /var/www/html/
-          systemctl restart apache2
+          systemctl restart apache2.service
 
           
