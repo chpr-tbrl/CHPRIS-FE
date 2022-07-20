@@ -11,6 +11,7 @@ import {
   RadioButton,
   FormLabel,
   RadioButtonGroup,
+  InlineNotification,
   InlineLoading,
   FlexGrid,
   Loading,
@@ -61,6 +62,7 @@ const SpecimenCollection = () => {
     "specimen_collection_1_specimen_collection_type",
     "sputum"
   );
+
   const specimenTwoType = watch(
     "specimen_collection_2_specimen_collection_type",
     "sputum"
@@ -129,7 +131,7 @@ const SpecimenCollection = () => {
               }
             >
               <Stack gap={7}>
-                <FormGroup legendText="Collection 1">
+                <FormGroup legendText="Collection 1" hidden={isUpdate}>
                   <Stack gap={7}>
                     <DatePicker
                       control={control}
@@ -183,10 +185,7 @@ const SpecimenCollection = () => {
                             labelText="Pleural fluid"
                             value="pleural_fluid"
                           />
-                          <RadioButton
-                            labelText="unknown"
-                            value="unknown"
-                          />
+                          <RadioButton labelText="unknown" value="unknown" />
                           <RadioButton labelText="other" value="other" />
                         </RadioButtonGroup>
 
@@ -283,7 +282,14 @@ const SpecimenCollection = () => {
                     />
                   </Stack>
                 </FormGroup>
-
+                {isUpdate && (
+                  <InlineNotification
+                    lowContrast
+                    kind="info"
+                    title="Alert"
+                    subtitle="Only Collection 2 can be updated"
+                  />
+                )}
                 <FormGroup legendText="Collection 2">
                   <Stack gap={7}>
                     <DatePicker
@@ -338,10 +344,7 @@ const SpecimenCollection = () => {
                             labelText="Pleural fluid"
                             value="pleural_fluid"
                           />
-                          <RadioButton
-                            labelText="unknown"
-                            value="unknown"
-                          />
+                          <RadioButton labelText="unknown" value="unknown" />
                           <RadioButton labelText="other" value="other" />
                         </RadioButtonGroup>
 
