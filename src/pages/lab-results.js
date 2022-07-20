@@ -460,7 +460,7 @@ const LabResults = () => {
 
                     <TextInput
                       id="lab_xpert_mtb_rif_assay_done_by_2"
-                      labelText="Done by steph"
+                      labelText="Done by"
                       {...register("lab_xpert_mtb_rif_assay_done_by")}
                       invalid={
                         errors.lab_xpert_mtb_rif_assay_done_by ? true : false
