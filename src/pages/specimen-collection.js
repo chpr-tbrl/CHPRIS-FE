@@ -155,62 +155,39 @@ const SpecimenCollection = () => {
                             )
                           }
                         >
-                          <RadioButton
-                            labelText="sputum"
-                            value="sputum"
-                            id="sputum"
-                          />
+                          <RadioButton labelText="sputum" value="sputum" />
                           <RadioButton labelText="CSF" value="csf" id="csf" />
                           <RadioButton
                             labelText="Lymph node aspirate"
                             value="lymph_node_aspirate"
-                            id="lymph_node_aspirate"
                           />
                           <RadioButton
                             labelText="Gastric aspirate"
                             value="gastric_aspirate"
-                            id="gastric_aspirate"
                           />
-                          <RadioButton
-                            labelText="Urine"
-                            value="urine"
-                            id="urine"
-                          />
-                          <RadioButton
-                            labelText="Abscess"
-                            id="abscess"
-                            value="abscess"
-                          />
+                          <RadioButton labelText="Urine" value="urine" />
+                          <RadioButton labelText="Abscess" value="abscess" />
                           <RadioButton
                             labelText="Bronchoalveolar aspirate"
-                            id="bronchoalveolar_aspirate"
                             value="bronchoalveolar_aspirate"
                           />
                           <RadioButton
                             labelText="Isolate from sputum"
-                            id="isolate_from_sputum"
                             value="isolate_from_sputum"
                           />
                           <RadioButton
                             labelText="Isolate from specimen not sputum"
-                            id="isolate_from_specimen_not_sputum"
                             value="isolate_from_specimen_not_sputum"
                           />
                           <RadioButton
                             labelText="Pleural fluid"
-                            id="pleural_fluid"
                             value="pleural_fluid"
                           />
                           <RadioButton
                             labelText="unknown"
-                            value="unk_unknown"
-                            id="unk_unknown"
+                            value="unknown"
                           />
-                          <RadioButton
-                            labelText="other"
-                            value="other"
-                            id="other"
-                          />
+                          <RadioButton labelText="other" value="other" />
                         </RadioButtonGroup>
 
                         {specimenOneType === "other" && (
@@ -334,7 +311,7 @@ const SpecimenCollection = () => {
                           }
                         >
                           <RadioButton labelText="sputum" value="sputum" />
-                          <RadioButton labelText="CSF" value="csf" id="csf2" />
+                          <RadioButton labelText="CSF" value="csf" id="csf" />
                           <RadioButton
                             labelText="Lymph node aspirate"
                             value="lymph_node_aspirate"
@@ -344,6 +321,27 @@ const SpecimenCollection = () => {
                             value="gastric_aspirate"
                           />
                           <RadioButton labelText="Urine" value="urine" />
+                          <RadioButton labelText="Abscess" value="abscess" />
+                          <RadioButton
+                            labelText="Bronchoalveolar aspirate"
+                            value="bronchoalveolar_aspirate"
+                          />
+                          <RadioButton
+                            labelText="Isolate from sputum"
+                            value="isolate_from_sputum"
+                          />
+                          <RadioButton
+                            labelText="Isolate from specimen not sputum"
+                            value="isolate_from_specimen_not_sputum"
+                          />
+                          <RadioButton
+                            labelText="Pleural fluid"
+                            value="pleural_fluid"
+                          />
+                          <RadioButton
+                            labelText="unknown"
+                            value="unknown"
+                          />
                           <RadioButton labelText="other" value="other" />
                         </RadioButtonGroup>
 
