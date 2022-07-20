@@ -83,23 +83,19 @@ export const SPECIMEN_COLLECTION_SCHEMA = yup.object({
     }),
   specimen_collection_2_period: yup
     .string()
-    .nullable()
+    .oneOf(["spot", "morning", "n_a"])
     .default("n_a")
     .when("specimen_collection_2_specimen_collection_type", {
       is: "sputum",
-      then: (schema) =>
-        schema.oneOf(["spot", "morning", "n_a"]).required("Field is required"),
+      then: (schema) => schema.required("Field is required"),
     }),
   specimen_collection_2_aspect: yup
     .string()
-    .nullable()
+    .oneOf(["mucopurulent", "bloody", "salivary", "n_a"])
     .default("n_a")
     .when("specimen_collection_2_specimen_collection_type", {
       is: "sputum",
-      then: (schema) =>
-        schema
-          .oneOf(["mucopurulent", "bloody", "salivary", "n_a"])
-          .required("Field is required"),
+      then: (schema) => schema.required("Field is required"),
     }),
   specimen_collection_2_received_by: yup
     .string()
