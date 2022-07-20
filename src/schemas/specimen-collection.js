@@ -18,10 +18,10 @@ export const SPECIMEN_COLLECTION_SCHEMA = yup.object({
       "isolate_from_sputum",
       "isolate_from_specimen_not_sputum",
       "pleural_fluid",
-      "unk_unknown",
+      "unknown",
       "other",
     ])
-    .default("sputum")
+    .default("unknown")
     .required("Field is required"),
   specimen_collection_1_other: yup
     .string()
@@ -55,26 +55,24 @@ export const SPECIMEN_COLLECTION_SCHEMA = yup.object({
   specimen_collection_2_specimen_collection_type: yup
     .string()
     .nullable()
-    .default("")
+    .oneOf([
+      "sputum",
+      "csf",
+      "lymph_node_aspirate",
+      "gastric_aspirate",
+      "urine",
+      "abscess",
+      "bronchoalveolar_aspirate",
+      "isolate_from_sputum",
+      "isolate_from_specimen_not_sputum",
+      "pleural_fluid",
+      "unknown",
+      "other",
+    ])
+    .default("unknown")
     .when("specimen_collection_2_date", {
       is: (value) => value != null,
-      then: (schema) =>
-        schema
-          .oneOf([
-            "sputum",
-            "csf",
-            "lymph_node_aspirate",
-            "gastric_aspirate",
-            "urine",
-            "abscess",
-            "bronchoalveolar_aspirate",
-            "isolate_from_sputum",
-            "isolate_from_specimen_not_sputum",
-            "pleural_fluid",
-            "unk_unknown",
-            "other",
-          ])
-          .required("Field is required"),
+      then: (schema) => schema.required("Field is required"),
     }),
   specimen_collection_2_other: yup
     .string()
