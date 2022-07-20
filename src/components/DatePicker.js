@@ -4,7 +4,7 @@ import { TextInput } from "@carbon/react";
 
 import Flatpickr from "react-flatpickr";
 
-export const DatePicker = ({ id, control, ...rest }) => {
+export const DatePicker = ({ id, control, labelText, ...rest }) => {
   const { field } = useController({
     name: id,
     control,
@@ -25,7 +25,7 @@ export const DatePicker = ({ id, control, ...rest }) => {
             ref={ref}
             aria-label="date"
             placeholder="yyyy-mm-dd"
-            labelText=""
+            labelText={labelText}
           />
         );
       }}
