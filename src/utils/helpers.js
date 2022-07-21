@@ -33,6 +33,9 @@ export function getResultType(data) {
     lab_xpert_mtb_rif_assay_grades,
     lab_xpert_mtb_rif_assay_rif_result,
     lab_urine_lf_lam_result,
+    lab_xpert_mtb_rif_assay_grades_2,
+    lab_xpert_mtb_rif_assay_rif_result_2,
+    lab_xpert_mtb_rif_assay_result_2,
   } = data;
 
   let result = null;
@@ -46,7 +49,10 @@ export function getResultType(data) {
   } else if (
     positiveXpert.includes(lab_xpert_mtb_rif_assay_result) ||
     positiveXpert.includes(lab_xpert_mtb_rif_assay_rif_result) ||
-    positiveXpert.includes(lab_xpert_mtb_rif_assay_grades)
+    positiveXpert.includes(lab_xpert_mtb_rif_assay_grades) ||
+    positiveXpert.includes(lab_xpert_mtb_rif_assay_result_2) ||
+    positiveXpert.includes(lab_xpert_mtb_rif_assay_rif_result_2) ||
+    positiveXpert.includes(lab_xpert_mtb_rif_assay_grades_2)
   ) {
     result = POSITIVE;
   } else if (lab_urine_lf_lam_result === POSITIVE) {

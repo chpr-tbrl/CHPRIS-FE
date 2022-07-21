@@ -264,8 +264,8 @@ const LabResults = () => {
                     setValue("lab_xpert_mtb_rif_assay_result", evt);
                     setValue("lab_xpert_mtb_rif_assay_grades", NOT_DONE);
                     setValue("lab_xpert_mtb_rif_assay_rif_result", NOT_DONE);
-                    setValue("lab_xpert_mtb_rif_assay_grades", NOT_DONE);
-                    setValue("lab_xpert_mtb_rif_assay_rif_result", NOT_DONE);
+                    setValue("lab_xpert_mtb_rif_assay_grades_2", NOT_DONE);
+                    setValue("lab_xpert_mtb_rif_assay_rif_result_2", NOT_DONE);
                     setValue("lab_xpert_mtb_rif_assay_result_2", NOT_DONE);
                   }}
                 >
