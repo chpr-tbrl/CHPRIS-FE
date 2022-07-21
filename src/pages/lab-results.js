@@ -59,10 +59,8 @@ const LabResults = () => {
 
   const isResultOneDone =
     watch("lab_smear_microscopy_result_result_1", NOT_DONE) !== NOT_DONE;
-  const isMTBResultOneDone =
-    watch("lab_xpert_mtb_rif_assay_result", NOT_DONE) !== NOT_DONE;
   const MTBResult = watch("lab_xpert_mtb_rif_assay_result", NOT_DONE);
-  const MTBResult_2 = watch("lab_xpert_mtb_rif_assay_result_2", NOT_DONE);
+  const MTBResultTwo = watch("lab_xpert_mtb_rif_assay_result_2", NOT_DONE);
   const isLFDone = watch("lab_urine_lf_lam_result", NOT_DONE) !== NOT_DONE;
 
   useEffect(() => {
@@ -256,9 +254,6 @@ const LabResults = () => {
             </FormGroup>
 
             <FormGroup legendText="Xpert MTB/RIF assay">
-              <p className="form--group__description">Result 1</p>
-              <br />
-
               <Stack gap={7}>
                 <RadioButtonGroup
                   orientation="vertical"
@@ -266,9 +261,12 @@ const LabResults = () => {
                   name="lab_xpert_mtb_rif_assay_result"
                   valueSelected={watch("lab_xpert_mtb_rif_assay_result")}
                   onChange={(evt) => {
+                    setValue("lab_xpert_mtb_rif_assay_result", evt);
                     setValue("lab_xpert_mtb_rif_assay_grades", NOT_DONE);
                     setValue("lab_xpert_mtb_rif_assay_rif_result", NOT_DONE);
-                    setValue("lab_xpert_mtb_rif_assay_result", evt);
+                    setValue("lab_xpert_mtb_rif_assay_grades", NOT_DONE);
+                    setValue("lab_xpert_mtb_rif_assay_rif_result", NOT_DONE);
+                    setValue("lab_xpert_mtb_rif_assay_result_2", NOT_DONE);
                   }}
                 >
                   <RadioButton labelText="Detected" value="detected" />
@@ -333,69 +331,32 @@ const LabResults = () => {
                 )}
 
                 {MTBResult !== NOT_DONE && (
-                  <Fragment>
-                    <DatePicker
-                      control={control}
-                      labelText="Date"
-                      id="lab_xpert_mtb_rif_assay_date"
-                      invalid={
-                        errors.lab_xpert_mtb_rif_assay_date ? true : false
-                      }
-                      invalidText={errors.lab_xpert_mtb_rif_assay_date?.message}
+                  <RadioButtonGroup
+                    orientation="vertical"
+                    legendText="MTB result (2)"
+                    name="lab_xpert_mtb_rif_assay_result_2"
+                    valueSelected={watch("lab_xpert_mtb_rif_assay_result_2")}
+                    onChange={(evt) => {
+                      setValue("lab_xpert_mtb_rif_assay_grades", NOT_DONE);
+                      setValue("lab_xpert_mtb_rif_assay_rif_result", NOT_DONE);
+                      setValue("lab_xpert_mtb_rif_assay_result_2", evt);
+                    }}
+                  >
+                    <RadioButton labelText="Detected" value="detected" />
+                    <RadioButton labelText="Trace" value="trace" id="trace" />
+                    <RadioButton
+                      labelText="Not detected"
+                      value="not_detected"
                     />
-
-                    <TextInput
-                      id="lab_xpert_mtb_rif_assay_done_by"
-                      labelText="Done by"
-                      {...register("lab_xpert_mtb_rif_assay_done_by")}
-                      invalid={
-                        errors.lab_xpert_mtb_rif_assay_done_by ? true : false
-                      }
-                      invalidText={
-                        errors.lab_xpert_mtb_rif_assay_done_by?.message
-                      }
+                    <RadioButton
+                      labelText="Error/invalid"
+                      value="error_invalid"
                     />
-                  </Fragment>
+                    <RadioButton labelText="Not done" value="not_done" />
+                  </RadioButtonGroup>
                 )}
 
-                {/* second mtb results */}
-                {isMTBResultOneDone && (
-                  <Fragment>
-                    <p className="form--group__description">Result 2</p>
-
-                    <RadioButtonGroup
-                      orientation="vertical"
-                      legendText="MTB result"
-                      name="lab_xpert_mtb_rif_assay_result_2"
-                      valueSelected={watch("lab_xpert_mtb_rif_assay_result_2")}
-                      onChange={(evt) => {
-                        setValue("lab_xpert_mtb_rif_assay_grades_2", NOT_DONE);
-                        setValue(
-                          "lab_xpert_mtb_rif_assay_rif_result_2",
-                          NOT_DONE
-                        );
-                        setValue("lab_xpert_mtb_rif_assay_result_2", evt);
-                      }}
-                    >
-                      <RadioButton labelText="Detected" value="detected_2" />
-                      <RadioButton
-                        labelText="Trace"
-                        value="trace"
-                        id="trace_2"
-                      />
-                      <RadioButton
-                        labelText="Not detected"
-                        value="not_detected"
-                      />
-                      <RadioButton
-                        labelText="Error/invalid"
-                        value="error_invalid"
-                      />
-                      <RadioButton labelText="Not done" value="not_done" />
-                    </RadioButtonGroup>
-                  </Fragment>
-                )}
-                {MTBResult_2 === "detected_2" && (
+                {MTBResultTwo === "detected" && (
                   <Fragment>
                     <RadioButtonGroup
                       orientation="vertical"
@@ -406,17 +367,17 @@ const LabResults = () => {
                         setValue("lab_xpert_mtb_rif_assay_grades_2", evt)
                       }
                     >
-                      <RadioButton labelText="High" value="high" id="high_2" />
+                      <RadioButton labelText="High" value="high" id="high" />
                       <RadioButton
                         labelText="Medium"
                         value="medium"
-                        id="medium_2"
+                        id="medium"
                       />
-                      <RadioButton labelText="Low" value="low" id="low_2" />
+                      <RadioButton labelText="Low" value="low" id="low" />
                       <RadioButton
                         labelText="Very low"
                         value="very_low"
-                        id="very_low_2"
+                        id="very_low"
                       />
                       <RadioButton labelText="Not done" value="not_done" />
                     </RadioButtonGroup>
@@ -451,7 +412,7 @@ const LabResults = () => {
                     <DatePicker
                       control={control}
                       labelText="Date"
-                      id="lab_xpert_mtb_rif_assay_date_2"
+                      id="lab_xpert_mtb_rif_assay_date"
                       invalid={
                         errors.lab_xpert_mtb_rif_assay_date ? true : false
                       }
@@ -459,7 +420,7 @@ const LabResults = () => {
                     />
 
                     <TextInput
-                      id="lab_xpert_mtb_rif_assay_done_by_2"
+                      id="lab_xpert_mtb_rif_assay_done_by"
                       labelText="Done by"
                       {...register("lab_xpert_mtb_rif_assay_done_by")}
                       invalid={
