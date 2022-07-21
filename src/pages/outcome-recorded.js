@@ -25,6 +25,7 @@ import { recordSelector } from "features";
 import {
   useGetOutcomesQuery,
   useNewOutcomeMutation,
+  useGetLabResultsQuery,
   useUpdateOutcomeMutation,
 } from "services";
 import { useNavigate } from "react-router-dom";
@@ -40,6 +41,14 @@ const OutcomeRecorded = () => {
     isFetching,
     refetch,
   } = useGetOutcomesQuery(record.record_id, {
+    refetchOnMountOrArgChange: true,
+  });
+
+  const {
+    data: results = [],
+    isFetching: fetchingResults,
+    refetch: refetchResults,
+  } = useGetLabResultsQuery(record.record_id, {
     refetchOnMountOrArgChange: true,
   });
 
@@ -92,7 +101,7 @@ const OutcomeRecorded = () => {
     }
   }
 
-  if (isFetching) return <Loading />;
+  if (isFetching || fetchingResults) return <Loading />;
 
   return (
     <FlexGrid fullWidth className="page">
@@ -131,15 +140,51 @@ const OutcomeRecorded = () => {
               >
                 <Stack gap={5}>
                   <h5>SMR results</h5>
-                  <p>Result 1: Not done</p>
-                  <p>Result 2: Not done</p>
+                  <p>
+                    <span>Result 1: </span>
+                    {results[0]?.lab_smear_microscopy_result_result_1 || "N/A"}
+                  </p>
+                  <p>
+                    <span>Result 2: </span>
+                    {results[0]?.lab_smear_microscopy_result_result_1 || "N/A"}
+                  </p>
                   <h5>Xpert results</h5>
-                  <p>MTB: Detected</p>
-                  <p>Grade: Very Low</p>
-                  <p>RIF: Not done</p>
+                  <p>
+                    <span>MTB: </span>
+                    {results[0]?.lab_xpert_mtb_rif_assay_result || "N/A"}
+                  </p>
+                  <p>
+                    <span>Grade: </span>
+                    {results[0]?.lab_xpert_mtb_rif_assay_grades || "N/A"}
+                  </p>
+                  <p>
+                    <span>RIF: </span>
+                    {results[0]?.lab_xpert_mtb_rif_assay_rif_result || "N/A"}
+                  </p>
+
+                  <h5>Xpert results (2)</h5>
+                  <p>
+                    <span>MTB: </span>
+                    {results[0]?.lab_xpert_mtb_rif_assay_result_2 || "N/A"}
+                  </p>
+                  <p>
+                    <span>Grade: </span>
+                    {results[0]?.lab_xpert_mtb_rif_assay_grades_2 || "N/A"}
+                  </p>
+                  <p>
+                    <span>RIF: </span>
+                    {results[0]?.lab_xpert_mtb_rif_assay_rif_result_2 || "N/A"}
+                  </p>
 
                   <h5>Urine results</h5>
-                  <p>Result: Not done</p>
+                  <p>
+                    <span>LFLam: </span>
+                    {results[0]?.lab_urine_lf_lam_result || "N/A"}
+                  </p>
+
+                  <Button kind="tertiary" onClick={() => refetchResults()}>
+                    refresh
+                  </Button>
                 </Stack>
               </AccordionItem>
             </Accordion>
