@@ -109,6 +109,36 @@ export const LAB_RESULTS_SCHEMA = yup.object({
       is: "not_done",
       otherwise: (schema) => schema.required("Field is required"),
     }),
+
+  lab_xpert_mtb_rif_assay_result_2: yup
+    .string()
+    .oneOf(["detected", "trace", "not_detected", "error_invalid", "not_done"])
+    .default("not_done")
+    .required("Field is required"),
+  lab_xpert_mtb_rif_assay_grades_2: yup
+    .string()
+    .default("not_done")
+    .when("lab_xpert_mtb_rif_assay_result_2", {
+      is: "detected",
+      then: (schema) =>
+        schema
+          .oneOf(["high", "medium", "low", "very_low", "not_done"])
+          .required("Field is required"),
+    }),
+  lab_xpert_mtb_rif_assay_rif_result_2: yup
+    .string()
+    .default("not_done")
+    .oneOf([
+      "detected",
+      "indeterminate",
+      "not_done",
+      "not_detected",
+      "not_done",
+    ])
+    .when("lab_xpert_mtb_rif_assay_result", {
+      is: "detected",
+      then: (schema) => schema.required("Field is required"),
+    }),
   lab_culture_mgit_culture: yup
     .string()
     .oneOf(["tbc", "ntm", "negative", "contaminated", "not_done"])
