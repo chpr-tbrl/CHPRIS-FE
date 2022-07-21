@@ -18,11 +18,10 @@ jobs:
         script: |
           cd /var/www/repos/CHPRIS-FE
           git checkout testing
-          git pull origin testing
+          git pull -r
           rm -rf build
           yarn install
           yarn build
           cp -r build/. /var/www/html/
           systemctl restart apache2.service
 
-          
