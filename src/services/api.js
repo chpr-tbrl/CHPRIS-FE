@@ -18,6 +18,12 @@ export const API = createApi({
         body: data,
       }),
     }),
+    logOut: builder.mutation({
+      query: (data) => ({
+        url: "/logout",
+        method: "POST",
+      }),
+    }),
     signup: builder.mutation({
       query: (data) => ({
         url: "/signup",
@@ -36,7 +42,7 @@ export const API = createApi({
       query: (params) => ({
         url: "/records",
         method: "GET",
-        params
+        params,
       }),
     }),
     getRecord: builder.query({
@@ -193,6 +199,7 @@ export const API = createApi({
 export const {
   useGetSitesQuery,
   useLoginMutation,
+  useLogOutMutation,
   useGetRecordQuery,
   useSignupMutation,
   useGetRecordsQuery,
