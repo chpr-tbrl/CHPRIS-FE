@@ -60,6 +60,7 @@ const LabResults = () => {
   const isResultOneDone =
     watch("lab_smear_microscopy_result_result_1", NOT_DONE) !== NOT_DONE;
   const MTBResult = watch("lab_xpert_mtb_rif_assay_result", NOT_DONE);
+  const MTBResultTwo = watch("lab_xpert_mtb_rif_assay_result_2", NOT_DONE);
   const isLFDone = watch("lab_urine_lf_lam_result", NOT_DONE) !== NOT_DONE;
 
   useEffect(() => {
@@ -260,9 +261,12 @@ const LabResults = () => {
                   name="lab_xpert_mtb_rif_assay_result"
                   valueSelected={watch("lab_xpert_mtb_rif_assay_result")}
                   onChange={(evt) => {
+                    setValue("lab_xpert_mtb_rif_assay_result", evt);
                     setValue("lab_xpert_mtb_rif_assay_grades", NOT_DONE);
                     setValue("lab_xpert_mtb_rif_assay_rif_result", NOT_DONE);
-                    setValue("lab_xpert_mtb_rif_assay_result", evt);
+                    setValue("lab_xpert_mtb_rif_assay_grades", NOT_DONE);
+                    setValue("lab_xpert_mtb_rif_assay_rif_result", NOT_DONE);
+                    setValue("lab_xpert_mtb_rif_assay_result_2", NOT_DONE);
                   }}
                 >
                   <RadioButton labelText="Detected" value="detected" />
@@ -310,6 +314,83 @@ const LabResults = () => {
                       )}
                       onChange={(evt) =>
                         setValue("lab_xpert_mtb_rif_assay_rif_result", evt)
+                      }
+                    >
+                      <RadioButton labelText="Detected" value="detected" />
+                      <RadioButton
+                        labelText="Indeterminate"
+                        value="indeterminate"
+                      />
+                      <RadioButton
+                        labelText="Not detected"
+                        value="not_detected"
+                      />
+                      <RadioButton labelText="Not done" value="not_done" />
+                    </RadioButtonGroup>
+                  </Fragment>
+                )}
+
+                {MTBResult !== NOT_DONE && (
+                  <RadioButtonGroup
+                    orientation="vertical"
+                    legendText="MTB result (2)"
+                    name="lab_xpert_mtb_rif_assay_result_2"
+                    valueSelected={watch("lab_xpert_mtb_rif_assay_result_2")}
+                    onChange={(evt) => {
+                      setValue("lab_xpert_mtb_rif_assay_grades", NOT_DONE);
+                      setValue("lab_xpert_mtb_rif_assay_rif_result", NOT_DONE);
+                      setValue("lab_xpert_mtb_rif_assay_result_2", evt);
+                    }}
+                  >
+                    <RadioButton labelText="Detected" value="detected" />
+                    <RadioButton labelText="Trace" value="trace" id="trace" />
+                    <RadioButton
+                      labelText="Not detected"
+                      value="not_detected"
+                    />
+                    <RadioButton
+                      labelText="Error/invalid"
+                      value="error_invalid"
+                    />
+                    <RadioButton labelText="Not done" value="not_done" />
+                  </RadioButtonGroup>
+                )}
+
+                {MTBResultTwo === "detected" && (
+                  <Fragment>
+                    <RadioButtonGroup
+                      orientation="vertical"
+                      legendText="Grades"
+                      name="lab_xpert_mtb_rif_assay_grades_2"
+                      valueSelected={watch("lab_xpert_mtb_rif_assay_grades_2")}
+                      onChange={(evt) =>
+                        setValue("lab_xpert_mtb_rif_assay_grades_2", evt)
+                      }
+                    >
+                      <RadioButton labelText="High" value="high" id="high" />
+                      <RadioButton
+                        labelText="Medium"
+                        value="medium"
+                        id="medium"
+                      />
+                      <RadioButton labelText="Low" value="low" id="low" />
+                      <RadioButton
+                        labelText="Very low"
+                        value="very_low"
+                        id="very_low"
+                      />
+                      <RadioButton labelText="Not done" value="not_done" />
+                    </RadioButtonGroup>
+
+                    <RadioButtonGroup
+                      orientation="vertical"
+                      legendText="RIF result"
+                      name="lab_xpert_mtb_rif_assay_rif_result_2"
+                      valueSelected={watch(
+                        "lab_xpert_mtb_rif_assay_rif_result_2"
+                      )}
+                      onChange={(evt) =>
+                        setValue("lab_xpert_mtb_rif_assay_rif_result_2", evt)
                       }
                     >
                       <RadioButton labelText="Detected" value="detected" />
