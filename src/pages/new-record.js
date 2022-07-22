@@ -110,7 +110,7 @@ const NewRecord = () => {
           renderIcon={<UserFollow size={42} />}
         />
         <Spacer h={7} />
-        <Form onSubmit={handleSubmit(handleRecordCreation)} id="form_data">
+        <Form onSubmit={handleSubmit(handleRecordCreation)}>
           <Stack gap={7}>
             <TextInput
               id="records_name"
