@@ -23,6 +23,8 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useSelector } from "react-redux";
 import { authSelector } from "features";
+
+// import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { handleSetValue } from "utils";
 import { NEW_RECORD_SCHEMA } from "schemas";
@@ -35,6 +37,12 @@ const NewRecord = () => {
   const isMobile = useDeviceDetection();
   const navigate = useNavigate();
   const [newRecord, { isLoading }] = useNewRecordMutation();
+
+  // const [inputText, setInputText] = useState("");
+  // const handleChange = (event) => {
+  //   const result = event.target.value.toUpperCase();
+  //   setInputText(result);
+  // };
 
   const {
     watch,
@@ -64,6 +72,16 @@ const NewRecord = () => {
   const { regions, sites, selectSite, selectRegion } =
     useFetchedRegionsAndSites(setValue);
 
+  Array.prototype.forEach.call(
+    document.querySelectorAll("input[type=text]"),
+    function (input) {
+      input.addEventListener("keyup", function () {
+        console.log("Key upped!");
+        input.value = input.value.toUpperCase();
+      });
+    }
+  );
+
   async function handleRecordCreation(data) {
     const request = {
       ...auth,
@@ -92,7 +110,7 @@ const NewRecord = () => {
           renderIcon={<UserFollow size={42} />}
         />
         <Spacer h={7} />
-        <Form onSubmit={handleSubmit(handleRecordCreation)}>
+        <Form onSubmit={handleSubmit(handleRecordCreation)} id="form_data">
           <Stack gap={7}>
             <TextInput
               id="records_name"
