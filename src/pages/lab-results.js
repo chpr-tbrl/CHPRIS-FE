@@ -44,6 +44,16 @@ const LabResults = () => {
   });
   const isUpdate = results[0]?.lab_id ? true : false;
 
+Array.prototype.forEach.call(
+    document.querySelectorAll("input[type=text]"),
+    function (input) {
+      input.addEventListener("keyup", function () {
+        console.log("Key upped!");
+        input.value = input.value.toUpperCase();
+      });
+    }
+  );
+
   const {
     reset,
     watch,

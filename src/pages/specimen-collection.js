@@ -43,6 +43,16 @@ const SpecimenCollection = () => {
     refetchOnMountOrArgChange: true,
   });
 
+  Array.prototype.forEach.call(
+    document.querySelectorAll("input[type=text]"),
+    function (input) {
+      input.addEventListener("keyup", function () {
+        console.log("Key upped!");
+        input.value = input.value.toUpperCase();
+      });
+    }
+  );
+
   const isUpdate = specimens[0]?.specimen_collection_id ? true : false;
 
   const {

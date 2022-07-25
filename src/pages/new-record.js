@@ -36,6 +36,16 @@ const NewRecord = () => {
   const navigate = useNavigate();
   const [newRecord, { isLoading }] = useNewRecordMutation();
 
+  Array.prototype.forEach.call(
+    document.querySelectorAll("input[type=text]"),
+    function (input) {
+      input.addEventListener("keyup", function () {
+        console.log("Key upped!");
+        input.value = input.value.toUpperCase();
+      });
+    }
+  );
+
   const {
     watch,
     control,
