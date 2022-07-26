@@ -90,12 +90,19 @@ export const NEW_RECORD_SCHEMA = yup.object({
       "default_after_mdr_regimen",
       "mdr_tb_contact",
       "prisoner_tb_treatment_history_unknown",
+      "contact_of_tb_patient",
       "unknown",
       "other",
     ])
     .default("unknown")
     .required("Field is required"),
-  records_tb_treatment_history_contact_of_tb_patient: yup.string().nullable(),
+  records_tb_treatment_history_contact_of_tb_patient: yup
+    .string()
+    .nullable()
+    .when("records_tb_treatment_history", {
+      is: "contact_of_tb_patient",
+      then: (schema) => schema.required("Field is required"),
+    }),
   records_tb_treatment_number: yup.string().nullable(),
   records_sms_notifications: yup.bool().default(false),
   records_requester_name: yup.string().nullable(),

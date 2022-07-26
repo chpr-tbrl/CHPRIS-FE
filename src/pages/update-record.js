@@ -65,6 +65,8 @@ const UpdateRecord = () => {
     "records_symptoms_night_sweats",
     "records_symptoms_weight_loss",
   ]);
+  const isContact =
+    watch("records_tb_treatment_history") === "contact_of_tb_patient";
 
   const { regions, sites, selectSite, selectRegion } =
     useFetchedRegionsAndSites(setValue);
@@ -439,6 +441,11 @@ const UpdateRecord = () => {
                     value="prisoner_tb_treatment_history_unknown"
                   />
                   <RadioButton
+                    labelText="Contact of TB patient"
+                    id="contact_of_tb_patient"
+                    value="contact_of_tb_patient"
+                  />
+                  <RadioButton
                     labelText="Unknown"
                     id="unknown"
                     value="unknown"
@@ -446,13 +453,24 @@ const UpdateRecord = () => {
                   <RadioButton labelText="Other" id="other" value="other" />
                 </RadioButtonGroup>
 
-                <TextInput
-                  labelText="Contact of TB patient"
-                  id="records_tb_treatment_history_contact_of_tb_patient"
-                  {...register(
-                    "records_tb_treatment_history_contact_of_tb_patient"
-                  )}
-                />
+                {isContact && (
+                  <TextInput
+                    labelText="Contact of TB patient"
+                    id="records_tb_treatment_history_contact_of_tb_patient"
+                    {...register(
+                      "records_tb_treatment_history_contact_of_tb_patient"
+                    )}
+                    invalid={
+                      errors.records_tb_treatment_history_contact_of_tb_patient
+                        ? true
+                        : false
+                    }
+                    invalidText={
+                      errors.records_tb_treatment_history_contact_of_tb_patient
+                        ?.message
+                    }
+                  />
+                )}
               </Stack>
             </FormGroup>
 
