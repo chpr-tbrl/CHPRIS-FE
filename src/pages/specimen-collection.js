@@ -81,7 +81,7 @@ const SpecimenCollection = () => {
         });
       }
     );
-  }, [specimens, reset]);
+  });
 
   async function handleSpecimenCreation(data) {
     const request = {

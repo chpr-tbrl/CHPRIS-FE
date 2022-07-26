@@ -78,7 +78,7 @@ const FollowUP = () => {
         });
       }
     );
-  }, [followUps, reset]);
+  });
 
   async function handleFollowUpCreation(data) {
     const request = {

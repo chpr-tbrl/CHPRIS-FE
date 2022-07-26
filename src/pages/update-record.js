@@ -74,7 +74,16 @@ const UpdateRecord = () => {
       reset(record[0]);
       selectRegion(record[0].region_id);
     }
-  }, [record, reset, selectRegion]);
+
+    Array.prototype.forEach.call(
+      document.querySelectorAll("input[type=text]"),
+      function (input) {
+        input.addEventListener("keyup", function () {
+          input.value = input.value.toUpperCase();
+        });
+      }
+    );
+  });
 
   async function handleUpdate(data) {
     try {

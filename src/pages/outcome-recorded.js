@@ -84,7 +84,7 @@ const OutcomeRecorded = () => {
         });
       }
     );
-  }, [outcomes, reset]);
+  });
 
   async function handleOutcome(data) {
     const request = {
