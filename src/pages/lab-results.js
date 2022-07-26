@@ -64,6 +64,12 @@ const LabResults = () => {
   const isLFDone = watch("lab_urine_lf_lam_result", NOT_DONE) !== NOT_DONE;
 
   useEffect(() => {
+    if (results.length) {
+      reset(results[0]);
+    }
+  }, [results, reset]);
+
+  useEffect(() => {
     Array.prototype.forEach.call(
       document.querySelectorAll("input[type=text],textarea"),
       function (input) {
@@ -72,10 +78,6 @@ const LabResults = () => {
         });
       }
     );
-
-    if (results.length) {
-      reset(results[0]);
-    }
   });
 
   async function handleResultCreation(data) {

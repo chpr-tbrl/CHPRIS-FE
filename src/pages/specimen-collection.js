@@ -72,9 +72,11 @@ const SpecimenCollection = () => {
     if (specimens.length) {
       reset(specimens[0]);
     }
+  }, [specimens, reset]);
 
+  useEffect(() => {
     Array.prototype.forEach.call(
-      document.querySelectorAll("input[type=text]"),
+      document.querySelectorAll("input[type=text],textarea"),
       function (input) {
         input.addEventListener("keyup", function () {
           input.value = input.value.toUpperCase();

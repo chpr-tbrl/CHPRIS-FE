@@ -69,7 +69,9 @@ const FollowUP = () => {
     if (followUps.length) {
       reset(followUps[0]);
     }
+  }, [followUps, reset]);
 
+  useEffect(() => {
     Array.prototype.forEach.call(
       document.querySelectorAll("input[type=text],textarea"),
       function (input) {

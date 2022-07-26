@@ -74,7 +74,9 @@ const UpdateRecord = () => {
       reset(record[0]);
       selectRegion(record[0].region_id);
     }
+  }, [record, reset, selectRegion]);
 
+  useEffect(() => {
     Array.prototype.forEach.call(
       document.querySelectorAll("input[type=text]"),
       function (input) {

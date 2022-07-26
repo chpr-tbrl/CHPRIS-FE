@@ -75,9 +75,11 @@ const OutcomeRecorded = () => {
     if (outcomes.length) {
       reset(outcomes[0]);
     }
+  }, [outcomes, reset]);
 
+  useEffect(() => {
     Array.prototype.forEach.call(
-      document.querySelectorAll("input[type=text]"),
+      document.querySelectorAll("input[type=text],textarea"),
       function (input) {
         input.addEventListener("keyup", function () {
           input.value = input.value.toUpperCase();
