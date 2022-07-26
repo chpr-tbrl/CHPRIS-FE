@@ -44,16 +44,6 @@ const LabResults = () => {
   });
   const isUpdate = results[0]?.lab_id ? true : false;
 
-Array.prototype.forEach.call(
-    document.querySelectorAll("input[type=text]"),
-    function (input) {
-      input.addEventListener("keyup", function () {
-        console.log("Key upped!");
-        input.value = input.value.toUpperCase();
-      });
-    }
-  );
-
   const {
     reset,
     watch,
@@ -74,10 +64,19 @@ Array.prototype.forEach.call(
   const isLFDone = watch("lab_urine_lf_lam_result", NOT_DONE) !== NOT_DONE;
 
   useEffect(() => {
+    Array.prototype.forEach.call(
+      document.querySelectorAll("input[type=text],textarea"),
+      function (input) {
+        input.addEventListener("keyup", function () {
+          input.value = input.value.toUpperCase();
+        });
+      }
+    );
+
     if (results.length) {
       reset(results[0]);
     }
-  }, [results, reset]);
+  });
 
   async function handleResultCreation(data) {
     const request = {

@@ -45,16 +45,6 @@ const FollowUP = () => {
     refetchOnMountOrArgChange: true,
   });
 
-  Array.prototype.forEach.call(
-    document.querySelectorAll("input[type=text]"),
-    function (input) {
-      input.addEventListener("keyup", function () {
-        console.log("Key upped!");
-        input.value = input.value.toUpperCase();
-      });
-    }
-  );
-
   const {
     data: results = [],
     isFetching: fetchingResults,
@@ -79,6 +69,15 @@ const FollowUP = () => {
     if (followUps.length) {
       reset(followUps[0]);
     }
+
+    Array.prototype.forEach.call(
+      document.querySelectorAll("input[type=text],textarea"),
+      function (input) {
+        input.addEventListener("keyup", function () {
+          input.value = input.value.toUpperCase();
+        });
+      }
+    );
   }, [followUps, reset]);
 
   async function handleFollowUpCreation(data) {

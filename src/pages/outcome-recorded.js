@@ -75,6 +75,15 @@ const OutcomeRecorded = () => {
     if (outcomes.length) {
       reset(outcomes[0]);
     }
+
+    Array.prototype.forEach.call(
+      document.querySelectorAll("input[type=text]"),
+      function (input) {
+        input.addEventListener("keyup", function () {
+          input.value = input.value.toUpperCase();
+        });
+      }
+    );
   }, [outcomes, reset]);
 
   async function handleOutcome(data) {
