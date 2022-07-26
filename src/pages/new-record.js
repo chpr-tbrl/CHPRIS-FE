@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import toast from "react-hot-toast";
 import {
   Form,
@@ -35,16 +35,6 @@ const NewRecord = () => {
   const isMobile = useDeviceDetection();
   const navigate = useNavigate();
   const [newRecord, { isLoading }] = useNewRecordMutation();
-
-  Array.prototype.forEach.call(
-    document.querySelectorAll("input[type=text]"),
-    function (input) {
-      input.addEventListener("keyup", function () {
-        console.log("Key upped!");
-        input.value = input.value.toUpperCase();
-      });
-    }
-  );
 
   const {
     watch,
@@ -91,6 +81,17 @@ const NewRecord = () => {
       // we handle errors with middleware
     }
   }
+
+  useEffect(() => {
+    Array.prototype.forEach.call(
+      document.querySelectorAll("input[type=text]"),
+      function (input) {
+        input.addEventListener("keyup", function () {
+          input.value = input.value.toUpperCase();
+        });
+      }
+    );
+  }, []);
 
   return (
     <FlexGrid className="page">

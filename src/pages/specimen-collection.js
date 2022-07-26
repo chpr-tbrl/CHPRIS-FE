@@ -43,16 +43,6 @@ const SpecimenCollection = () => {
     refetchOnMountOrArgChange: true,
   });
 
-  Array.prototype.forEach.call(
-    document.querySelectorAll("input[type=text]"),
-    function (input) {
-      input.addEventListener("keyup", function () {
-        console.log("Key upped!");
-        input.value = input.value.toUpperCase();
-      });
-    }
-  );
-
   const isUpdate = specimens[0]?.specimen_collection_id ? true : false;
 
   const {
@@ -82,6 +72,15 @@ const SpecimenCollection = () => {
     if (specimens.length) {
       reset(specimens[0]);
     }
+
+    Array.prototype.forEach.call(
+      document.querySelectorAll("input[type=text]"),
+      function (input) {
+        input.addEventListener("keyup", function () {
+          input.value = input.value.toUpperCase();
+        });
+      }
+    );
   }, [specimens, reset]);
 
   async function handleSpecimenCreation(data) {
