@@ -65,8 +65,6 @@ const UpdateRecord = () => {
     "records_symptoms_night_sweats",
     "records_symptoms_weight_loss",
   ]);
-  const isContact =
-    watch("records_tb_treatment_history") === "contact_of_tb_patient";
 
   const { regions, sites, selectSite, selectRegion } =
     useFetchedRegionsAndSites(setValue);
@@ -76,7 +74,27 @@ const UpdateRecord = () => {
       reset(record[0]);
       selectRegion(record[0].region_id);
     }
+
+    Array.prototype.forEach.call(
+      document.querySelectorAll("input[type=text]"),
+      function (input) {
+        input.addEventListener("keyup", function () {
+          input.value = input.value.toUpperCase();
+        });
+      }
+    );
   }, [record, reset, selectRegion]);
+
+  useEffect(() => {
+    Array.prototype.forEach.call(
+      document.querySelectorAll("input[type=text]"),
+      function (input) {
+        input.addEventListener("keyup", function () {
+          input.value = input.value.toUpperCase();
+        });
+      }
+    );
+  });
 
   async function handleUpdate(data) {
     try {
@@ -359,6 +377,12 @@ const UpdateRecord = () => {
                 id="records_patient_category_diabetes_clinic"
                 {...register("records_patient_category_diabetes_clinic")}
               />
+              <Checkbox
+                labelText="Prisoner"
+                id="records_patient_category_prisoner"
+                {...register("records_patient_category_prisoner")}
+              />
+
               <Spacer h={4} />
               <TextInput
                 id="records_patient_category_other"
@@ -441,11 +465,6 @@ const UpdateRecord = () => {
                     value="prisoner_tb_treatment_history_unknown"
                   />
                   <RadioButton
-                    labelText="Contact of TB patient"
-                    id="contact_of_tb_patient"
-                    value="contact_of_tb_patient"
-                  />
-                  <RadioButton
                     labelText="Unknown"
                     id="unknown"
                     value="unknown"
@@ -453,24 +472,19 @@ const UpdateRecord = () => {
                   <RadioButton labelText="Other" id="other" value="other" />
                 </RadioButtonGroup>
 
-                {isContact && (
-                  <TextInput
-                    labelText="Contact of TB patient"
-                    id="records_tb_treatment_history_contact_of_tb_patient"
-                    {...register(
-                      "records_tb_treatment_history_contact_of_tb_patient"
-                    )}
-                    invalid={
-                      errors.records_tb_treatment_history_contact_of_tb_patient
-                        ? true
-                        : false
-                    }
-                    invalidText={
-                      errors.records_tb_treatment_history_contact_of_tb_patient
-                        ?.message
-                    }
-                  />
-                )}
+                <Checkbox
+                  labelText="Contact of TB patient"
+                  id="records_tb_treatment_history_contact_of_tb_patient"
+                  {...register(
+                    "records_tb_treatment_history_contact_of_tb_patient"
+                  )}
+                />
+
+                <TextInput
+                  id="records_tb_treatment_history_other"
+                  labelText="Other"
+                  {...register("records_tb_treatment_history_other")}
+                />
               </Stack>
             </FormGroup>
 

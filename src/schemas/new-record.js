@@ -74,6 +74,7 @@ export const NEW_RECORD_SCHEMA = yup.object({
   records_patient_category_outpatient: yup.bool().default(false),
   records_patient_category_anc: yup.bool().default(false),
   records_patient_category_diabetes_clinic: yup.bool().default(false),
+  records_patient_category_prisoner: yup.bool().default(false),
   records_patient_category_other: yup.string(),
   records_reason_for_test_presumptive_tb: yup.bool().default(false),
   records_tb_treatment_history: yup
@@ -96,13 +97,8 @@ export const NEW_RECORD_SCHEMA = yup.object({
     ])
     .default("unknown")
     .required("Field is required"),
-  records_tb_treatment_history_contact_of_tb_patient: yup
-    .string()
-    .nullable()
-    .when("records_tb_treatment_history", {
-      is: "contact_of_tb_patient",
-      then: (schema) => schema.required("Field is required"),
-    }),
+  records_tb_treatment_history_contact_of_tb_patient: yup.bool().nullable(),
+  records_tb_treatment_history_other: yup.string().nullable(),
   records_tb_treatment_number: yup.string().nullable(),
   records_sms_notifications: yup.bool().default(false),
   records_requester_name: yup.string().nullable(),
