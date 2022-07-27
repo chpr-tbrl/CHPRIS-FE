@@ -395,6 +395,12 @@ const NewRecord = () => {
                 id="records_patient_category_diabetes_clinic"
                 {...register("records_patient_category_diabetes_clinic")}
               />
+              <Checkbox
+                labelText="Prisoner"
+                id="records_patient_category_prisoner"
+                {...register("records_patient_category_prisoner")}
+              />
+
               <Spacer h={4} />
               <TextInput
                 id="records_patient_category_other"
