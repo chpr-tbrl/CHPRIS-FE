@@ -343,7 +343,7 @@ const LabResults = () => {
                     }}
                   >
                     <RadioButton labelText="Detected" value="detected" />
-                    <RadioButton labelText="Trace" value="trace" id="trace" />
+                    <RadioButton labelText="Trace" value="trace" id="trace_2" />
                     <RadioButton
                       labelText="Not detected"
                       value="not_detected"
@@ -367,17 +367,17 @@ const LabResults = () => {
                         setValue("lab_xpert_mtb_rif_assay_grades_2", evt)
                       }
                     >
-                      <RadioButton labelText="High" value="high" id="high" />
+                      <RadioButton labelText="High" value="high" id="high_2" />
                       <RadioButton
                         labelText="Medium"
                         value="medium"
-                        id="medium"
+                        id="medium_2"
                       />
-                      <RadioButton labelText="Low" value="low" id="low" />
+                      <RadioButton labelText="Low" value="low" id="low_2" />
                       <RadioButton
                         labelText="Very low"
                         value="very_low"
-                        id="very_low"
+                        id="very_low_2"
                       />
                       <RadioButton labelText="Not done" value="not_done" />
                     </RadioButtonGroup>
