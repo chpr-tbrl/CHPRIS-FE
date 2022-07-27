@@ -351,7 +351,11 @@ const NewRecord = () => {
                 id="pulmonary_and_extrapulmonary"
                 value="pulmonary_and_extrapulmonary"
               />
-              <RadioButton labelText="Unknown" id="unknown" value="unknown" />
+              <RadioButton
+                labelText="Unknown"
+                id="tb_type_unknown"
+                value="unknown"
+              />
             </RadioButtonGroup>
 
             <FormGroup legendText="Patient Category">
@@ -483,7 +487,7 @@ const NewRecord = () => {
                   />
                   <RadioButton
                     labelText="Unknown"
-                    id="unknown"
+                    id="tb_treatment_unknown"
                     value="unknown"
                   />
                   <RadioButton labelText="Other" id="other" value="other" />
