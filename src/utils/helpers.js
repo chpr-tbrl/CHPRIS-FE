@@ -19,7 +19,6 @@ export function getResultType(data) {
   const positiveMicroscopy = ["scanty", "1+", "2+", "3+"];
   const positiveXpert = [
     "detected",
-    "trace",
     "high",
     "medium",
     "low",

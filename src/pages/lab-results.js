@@ -270,7 +270,6 @@ const LabResults = () => {
                   }}
                 >
                   <RadioButton labelText="Detected" value="detected" />
-                  <RadioButton labelText="Trace" value="trace" id="trace" />
                   <RadioButton labelText="Not detected" value="not_detected" />
                   <RadioButton
                     labelText="Error/invalid"
@@ -343,7 +342,6 @@ const LabResults = () => {
                     }}
                   >
                     <RadioButton labelText="Detected" value="detected" />
-                    <RadioButton labelText="Trace" value="trace" id="trace_2" />
                     <RadioButton
                       labelText="Not detected"
                       value="not_detected"

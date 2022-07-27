@@ -61,7 +61,7 @@ export const LAB_RESULTS_SCHEMA = yup.object({
     }),
   lab_xpert_mtb_rif_assay_result: yup
     .string()
-    .oneOf(["detected", "trace", "not_detected", "error_invalid", "not_done"])
+    .oneOf(["detected", "not_detected", "error_invalid", "not_done"])
     .default("not_done")
     .required("Field is required"),
   lab_xpert_mtb_rif_assay_grades: yup
@@ -112,7 +112,7 @@ export const LAB_RESULTS_SCHEMA = yup.object({
 
   lab_xpert_mtb_rif_assay_result_2: yup
     .string()
-    .oneOf(["detected", "trace", "not_detected", "error_invalid", "not_done"])
+    .oneOf(["detected", "not_detected", "error_invalid", "not_done"])
     .default("not_done")
     .required("Field is required"),
   lab_xpert_mtb_rif_assay_grades_2: yup
