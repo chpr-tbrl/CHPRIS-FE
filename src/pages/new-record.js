@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import toast from "react-hot-toast";
 import {
   Form,
@@ -81,6 +81,17 @@ const NewRecord = () => {
       // we handle errors with middleware
     }
   }
+
+  useEffect(() => {
+    Array.prototype.forEach.call(
+      document.querySelectorAll("input[type=text]"),
+      function (input) {
+        input.addEventListener("keyup", function () {
+          input.value = input.value.toUpperCase();
+        });
+      }
+    );
+  }, []);
 
   return (
     <FlexGrid className="page">

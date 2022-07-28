@@ -74,6 +74,17 @@ const SpecimenCollection = () => {
     }
   }, [specimens, reset]);
 
+  useEffect(() => {
+    Array.prototype.forEach.call(
+      document.querySelectorAll("input[type=text],textarea"),
+      function (input) {
+        input.addEventListener("keyup", function () {
+          input.value = input.value.toUpperCase();
+        });
+      }
+    );
+  });
+
   async function handleSpecimenCreation(data) {
     const request = {
       ...data,

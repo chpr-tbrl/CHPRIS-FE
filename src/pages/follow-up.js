@@ -71,6 +71,17 @@ const FollowUP = () => {
     }
   }, [followUps, reset]);
 
+  useEffect(() => {
+    Array.prototype.forEach.call(
+      document.querySelectorAll("input[type=text],textarea"),
+      function (input) {
+        input.addEventListener("keyup", function () {
+          input.value = input.value.toUpperCase();
+        });
+      }
+    );
+  });
+
   async function handleFollowUpCreation(data) {
     const request = {
       ...data,

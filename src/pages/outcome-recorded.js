@@ -77,6 +77,17 @@ const OutcomeRecorded = () => {
     }
   }, [outcomes, reset]);
 
+  useEffect(() => {
+    Array.prototype.forEach.call(
+      document.querySelectorAll("input[type=text],textarea"),
+      function (input) {
+        input.addEventListener("keyup", function () {
+          input.value = input.value.toUpperCase();
+        });
+      }
+    );
+  });
+
   async function handleOutcome(data) {
     const request = {
       ...data,

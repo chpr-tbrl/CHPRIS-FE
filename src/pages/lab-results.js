@@ -69,6 +69,17 @@ const LabResults = () => {
     }
   }, [results, reset]);
 
+  useEffect(() => {
+    Array.prototype.forEach.call(
+      document.querySelectorAll("input[type=text],textarea"),
+      function (input) {
+        input.addEventListener("keyup", function () {
+          input.value = input.value.toUpperCase();
+        });
+      }
+    );
+  });
+
   async function handleResultCreation(data) {
     const request = {
       ...data,
