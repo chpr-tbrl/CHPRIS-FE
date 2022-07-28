@@ -62,6 +62,29 @@ const LabResults = () => {
   const MTBResult = watch("lab_xpert_mtb_rif_assay_result", NOT_DONE);
   const MTBResultTwo = watch("lab_xpert_mtb_rif_assay_result_2", NOT_DONE);
   const isLFDone = watch("lab_urine_lf_lam_result", NOT_DONE) !== NOT_DONE;
+  const cultureFields = watch([
+    "lab_culture_mgit_culture",
+    "lab_culture_lj_culture",
+  ]);
+  const LPAFields = watch([
+    "lab_lpa_mtbdrplus_isoniazid",
+    "lab_lpa_mtbdrplus_rifampin",
+    "lab_lpa_mtbdrs_flouoroquinolones",
+    "lab_lpa_mtbdrs_kanamycin",
+    "lab_lpa_mtbdrs_amikacin",
+    "lab_lpa_mtbdrs_capreomycin",
+    "lab_lpa_mtbdrs_low_level_kanamycin",
+  ]);
+  const DSTFields = watch([
+    "lab_dst_isonazid",
+    "lab_dst_rifampin",
+    "lab_dst_ethambutol",
+    "lab_dst_kanamycin",
+    "lab_dst_ofloxacin",
+    "lab_dst_levofloxacinekanamycin",
+    "lab_dst_moxifloxacinekanamycin",
+    "lab_dst_amikacinekanamycin",
+  ]);
 
   useEffect(() => {
     if (results.length) {
@@ -347,8 +370,8 @@ const LabResults = () => {
                     name="lab_xpert_mtb_rif_assay_result_2"
                     valueSelected={watch("lab_xpert_mtb_rif_assay_result_2")}
                     onChange={(evt) => {
-                      setValue("lab_xpert_mtb_rif_assay_grades", NOT_DONE);
-                      setValue("lab_xpert_mtb_rif_assay_rif_result", NOT_DONE);
+                      setValue("lab_xpert_mtb_rif_assay_grades_2", NOT_DONE);
+                      setValue("lab_xpert_mtb_rif_assay_rif_result_2", NOT_DONE);
                       setValue("lab_xpert_mtb_rif_assay_result_2", evt);
                     }}
                   >
@@ -520,6 +543,26 @@ const LabResults = () => {
                   <RadioButton labelText="Contaminated" value="contaminated" />
                   <RadioButton labelText="Not done" value="not_done" />
                 </RadioButtonGroup>
+
+                {cultureFields.some((field) => field !== NOT_DONE) && (
+                  <Fragment>
+                    <DatePicker
+                      control={control}
+                      labelText="Date"
+                      id="lab_culture_date"
+                      invalid={errors.lab_culture_date ? true : false}
+                      invalidText={errors.lab_culture_date?.message}
+                    />
+
+                    <TextInput
+                      id="lab_culture_done_by"
+                      labelText="Done by"
+                      {...register("lab_culture_done_by")}
+                      invalid={errors.lab_culture_done_by ? true : false}
+                      invalidText={errors.lab_culture_done_by?.message}
+                    />
+                  </Fragment>
+                )}
               </Stack>
             </FormGroup>
 
@@ -528,9 +571,9 @@ const LabResults = () => {
                 TB drug susceptibility testing (DST)
               </p>
               <br />
-              <Stack gap={7} className="indented--group">
+              <Stack gap={7}>
                 <FormGroup legendText="First line LPA (MTBDRplus)">
-                  <Stack gap={6}>
+                  <Stack gap={6} className="indented--group">
                     <RadioButtonGroup
                       orientation="vertical"
                       legendText="Isoniazid"
@@ -582,7 +625,7 @@ const LabResults = () => {
                 </FormGroup>
 
                 <FormGroup legendText="Second line LPA (MTBDRsl)">
-                  <Stack gap={6}>
+                  <Stack gap={6} className="indented--group">
                     <RadioButtonGroup
                       orientation="vertical"
                       legendText="Flouoroquinolones"
@@ -709,10 +752,30 @@ const LabResults = () => {
                     </RadioButtonGroup>
                   </Stack>
                 </FormGroup>
+
+                {LPAFields.some((field) => field !== NOT_DONE) && (
+                  <Fragment>
+                    <DatePicker
+                      control={control}
+                      labelText="Date"
+                      id="lab_lpa_date"
+                      invalid={errors.lab_lpa_date ? true : false}
+                      invalidText={errors.lab_lpa_date?.message}
+                    />
+
+                    <TextInput
+                      id="lab_lpa_done_by"
+                      labelText="Done by"
+                      {...register("lab_lpa_done_by")}
+                      invalid={errors.lab_lpa_done_by ? true : false}
+                      invalidText={errors.lab_lpa_done_by?.message}
+                    />
+                  </Fragment>
+                )}
               </Stack>
             </FormGroup>
 
-            <FormGroup legendText="Proportion method drug susceptibility testing (DST) ">
+            <FormGroup legendText="Proportion method drug susceptibility testing (DST)">
               <Stack gap={6} className="indented--group">
                 <RadioButtonGroup
                   orientation="vertical"
@@ -863,6 +926,26 @@ const LabResults = () => {
                   />
                   <RadioButton labelText="Not done" value="not_done" />
                 </RadioButtonGroup>
+
+                {DSTFields.some((field) => field !== NOT_DONE) && (
+                  <Fragment>
+                    <DatePicker
+                      control={control}
+                      labelText="Date"
+                      id="lab_dst_date"
+                      invalid={errors.lab_dst_date ? true : false}
+                      invalidText={errors.lab_dst_date?.message}
+                    />
+
+                    <TextInput
+                      id="lab_dst_done_by"
+                      labelText="Done by"
+                      {...register("lab_dst_done_by")}
+                      invalid={errors.lab_dst_done_by ? true : false}
+                      invalidText={errors.lab_dst_done_by?.message}
+                    />
+                  </Fragment>
+                )}
               </Stack>
             </FormGroup>
 
