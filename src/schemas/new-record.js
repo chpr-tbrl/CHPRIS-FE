@@ -89,6 +89,7 @@ export const NEW_RECORD_SCHEMA = yup.object({
   records_reason_for_test_follow_up_months: yup
     .number()
     .nullable()
+    .default(null)
     .when("records_reason_for_test", {
       is: (value) => value === "n_a" || value === "presumptive_tb",
       otherwise: (schema) =>
