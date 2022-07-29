@@ -61,6 +61,8 @@ const NewRecord = () => {
     "records_symptoms_weight_loss",
   ]);
 
+  const reasonForTest = watch("records_reason_for_test");
+
   const { regions, sites, selectSite, selectRegion } =
     useFetchedRegionsAndSites(setValue);
 
@@ -423,11 +425,57 @@ const NewRecord = () => {
             </FormGroup>
 
             <FormGroup legendText="Reason for test">
-              <Checkbox
-                labelText="Presumptive TB (Pre-treatment)"
-                id="records_reason_for_test_presumptive_tb"
-                {...register("records_reason_for_test_presumptive_tb")}
-              />
+              <Stack gap={5}>
+                <RadioButtonGroup
+                  legendText="Diagnostic"
+                  valueSelected={watch("records_reason_for_test")}
+                  orientation="vertical"
+                  onChange={(evt) => setValue("records_reason_for_test", evt)}
+                >
+                  <RadioButton
+                    labelText="Presumptive TB (Pre-treatment)"
+                    value="presumptive_tb"
+                  />
+                </RadioButtonGroup>
+
+                <RadioButtonGroup
+                  legendText="Follow up"
+                  valueSelected={watch("records_reason_for_test")}
+                  orientation="vertical"
+                  onChange={(evt) => {
+                    setValue("records_reason_for_test", evt);
+                    setValue("records_reason_for_test_follow_up_months", null);
+                  }}
+                >
+                  <RadioButton labelText="On RHEZ" value="on_rhez" />
+                  <RadioButton
+                    labelText="On retreatment(SRHEZ)"
+                    value="on_retreatment"
+                  />
+                  <RadioButton
+                    labelText="On MDR-TB treatment"
+                    value="on_mdr_tb_treatment"
+                  />
+                  <RadioButton labelText="N/A" value="n_a" />
+                </RadioButtonGroup>
+
+                {!["n_a", "presumptive_tb"].includes(reasonForTest) && (
+                  <NumberInput
+                    min={1}
+                    labelText="After (months)"
+                    id="records_reason_for_test_follow_up_months"
+                    {...register("records_reason_for_test_follow_up_months")}
+                    invalid={
+                      errors.records_reason_for_test_follow_up_months
+                        ? true
+                        : false
+                    }
+                    invalidText={
+                      errors.records_reason_for_test_follow_up_months?.message
+                    }
+                  />
+                )}
+              </Stack>
             </FormGroup>
 
             <FormGroup legendText="TB Treatment history">

@@ -76,7 +76,24 @@ export const NEW_RECORD_SCHEMA = yup.object({
   records_patient_category_diabetes_clinic: yup.bool().default(false),
   records_patient_category_prisoner: yup.bool().default(false),
   records_patient_category_other: yup.string(),
-  records_reason_for_test_presumptive_tb: yup.bool().default(false),
+  records_reason_for_test: yup
+    .string()
+    .oneOf([
+      "presumptive_tb",
+      "on_rhez",
+      "on_retreatment",
+      "on_mdr_tb_treatment",
+      "n_a",
+    ])
+    .default("n_a"),
+  records_reason_for_test_follow_up_months: yup
+    .number()
+    .nullable()
+    .when("records_reason_for_test", {
+      is: (value) => value === "n_a" || value === "presumptive_tb",
+      otherwise: (schema) =>
+        schema.required("Field is required").typeError("field is required"),
+    }),
   records_tb_treatment_history: yup
     .string()
     .oneOf([
