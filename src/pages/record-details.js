@@ -26,7 +26,7 @@ const RecordDetails = () => {
         />
 
         {Object.keys(data[0]).map((key) => (
-          <Fragment>
+          <Fragment key={key}>
             <FormLabel>{key}</FormLabel>
             <p>{data[0][key] + "" || "N/A"}</p>
             <Spacer h={5} />

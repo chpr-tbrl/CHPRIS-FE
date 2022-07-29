@@ -504,20 +504,22 @@ const UpdateRecord = () => {
                   onChange={(evt) => selectRegion(evt.selectedItem.id)}
                 />
 
-                <Dropdown
-                  id="site"
-                  titleText="Site"
-                  label="Select site"
-                  items={sites}
-                  initialSelectedItem={getSelectedItem(
-                    sites,
-                    record[0].site_id
-                  )}
-                  itemToString={(item) => item.name}
-                  invalid={errors.site_id ? true : false}
-                  invalidText={errors.site_id?.message}
-                  onChange={(evt) => selectSite(evt.selectedItem.id)}
-                />
+                {sites.length && (
+                  <Dropdown
+                    id="site"
+                    titleText="Site"
+                    label="Select site"
+                    items={sites}
+                    initialSelectedItem={getSelectedItem(
+                      sites,
+                      record[0].site_id
+                    )}
+                    itemToString={(item) => item.name}
+                    invalid={errors.site_id ? true : false}
+                    invalidText={errors.site_id?.message}
+                    onChange={(evt) => selectSite(evt.selectedItem.id)}
+                  />
+                )}
               </Stack>
             </FormGroup>
 
