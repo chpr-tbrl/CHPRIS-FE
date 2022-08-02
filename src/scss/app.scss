@@ -198,6 +198,12 @@ form {
   }
 }
 
+form.data--collection {
+  input[type=text] {
+    text-transform: uppercase;
+  }
+}
+
 footer {
   padding: layout.$spacing-04;
   p {

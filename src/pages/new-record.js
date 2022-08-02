@@ -21,17 +21,14 @@ import { format } from "date-fns";
 import { UserFollow } from "@carbon/icons-react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { useSelector } from "react-redux";
-import { authSelector } from "features";
 import { useNavigate } from "react-router-dom";
-import { handleSetValue } from "utils";
+import { handleSetValue, normalizeData } from "utils";
 import { NEW_RECORD_SCHEMA } from "schemas";
 import { useNewRecordMutation } from "services";
 import { PageHeader, PhoneNumberInput, Spacer, TabBar } from "components";
 import { useFetchedRegionsAndSites, useDeviceDetection } from "hooks";
 
 const NewRecord = () => {
-  const auth = useSelector(authSelector);
   const isMobile = useDeviceDetection();
   const navigate = useNavigate();
   const [newRecord, { isLoading }] = useNewRecordMutation();
@@ -67,14 +64,17 @@ const NewRecord = () => {
     useFetchedRegionsAndSites(setValue);
 
   async function handleRecordCreation(data) {
+    // capitalize all inputs
+    const normalizedData = normalizeData(data);
+    // build request body
     const request = {
-      ...auth,
-      ...data,
+      ...normalizedData,
       records_date_of_test_request: format(
-        new Date(data.records_date_of_test_request),
+        new Date(normalizedData.records_date_of_test_request),
         "yyyy-MM-dd"
       ),
     };
+
     try {
       await newRecord(request).unwrap();
       toast.success("Record created");
@@ -88,7 +88,7 @@ const NewRecord = () => {
     Array.prototype.forEach.call(
       document.querySelectorAll("input[type=text]"),
       function (input) {
-        input.addEventListener("keyup", function () {
+        input.addEventListener("input", function () {
           input.value = input.value.toUpperCase();
         });
       }
@@ -105,7 +105,10 @@ const NewRecord = () => {
           renderIcon={<UserFollow size={42} />}
         />
         <Spacer h={7} />
-        <Form onSubmit={handleSubmit(handleRecordCreation)}>
+        <Form
+          className="data--collection"
+          onSubmit={handleSubmit(handleRecordCreation)}
+        >
           <Stack gap={7}>
             <TextInput
               id="records_name"

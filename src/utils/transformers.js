@@ -31,3 +31,45 @@ export function getSelectedItem(data, id) {
   const index = data.findIndex((item) => item.id === id);
   return data[index];
 }
+
+// function for capitalizing form inputs
+// https://stackoverflow.com/questions/19023226/map-over-object-preserving-keys
+
+export function normalizeData(inputs) {
+  // parse the object
+  return Object.fromEntries(
+    Object.entries(inputs).map(([key, value]) => {
+      // do not parse dates, phone numbers or nullish values
+      if (!value || key.includes("date") || key.includes("telephone")) {
+        return [key, value];
+      }
+      // do not parse booleans or numbers too
+      // Booleans will be converted to YES/NO at export
+      else if (typeof value === "number" || typeof value === "boolean") {
+        return [key, value];
+      }
+      // capitalize everything else
+      return [key, value.toUpperCase()];
+    })
+  );
+}
+
+// transform values to lower case for updates
+export function deNormalizeData(inputs) {
+  // parse the object
+  return Object.fromEntries(
+    Object.entries(inputs).map(([key, value]) => {
+      // do not parse dates, phone numbers or nullish values
+      if (!value || key.includes("date") || key.includes("telephone")) {
+        return [key, value];
+      }
+      // do not parse booleans or numbers too
+      // Booleans will be converted to YES/NO at export
+      else if (typeof value === "number" || typeof value === "boolean") {
+        return [key, value];
+      }
+      // set everything else to lowercase
+      return [key, value.toLowerCase()];
+    })
+  );
+}
