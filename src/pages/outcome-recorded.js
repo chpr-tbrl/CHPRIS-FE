@@ -30,6 +30,7 @@ import {
 } from "services";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
+import { deNormalizeData, normalizeData } from "utils";
 
 const OutcomeRecorded = () => {
   const navigate = useNavigate();
@@ -73,7 +74,8 @@ const OutcomeRecorded = () => {
 
   useEffect(() => {
     if (outcomes.length) {
-      reset(outcomes[0]);
+      const data = deNormalizeData(outcomes[0]);
+      reset(data);
     }
   }, [outcomes, reset]);
 
@@ -81,7 +83,7 @@ const OutcomeRecorded = () => {
     Array.prototype.forEach.call(
       document.querySelectorAll("input[type=text],textarea"),
       function (input) {
-        input.addEventListener("keyup", function () {
+        input.addEventListener("input", function () {
           input.value = input.value.toUpperCase();
         });
       }
@@ -103,8 +105,11 @@ const OutcomeRecorded = () => {
   }
 
   async function handleOutcomeUpdate(data) {
+    // Re normalize the data before submission
+    const normalizedData = normalizeData(data);
+
     try {
-      await updateOutcome(data).unwrap();
+      await updateOutcome(normalizedData).unwrap();
       toast.success("Outcome recorded");
       refetch();
     } catch (error) {
@@ -141,6 +146,7 @@ const OutcomeRecorded = () => {
               ? handleSubmit(handleOutcomeUpdate)
               : handleSubmit(handleOutcome)
           }
+          className="data--collection"
         >
           <Stack gap={7}>
             <Accordion>
