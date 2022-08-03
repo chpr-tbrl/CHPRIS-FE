@@ -32,6 +32,7 @@ import {
   useNewTreatmentOutcomeMutation,
   useUpdateTreatmentOutcomeMutation,
 } from "services";
+import { deNormalizeData, normalizeData } from "utils";
 
 const TBTreatmentOutcome = () => {
   const record = useSelector(recordSelector);
@@ -88,9 +89,21 @@ const TBTreatmentOutcome = () => {
 
   useEffect(() => {
     if (treatmentOutcomes.length) {
-      reset(treatmentOutcomes[0]);
+      const data = deNormalizeData(treatmentOutcomes[0]);
+      reset(data);
     }
   }, [treatmentOutcomes, reset]);
+
+  useEffect(() => {
+    Array.prototype.forEach.call(
+      document.querySelectorAll("input[type=text],textarea"),
+      function (input) {
+        input.addEventListener("input", function () {
+          input.value = input.value.toUpperCase();
+        });
+      }
+    );
+  });
 
   async function handleTreatmentOutcome(data) {
     const request = {
@@ -107,8 +120,9 @@ const TBTreatmentOutcome = () => {
   }
 
   async function handleUpdate(data) {
+    
     try {
-      await updateTreatmentOutcome(data).unwrap();
+      await updateTreatmentOutcome(normalizeData).unwrap();
       toast.success("Treatment outcome updated");
       refetch();
     } catch (error) {
@@ -146,6 +160,7 @@ const TBTreatmentOutcome = () => {
               ? handleSubmit(handleUpdate)
               : handleSubmit(handleTreatmentOutcome)
           }
+          className="data--collection"
         >
           <Stack gap={7}>
             <br />

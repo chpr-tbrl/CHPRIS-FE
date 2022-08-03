@@ -28,6 +28,7 @@ import {
   useUpdateSpecimenMutation,
 } from "services";
 import { useNavigate } from "react-router-dom";
+import { deNormalizeData, normalizeData } from "utils";
 
 const SpecimenCollection = () => {
   const record = useSelector(recordSelector);
@@ -70,7 +71,10 @@ const SpecimenCollection = () => {
 
   useEffect(() => {
     if (specimens.length) {
-      reset(specimens[0]);
+      // normalize data to lowerCase
+      const data = deNormalizeData(specimens[0]);
+      // populate form with existing fields
+      reset(data);
     }
   }, [specimens, reset]);
 
@@ -78,7 +82,7 @@ const SpecimenCollection = () => {
     Array.prototype.forEach.call(
       document.querySelectorAll("input[type=text],textarea"),
       function (input) {
-        input.addEventListener("keyup", function () {
+        input.addEventListener("input", function () {
           input.value = input.value.toUpperCase();
         });
       }
@@ -86,8 +90,9 @@ const SpecimenCollection = () => {
   });
 
   async function handleSpecimenCreation(data) {
+    const normalizedData = normalizeData(data);
     const request = {
-      ...data,
+      ...normalizedData,
       record_id: record.record_id,
     };
     try {
@@ -100,8 +105,10 @@ const SpecimenCollection = () => {
   }
 
   async function handleSpecimenUpdate(data) {
+    // Re normalize the data before submission
+    const normalizedData = normalizeData(data);
     try {
-      await updateSpecimen(data).unwrap();
+      await updateSpecimen(normalizedData).unwrap();
       toast.success("specimen updated");
       refetch();
     } catch (error) {
@@ -135,6 +142,7 @@ const SpecimenCollection = () => {
             </Stack>
             <Spacer h={7} />
             <Form
+              className="data--collection"
               onSubmit={
                 isUpdate
                   ? handleSubmit(handleSpecimenUpdate)

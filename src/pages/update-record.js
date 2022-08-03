@@ -30,7 +30,7 @@ import {
   DatePicker,
 } from "components";
 import { useFetchedRegionsAndSites, useDeviceDetection } from "hooks";
-import { getSelectedItem } from "utils";
+import { getSelectedItem, deNormalizeData, normalizeData } from "utils";
 
 const UpdateRecord = () => {
   const { id } = useParams();
@@ -71,27 +71,36 @@ const UpdateRecord = () => {
   const { regions, sites, selectSite, selectRegion } =
     useFetchedRegionsAndSites(setValue);
 
-  useEffect(() => {
-    if (record.length) {
-      reset(record[0]);
-      selectRegion(record[0].region_id);
-    }
-  }, [record, reset, selectRegion]);
-
+  // capitalize text inputs
   useEffect(() => {
     Array.prototype.forEach.call(
       document.querySelectorAll("input[type=text]"),
       function (input) {
-        input.addEventListener("keyup", function () {
+        input.addEventListener("input", function () {
           input.value = input.value.toUpperCase();
         });
       }
     );
   });
 
+  useEffect(() => {
+    if (record.length) {
+      // normalize data to lowerCase
+      const data = deNormalizeData(record[0]);
+      // populate form with existing fields
+      reset(data);
+      // preselect region
+      selectRegion(record[0].region_id);
+      // trigger revalidation on text input
+    }
+  }, [record, reset, selectRegion]);
+
   async function handleUpdate(data) {
+    // Re normalize the data before submission
+    const normalizedData = normalizeData(data);
+
     try {
-      await updateRecord(data).unwrap();
+      await updateRecord(normalizedData).unwrap();
       toast.success("Record updated");
       navigate("../details");
     } catch (error) {
@@ -111,7 +120,7 @@ const UpdateRecord = () => {
           renderIcon={<UserProfile size={42} />}
         />
         <Spacer h={7} />
-        <Form onSubmit={handleSubmit(handleUpdate)}>
+        <Form className="data--collection" onSubmit={handleSubmit(handleUpdate)}>
           <Stack gap={7}>
             <TextInput
               id="records_name"
