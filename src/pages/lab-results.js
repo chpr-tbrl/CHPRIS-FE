@@ -27,7 +27,7 @@ import {
 } from "services";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
-import { getResultType } from "utils";
+import { getResultType, normalizeData, deNormalizeData } from "utils";
 
 const LabResults = () => {
   const record = useSelector(recordSelector);
@@ -88,7 +88,10 @@ const LabResults = () => {
 
   useEffect(() => {
     if (results.length) {
-      reset(results[0]);
+      // normalize data to lowerCase
+      const data = deNormalizeData(results[0]);
+      // populate form with existing fields
+      reset(data);
     }
   }, [results, reset]);
 
@@ -96,7 +99,7 @@ const LabResults = () => {
     Array.prototype.forEach.call(
       document.querySelectorAll("input[type=text],textarea"),
       function (input) {
-        input.addEventListener("keyup", function () {
+        input.addEventListener("input", function () {
           input.value = input.value.toUpperCase();
         });
       }
@@ -104,8 +107,9 @@ const LabResults = () => {
   });
 
   async function handleResultCreation(data) {
+    const normalizedData = normalizeData(data);
     const request = {
-      ...data,
+      ...normalizedData,
       record_id: record.record_id,
       lab_result_type: getResultType(data),
     };
@@ -119,8 +123,9 @@ const LabResults = () => {
   }
 
   async function handleResultUpdate(data) {
+    const normalizedData = normalizeData(data);
     const request = {
-      ...data,
+      ...normalizedData,
       lab_result_type: getResultType(data),
     };
 
@@ -157,6 +162,7 @@ const LabResults = () => {
         </Stack>
         <Spacer h={7} />
         <Form
+          className="data--collection"
           onSubmit={
             isUpdate
               ? handleSubmit(handleResultUpdate)
@@ -371,7 +377,10 @@ const LabResults = () => {
                     valueSelected={watch("lab_xpert_mtb_rif_assay_result_2")}
                     onChange={(evt) => {
                       setValue("lab_xpert_mtb_rif_assay_grades_2", NOT_DONE);
-                      setValue("lab_xpert_mtb_rif_assay_rif_result_2", NOT_DONE);
+                      setValue(
+                        "lab_xpert_mtb_rif_assay_rif_result_2",
+                        NOT_DONE
+                      );
                       setValue("lab_xpert_mtb_rif_assay_result_2", evt);
                     }}
                   >
