@@ -13,6 +13,7 @@ import {
   RadioButton,
   RadioButtonGroup,
   InlineLoading,
+  ActionableNotification,
 } from "@carbon/react";
 import { Hospital } from "@carbon/icons-react";
 import { useForm } from "react-hook-form";
@@ -38,6 +39,7 @@ const LabResults = () => {
   const {
     data: results = [],
     isFetching,
+    isError,
     refetch,
   } = useGetLabResultsQuery(record.record_id, {
     refetchOnMountOrArgChange: true,
@@ -161,6 +163,21 @@ const LabResults = () => {
           </div>
         </Stack>
         <Spacer h={7} />
+        {isError && (
+          <Fragment>
+            <ActionableNotification
+              inline
+              kind="error"
+              title="An error occured"
+              subtitle="while fetching lab results"
+              lowContrast
+              hideCloseButton
+              actionButtonLabel="try again"
+              onActionButtonClick={refetch}
+            />
+            <Spacer h={7} />
+          </Fragment>
+        )}
         <Form
           className="data--collection"
           onSubmit={

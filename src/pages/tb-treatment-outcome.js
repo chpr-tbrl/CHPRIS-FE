@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, Fragment } from "react";
 import toast from "react-hot-toast";
 import {
   Stack,
@@ -15,6 +15,7 @@ import {
   InlineLoading,
   FormLabel,
   TextArea,
+  ActionableNotification
 } from "@carbon/react";
 import { Archive } from "@carbon/icons-react";
 import { useForm } from "react-hook-form";
@@ -44,6 +45,7 @@ const TBTreatmentOutcome = () => {
   const {
     data: treatmentOutcomes = [],
     isFetching,
+    isError,
     refetch,
   } = useGetTreatmentOutcomesQuery(record.record_id, {
     refetchOnMountOrArgChange: true,
@@ -120,7 +122,6 @@ const TBTreatmentOutcome = () => {
   }
 
   async function handleUpdate(data) {
-    
     try {
       await updateTreatmentOutcome(normalizeData).unwrap();
       toast.success("Treatment outcome updated");
@@ -153,7 +154,21 @@ const TBTreatmentOutcome = () => {
           </div>
         </Stack>
         <Spacer h={7} />
-
+        {isError && (
+          <Fragment>
+            <ActionableNotification
+              inline
+              kind="error"
+              title="An error occured"
+              subtitle="while fetching treatment outcome"
+              lowContrast
+              hideCloseButton
+              actionButtonLabel="try again"
+              onActionButtonClick={refetch}
+            />
+            <Spacer h={7} />
+          </Fragment>
+        )}
         <Form
           onSubmit={
             isUpdate

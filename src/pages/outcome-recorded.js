@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, Fragment } from "react";
 import { PageHeader, Spacer, TabBar } from "components";
 import {
   Stack,
@@ -15,6 +15,7 @@ import {
   InlineLoading,
   TextArea,
   FlexGrid,
+  ActionableNotification,
 } from "@carbon/react";
 import { DocumentAdd } from "@carbon/icons-react";
 import { useForm } from "react-hook-form";
@@ -40,6 +41,7 @@ const OutcomeRecorded = () => {
   const {
     data: outcomes = [],
     isFetching,
+    isError,
     refetch,
   } = useGetOutcomesQuery(record.record_id, {
     refetchOnMountOrArgChange: true,
@@ -140,6 +142,21 @@ const OutcomeRecorded = () => {
           </div>
         </Stack>
         <Spacer h={7} />
+        {isError && (
+          <Fragment>
+            <ActionableNotification
+              inline
+              kind="error"
+              title="An error occured"
+              subtitle="while fetching outcome recorded"
+              lowContrast
+              hideCloseButton
+              actionButtonLabel="try again"
+              onActionButtonClick={refetch}
+            />
+            <Spacer h={7} />
+          </Fragment>
+        )}
         <Form
           onSubmit={
             isUpdate

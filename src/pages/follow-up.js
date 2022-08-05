@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, Fragment } from "react";
 import { PageHeader, Spacer, TabBar, DatePicker } from "components";
 import {
   Stack,
@@ -15,6 +15,7 @@ import {
   InlineLoading,
   FormLabel,
   TextArea,
+  ActionableNotification,
 } from "@carbon/react";
 import { ReminderMedical } from "@carbon/icons-react";
 import { useForm } from "react-hook-form";
@@ -40,6 +41,7 @@ const FollowUP = () => {
   const {
     data: followUps = [],
     isFetching,
+    isError,
     refetch,
   } = useGetFollowUpsQuery(record.record_id, {
     refetchOnMountOrArgChange: true,
@@ -129,6 +131,21 @@ const FollowUP = () => {
           </div>
         </Stack>
         <Spacer h={7} />
+        {isError && (
+          <Fragment>
+            <ActionableNotification
+              inline
+              kind="error"
+              title="An error occured"
+              subtitle="while fetching followup"
+              lowContrast
+              hideCloseButton
+              actionButtonLabel="try again"
+              onActionButtonClick={refetch}
+            />
+            <Spacer h={7} />
+          </Fragment>
+        )}
         <Form
           onSubmit={
             isUpdate
