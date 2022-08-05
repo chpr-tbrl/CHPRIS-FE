@@ -1,6 +1,12 @@
 import React, { Fragment } from "react";
 import { PageHeader, Spacer, TabBar } from "components";
-import { Button, FormLabel, FlexGrid, Column, Loading } from "@carbon/react";
+import {
+  Button,
+  FlexGrid,
+  Column,
+  Loading,
+  ActionableNotification,
+} from "@carbon/react";
 import { useSelector } from "react-redux";
 import { recordSelector } from "features";
 import { Person } from "@carbon/icons-react";
@@ -10,7 +16,12 @@ import { useGetRecordQuery } from "services";
 const RecordDetails = () => {
   const record = useSelector(recordSelector);
   const navigate = useNavigate();
-  const { data = [], isFetching } = useGetRecordQuery(record.record_id, {
+  const {
+    data = [],
+    isFetching,
+    isError,
+    refetch,
+  } = useGetRecordQuery(record.record_id, {
     refetchOnMountOrArgChange: true,
   });
 
@@ -25,17 +36,37 @@ const RecordDetails = () => {
           renderIcon={<Person size={42} />}
         />
 
-        {Object.keys(data[0]).map((key) => (
-          <Fragment key={key}>
-            <FormLabel>{key}</FormLabel>
-            <p>{data[0][key] + "" || "N/A"}</p>
-            <Spacer h={5} />
-          </Fragment>
-        ))}
+        {isError && (
+          <ActionableNotification
+            inline
+            kind="error"
+            title="An error occured"
+            subtitle="while fetching record details"
+            lowContrast
+            hideCloseButton
+            actionButtonLabel="try again"
+            onActionButtonClick={refetch}
+          />
+        )}
 
-        <Button onClick={() => navigate(`../${record.record_id}`)}>
-          Edit record
-        </Button>
+        {data.length > 0 && (
+          <Fragment>
+            {Object.keys(data[0]).map((key) => (
+              <Fragment key={key}>
+                <h5>
+                  {key.charAt(0).toUpperCase() +
+                    key.slice(1).split("_").join(" ")}
+                </h5>
+                <br />
+                <p>{data[0][key] + "" || "N/A"}</p>
+                <Spacer h={5} />
+              </Fragment>
+            ))}
+            <Button onClick={() => navigate(`../${record.record_id}`)}>
+              Update record
+            </Button>
+          </Fragment>
+        )}
       </Column>
     </FlexGrid>
   );
