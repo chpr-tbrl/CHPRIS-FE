@@ -129,6 +129,8 @@ const LabResults = () => {
     const request = {
       ...normalizedData,
       lab_result_type: getResultType(data),
+      lab_xpert_mtb_rif_assay_result_done:
+        results[0].lab_xpert_mtb_rif_assay_result !== "NOT_DONE" ? true : false,
     };
 
     try {
