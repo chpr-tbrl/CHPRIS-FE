@@ -23,6 +23,7 @@ export function getResultType(data) {
     "medium",
     "low",
     "very_low",
+    "trace",
   ];
 
   let {

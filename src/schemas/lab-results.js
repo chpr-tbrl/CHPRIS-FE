@@ -66,12 +66,13 @@ export const LAB_RESULTS_SCHEMA = yup.object({
     .required("Field is required"),
   lab_xpert_mtb_rif_assay_grades: yup
     .string()
-    .default("not_done")
+    .nullable()
+    .default(null)
     .when("lab_xpert_mtb_rif_assay_result", {
       is: "detected",
       then: (schema) =>
         schema
-          .oneOf(["high", "medium", "low", "very_low", "not_done"])
+          .oneOf(["high", "medium", "low", "very_low", "trace"])
           .required("Field is required"),
     }),
   lab_xpert_mtb_rif_assay_rif_result: yup
@@ -117,12 +118,13 @@ export const LAB_RESULTS_SCHEMA = yup.object({
     .required("Field is required"),
   lab_xpert_mtb_rif_assay_grades_2: yup
     .string()
-    .default("not_done")
+    .nullable()
+    .default(null)
     .when("lab_xpert_mtb_rif_assay_result_2", {
       is: "detected",
       then: (schema) =>
         schema
-          .oneOf(["high", "medium", "low", "very_low", "not_done"])
+          .oneOf(["high", "medium", "low", "very_low", "trace"])
           .required("Field is required"),
     }),
   lab_xpert_mtb_rif_assay_rif_result_2: yup

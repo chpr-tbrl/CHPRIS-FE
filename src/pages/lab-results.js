@@ -1,5 +1,12 @@
 import React, { Fragment, useEffect, useState } from "react";
-import { PageHeader, Spacer, TabBar, DatePicker } from "components";
+import toast from "react-hot-toast";
+import {
+  PageHeader,
+  Spacer,
+  TabBar,
+  DatePicker,
+  ErrorMessage,
+} from "components";
 import {
   Stack,
   Form,
@@ -28,7 +35,6 @@ import {
   useUpdateLabResultMutation,
 } from "services";
 import { useNavigate } from "react-router-dom";
-import toast from "react-hot-toast";
 import { getResultType, normalizeData, deNormalizeData } from "utils";
 
 const LabResults = () => {
@@ -122,20 +128,20 @@ const LabResults = () => {
       setCache({
         ...normalizedData,
         lab_result_type: resultType,
-        record_id: record.record_id
+        record_id: record.record_id,
       });
       return;
     } else if (isUpdate) {
       handleResultUpdate({
         ...normalizedData,
         lab_result_type: resultType,
-        record_id: record.record_id
+        record_id: record.record_id,
       });
     } else {
       handleResultCreation({
         ...normalizedData,
         lab_result_type: resultType,
-        record_id: record.record_id
+        record_id: record.record_id,
       });
     }
   }
@@ -352,9 +358,9 @@ const LabResults = () => {
                   valueSelected={watch("lab_xpert_mtb_rif_assay_result")}
                   onChange={(evt) => {
                     setValue("lab_xpert_mtb_rif_assay_result", evt);
-                    setValue("lab_xpert_mtb_rif_assay_grades", NOT_DONE);
+                    setValue("lab_xpert_mtb_rif_assay_grades", null);
                     setValue("lab_xpert_mtb_rif_assay_rif_result", NOT_DONE);
-                    setValue("lab_xpert_mtb_rif_assay_grades_2", NOT_DONE);
+                    setValue("lab_xpert_mtb_rif_assay_grades_2", null);
                     setValue("lab_xpert_mtb_rif_assay_rif_result_2", NOT_DONE);
                     setValue("lab_xpert_mtb_rif_assay_result_2", NOT_DONE);
                   }}
@@ -370,29 +376,36 @@ const LabResults = () => {
 
                 {MTBResult === "detected" && (
                   <Fragment>
-                    <RadioButtonGroup
-                      orientation="vertical"
-                      legendText="Grades"
-                      name="lab_xpert_mtb_rif_assay_grades"
-                      valueSelected={watch("lab_xpert_mtb_rif_assay_grades")}
-                      onChange={(evt) =>
-                        setValue("lab_xpert_mtb_rif_assay_grades", evt)
-                      }
-                    >
-                      <RadioButton labelText="High" value="high" id="high" />
-                      <RadioButton
-                        labelText="Medium"
-                        value="medium"
-                        id="medium"
-                      />
-                      <RadioButton labelText="Low" value="low" id="low" />
-                      <RadioButton
-                        labelText="Very low"
-                        value="very_low"
-                        id="very_low"
-                      />
-                      <RadioButton labelText="Not done" value="not_done" />
-                    </RadioButtonGroup>
+                    <Stack gap={5}>
+                      <RadioButtonGroup
+                        orientation="vertical"
+                        legendText="Grades"
+                        name="lab_xpert_mtb_rif_assay_grades"
+                        valueSelected={watch("lab_xpert_mtb_rif_assay_grades")}
+                        onChange={(evt) =>
+                          setValue("lab_xpert_mtb_rif_assay_grades", evt, {
+                            shouldValidate: true,
+                          })
+                        }
+                      >
+                        <RadioButton labelText="High" value="high" id="high" />
+                        <RadioButton
+                          labelText="Medium"
+                          value="medium"
+                          id="medium"
+                        />
+                        <RadioButton labelText="Low" value="low" id="low" />
+                        <RadioButton
+                          labelText="Very low"
+                          value="very_low"
+                          id="very_low"
+                        />
+                        <RadioButton labelText="Trace" value="trace" />
+                      </RadioButtonGroup>
+                      {errors?.lab_xpert_mtb_rif_assay_grades && (
+                        <ErrorMessage id="lab_xpert_mtb_rif_assay_grades" />
+                      )}
+                    </Stack>
 
                     <RadioButtonGroup
                       orientation="vertical"
@@ -426,7 +439,7 @@ const LabResults = () => {
                     name="lab_xpert_mtb_rif_assay_result_2"
                     valueSelected={watch("lab_xpert_mtb_rif_assay_result_2")}
                     onChange={(evt) => {
-                      setValue("lab_xpert_mtb_rif_assay_grades_2", NOT_DONE);
+                      setValue("lab_xpert_mtb_rif_assay_grades_2", null);
                       setValue(
                         "lab_xpert_mtb_rif_assay_rif_result_2",
                         NOT_DONE
@@ -449,29 +462,42 @@ const LabResults = () => {
 
                 {MTBResultTwo === "detected" && (
                   <Fragment>
-                    <RadioButtonGroup
-                      orientation="vertical"
-                      legendText="Grades"
-                      name="lab_xpert_mtb_rif_assay_grades_2"
-                      valueSelected={watch("lab_xpert_mtb_rif_assay_grades_2")}
-                      onChange={(evt) =>
-                        setValue("lab_xpert_mtb_rif_assay_grades_2", evt)
-                      }
-                    >
-                      <RadioButton labelText="High" value="high" id="high_2" />
-                      <RadioButton
-                        labelText="Medium"
-                        value="medium"
-                        id="medium_2"
-                      />
-                      <RadioButton labelText="Low" value="low" id="low_2" />
-                      <RadioButton
-                        labelText="Very low"
-                        value="very_low"
-                        id="very_low_2"
-                      />
-                      <RadioButton labelText="Not done" value="not_done" />
-                    </RadioButtonGroup>
+                    <Stack gap={5}>
+                      <RadioButtonGroup
+                        orientation="vertical"
+                        legendText="Grades"
+                        name="lab_xpert_mtb_rif_assay_grades_2"
+                        valueSelected={watch(
+                          "lab_xpert_mtb_rif_assay_grades_2"
+                        )}
+                        onChange={(evt) =>
+                          setValue("lab_xpert_mtb_rif_assay_grades_2", evt, {
+                            shouldValidate: true,
+                          })
+                        }
+                      >
+                        <RadioButton
+                          labelText="High"
+                          value="high"
+                          id="high_2"
+                        />
+                        <RadioButton
+                          labelText="Medium"
+                          value="medium"
+                          id="medium_2"
+                        />
+                        <RadioButton labelText="Low" value="low" id="low_2" />
+                        <RadioButton
+                          labelText="Very low"
+                          value="very_low"
+                          id="very_low_2"
+                        />
+                        <RadioButton labelText="Trace" value="trace" />
+                      </RadioButtonGroup>
+                      {errors?.lab_xpert_mtb_rif_assay_grades_2 && (
+                        <ErrorMessage id="lab_xpert_mtb_rif_assay_grades_2" />
+                      )}
+                    </Stack>
 
                     <RadioButtonGroup
                       orientation="vertical"

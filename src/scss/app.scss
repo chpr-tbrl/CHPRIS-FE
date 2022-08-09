@@ -199,7 +199,7 @@ form {
 }
 
 form.data--collection {
-  input[type=text] {
+  input[type="text"] {
     text-transform: uppercase;
   }
 }
@@ -220,4 +220,9 @@ footer {
       width: layout.rem(160px);
     }
   }
+}
+
+.error--message {
+  color: themes.$text-error;
+  font-size: layout.rem(14px);
 }
