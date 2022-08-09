@@ -1,8 +1,9 @@
-import React, { Fragment, useEffect } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import { PageHeader, Spacer, TabBar, DatePicker } from "components";
 import {
   Stack,
   Form,
+  Modal,
   Button,
   Column,
   Loading,
@@ -31,6 +32,8 @@ import toast from "react-hot-toast";
 import { getResultType, normalizeData, deNormalizeData } from "utils";
 
 const LabResults = () => {
+  const [prompt, setPrompt] = useState(false);
+  const [cache, setCache] = useState({});
   const record = useSelector(recordSelector);
   const navigate = useNavigate();
   const [newLabResult, { isLoading: isCreating }] = useNewLabResultMutation();
@@ -88,6 +91,7 @@ const LabResults = () => {
     "lab_dst_amikacinekanamycin",
   ]);
 
+  // Populate form with results
   useEffect(() => {
     if (results.length) {
       // normalize data to lowerCase
@@ -97,6 +101,7 @@ const LabResults = () => {
     }
   }, [results, reset]);
 
+  // Capitalize text inputs
   useEffect(() => {
     Array.prototype.forEach.call(
       document.querySelectorAll("input[type=text],textarea"),
@@ -108,15 +113,46 @@ const LabResults = () => {
     );
   });
 
-  async function handleResultCreation(data) {
+  // check result type
+  function checkResultType(data) {
+    const resultType = getResultType(data);
     const normalizedData = normalizeData(data);
-    const request = {
-      ...normalizedData,
-      record_id: record.record_id,
-      lab_result_type: getResultType(data),
-    };
+    if (resultType === "positive") {
+      setPrompt(true);
+      setCache({
+        ...normalizedData,
+        lab_result_type: resultType,
+        record_id: record.record_id
+      });
+      return;
+    } else if (isUpdate) {
+      handleResultUpdate({
+        ...normalizedData,
+        lab_result_type: resultType,
+        record_id: record.record_id
+      });
+    } else {
+      handleResultCreation({
+        ...normalizedData,
+        lab_result_type: resultType,
+        record_id: record.record_id
+      });
+    }
+  }
+
+  function confirmResult() {
+    setPrompt(false);
+    if (isUpdate) {
+      handleResultUpdate(cache);
+      return;
+    }
+    handleResultCreation(cache);
+  }
+
+  // Create record
+  async function handleResultCreation(data) {
     try {
-      await newLabResult(request).unwrap();
+      await newLabResult(data).unwrap();
       toast.success("Lab result recorded");
       navigate("/dashboard");
     } catch (error) {
@@ -124,11 +160,10 @@ const LabResults = () => {
     }
   }
 
+  // Update record
   async function handleResultUpdate(data) {
-    const normalizedData = normalizeData(data);
     const request = {
-      ...normalizedData,
-      lab_result_type: getResultType(data),
+      ...data,
       lab_xpert_mtb_rif_assay_result_done:
         results[0].lab_xpert_mtb_rif_assay_result !== "NOT_DONE" ? true : false,
     };
@@ -182,11 +217,7 @@ const LabResults = () => {
         )}
         <Form
           className="data--collection"
-          onSubmit={
-            isUpdate
-              ? handleSubmit(handleResultUpdate)
-              : handleSubmit(handleResultCreation)
-          }
+          onSubmit={handleSubmit(checkResultType)}
         >
           <Stack gap={7}>
             <DatePicker
@@ -991,6 +1022,19 @@ const LabResults = () => {
           </Stack>
         </Form>
       </Column>
+      <Modal
+        size="sm"
+        open={prompt}
+        modalHeading="Positive result!"
+        modalLabel="Alert"
+        primaryButtonText="Confirm"
+        secondaryButtonText="Cancel"
+        preventCloseOnClickOutside
+        onRequestClose={() => setPrompt(false)}
+        onRequestSubmit={() => confirmResult()}
+      >
+        <p>You are about to record a positive result</p>
+      </Modal>
     </FlexGrid>
   );
 };
