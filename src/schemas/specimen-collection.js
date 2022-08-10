@@ -40,11 +40,14 @@ export const SPECIMEN_COLLECTION_SCHEMA = yup.object({
     }),
   specimen_collection_1_aspect: yup
     .string()
-    .oneOf(["mucopurulent", "bloody", "salivary", "n_a"])
-    .default("mucopurulent")
+    .nullable()
+    .default(null)
     .when("specimen_collection_1_specimen_collection_type", {
       is: "sputum",
-      then: (schema) => schema.required("Field is required"),
+      then: (schema) =>
+        schema
+          .oneOf(["mucopurulent", "bloody", "salivary"])
+          .required("Field is required"),
     }),
   specimen_collection_1_received_by: yup.string().required("Field is required"),
   specimen_collection_2_date: yup
@@ -91,11 +94,14 @@ export const SPECIMEN_COLLECTION_SCHEMA = yup.object({
     }),
   specimen_collection_2_aspect: yup
     .string()
-    .oneOf(["mucopurulent", "bloody", "salivary", "n_a"])
-    .default("n_a")
+    .nullable()
+    .default(null)
     .when("specimen_collection_2_specimen_collection_type", {
       is: "sputum",
-      then: (schema) => schema.required("Field is required"),
+      then: (schema) =>
+        schema
+          .oneOf(["mucopurulent", "bloody", "salivary"])
+          .required("Field is required"),
     }),
   specimen_collection_2_received_by: yup
     .string()

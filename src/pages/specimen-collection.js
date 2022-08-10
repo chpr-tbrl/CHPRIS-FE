@@ -1,6 +1,12 @@
 import React, { Fragment, useEffect } from "react";
 import toast from "react-hot-toast";
-import { PageHeader, Spacer, TabBar, DatePicker } from "components";
+import {
+  PageHeader,
+  Spacer,
+  TabBar,
+  DatePicker,
+  ErrorMessage,
+} from "components";
 import {
   Stack,
   Form,
@@ -276,15 +282,17 @@ const SpecimenCollection = () => {
                       valueSelected={watch(
                         "specimen_collection_1_specimen_collection_type"
                       )}
-                      onChange={(evt) =>
+                      onChange={(evt) => {
                         setValue(
                           "specimen_collection_1_specimen_collection_type",
                           evt
-                        )
-                      }
+                        );
+                        setValue("specimen_collection_1_aspect", null);
+                        setValue("specimen_collection_1_period", "n_a");
+                      }}
                     >
                       <RadioButton labelText="sputum" value="sputum" />
-                      <RadioButton labelText="CSF" value="csf" id="csf" />
+                      <RadioButton labelText="CSF" value="csf" />
                       <RadioButton
                         labelText="Lymph node aspirate"
                         value="lymph_node_aspirate"
@@ -352,32 +360,40 @@ const SpecimenCollection = () => {
                           <RadioButton labelText="N/A" value="n_a" id="n_a" />
                         </RadioButtonGroup>
 
-                        <RadioButtonGroup
-                          orientation="vertical"
-                          legendText="Aspect"
-                          name="specimen_collection_1_aspect"
-                          valueSelected={watch("specimen_collection_1_aspect")}
-                          onChange={(evt) =>
-                            setValue("specimen_collection_1_aspect", evt)
-                          }
-                        >
-                          <RadioButton
-                            labelText="Mucopurulent"
-                            value="mucopurulent"
-                            id="mucopurulent"
-                          />
-                          <RadioButton
-                            labelText="Bloody"
-                            value="bloody"
-                            id="bloody"
-                          />
-                          <RadioButton
-                            labelText="Salivary"
-                            value="salivary"
-                            id="salivary"
-                          />
-                          <RadioButton labelText="N/A" value="n_a" id="n_a2" />
-                        </RadioButtonGroup>
+                        <Stack gap={5}>
+                          <RadioButtonGroup
+                            orientation="vertical"
+                            legendText="Aspect"
+                            name="specimen_collection_1_aspect"
+                            valueSelected={watch(
+                              "specimen_collection_1_aspect"
+                            )}
+                            onChange={(evt) =>
+                              setValue("specimen_collection_1_aspect", evt, {
+                                shouldValidate: true,
+                              })
+                            }
+                          >
+                            <RadioButton
+                              labelText="Mucopurulent"
+                              value="mucopurulent"
+                              id="mucopurulent"
+                            />
+                            <RadioButton
+                              labelText="Bloody"
+                              value="bloody"
+                              id="bloody"
+                            />
+                            <RadioButton
+                              labelText="Salivary"
+                              value="salivary"
+                              id="salivary"
+                            />
+                          </RadioButtonGroup>
+                          {errors?.specimen_collection_1_aspect && (
+                            <ErrorMessage id="specimen_collection_1_aspect" />
+                          )}
+                        </Stack>
                       </Fragment>
                     )}
                   </Stack>
@@ -416,15 +432,17 @@ const SpecimenCollection = () => {
                       valueSelected={watch(
                         "specimen_collection_2_specimen_collection_type"
                       )}
-                      onChange={(evt) =>
+                      onChange={(evt) => {
                         setValue(
                           "specimen_collection_2_specimen_collection_type",
                           evt
-                        )
-                      }
+                        );
+                        setValue("specimen_collection_2_aspect", null);
+                        setValue("specimen_collection_2_period", "n_a");
+                      }}
                     >
                       <RadioButton labelText="sputum" value="sputum" />
-                      <RadioButton labelText="CSF" value="csf" id="csf" />
+                      <RadioButton labelText="CSF" value="csf" />
                       <RadioButton
                         labelText="Lymph node aspirate"
                         value="lymph_node_aspirate"
@@ -484,23 +502,34 @@ const SpecimenCollection = () => {
                           <RadioButton labelText="N/A" value="n_a" />
                         </RadioButtonGroup>
 
-                        <RadioButtonGroup
-                          orientation="vertical"
-                          legendText="Aspect"
-                          name="specimen_collection_2_aspect"
-                          valueSelected={watch("specimen_collection_2_aspect")}
-                          onChange={(evt) =>
-                            setValue("specimen_collection_2_aspect", evt)
-                          }
-                        >
-                          <RadioButton
-                            labelText="Mucopurulent"
-                            value="mucopurulent"
-                          />
-                          <RadioButton labelText="Bloody" value="bloody" />
-                          <RadioButton labelText="Salivary" value="salivary" />
-                          <RadioButton labelText="N/A" value="n_a" />
-                        </RadioButtonGroup>
+                        <Stack gap={5}>
+                          <RadioButtonGroup
+                            orientation="vertical"
+                            legendText="Aspect"
+                            name="specimen_collection_2_aspect"
+                            valueSelected={watch(
+                              "specimen_collection_2_aspect"
+                            )}
+                            onChange={(evt) =>
+                              setValue("specimen_collection_2_aspect", evt, {
+                                shouldValidate: true,
+                              })
+                            }
+                          >
+                            <RadioButton
+                              labelText="Mucopurulent"
+                              value="mucopurulent"
+                            />
+                            <RadioButton labelText="Bloody" value="bloody" />
+                            <RadioButton
+                              labelText="Salivary"
+                              value="salivary"
+                            />
+                          </RadioButtonGroup>
+                          {errors?.specimen_collection_2_aspect && (
+                            <ErrorMessage id="specimen_collection_2_aspect" />
+                          )}
+                        </Stack>
                       </Fragment>
                     )}
                   </Stack>
