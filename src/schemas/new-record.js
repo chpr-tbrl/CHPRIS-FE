@@ -12,8 +12,9 @@ export const NEW_RECORD_SCHEMA = yup.object({
   records_name: yup.string().required("Field is required"),
   records_sex: yup
     .string()
+    .nullable()
+    .default(null)
     .oneOf(["male", "female", "unknown"])
-    .default("unknown")
     .required("Field is required"),
   records_date_of_test_request: yup
     .date()
@@ -30,11 +31,7 @@ export const NEW_RECORD_SCHEMA = yup.object({
   records_art_unique_code: yup
     .string()
     .default("")
-    .nullable()
-    .when("records_has_art_unique_code", {
-      is: "yes",
-      then: (schema) => schema.required("Field is required"),
-    }),
+    .nullable(),
   records_status: yup
     .string()
     .oneOf(["outpatient", "ward-bed"])
@@ -43,11 +40,7 @@ export const NEW_RECORD_SCHEMA = yup.object({
   records_ward_bed_number: yup
     .string()
     .default("")
-    .nullable()
-    .when("records_status", {
-      is: "ward-bed",
-      then: (schema) => schema.required("Field is required"),
-    }),
+    .nullable(),
   records_currently_pregnant: yup
     .string()
     .oneOf(["yes", "no"])

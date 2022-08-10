@@ -25,7 +25,13 @@ import { useNavigate } from "react-router-dom";
 import { handleSetValue, normalizeData } from "utils";
 import { NEW_RECORD_SCHEMA } from "schemas";
 import { useNewRecordMutation } from "services";
-import { PageHeader, PhoneNumberInput, Spacer, TabBar } from "components";
+import {
+  PageHeader,
+  PhoneNumberInput,
+  Spacer,
+  TabBar,
+  ErrorMessage,
+} from "components";
 import { useFetchedRegionsAndSites, useDeviceDetection } from "hooks";
 
 const NewRecord = () => {
@@ -120,9 +126,9 @@ const NewRecord = () => {
             <NumberInput
               id="age"
               label="Age"
-              min={1}
-              allowEmpty={false}
+              allowEmpty
               hideSteppers
+              defaultValue=""
               value={watch("records_age")}
               onChange={(evt) => {
                 setValue("records_age", evt.target.value, {
@@ -142,20 +148,23 @@ const NewRecord = () => {
               invalidText={errors.records_age?.message}
               iconDescription="age"
             />
-            <RadioButtonGroup
-              legendText="Sex"
-              name="records_sex"
-              valueSelected={watch("records_sex")}
-              onChange={(evt) =>
-                setValue("records_sex", evt, {
-                  shouldValidate: true,
-                })
-              }
-            >
-              <RadioButton labelText="Female" value="female" id="female" />
-              <RadioButton labelText="Male" value="male" id="male" />
-              <RadioButton labelText="Unkown" value="unknown" id="unknown" />
-            </RadioButtonGroup>
+            <Stack gap={5}>
+              <RadioButtonGroup
+                legendText="Sex"
+                name="records_sex"
+                valueSelected={watch("records_sex")}
+                onChange={(evt) =>
+                  setValue("records_sex", evt, {
+                    shouldValidate: true,
+                  })
+                }
+              >
+                <RadioButton labelText="Female" value="female" id="female" />
+                <RadioButton labelText="Male" value="male" id="male" />
+                <RadioButton labelText="Unkown" value="unknown" id="unknown" />
+              </RadioButtonGroup>
+              {errors?.records_sex && <ErrorMessage id="records_sex" />}
+            </Stack>
 
             <DatePicker
               datePickerType="single"
