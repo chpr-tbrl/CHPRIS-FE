@@ -11,7 +11,6 @@ import {
   RadioButton,
   FormLabel,
   RadioButtonGroup,
-  InlineNotification,
   InlineLoading,
   Accordion,
   AccordionItem,
@@ -158,14 +157,6 @@ const SpecimenCollection = () => {
         ) : specimens.length ? (
           // Display collected specimens
           <Stack gap={7}>
-            {isUpdate && (
-              <InlineNotification
-                lowContrast
-                kind="info"
-                title="Alert"
-                subtitle="only collection 2 can be updated"
-              />
-            )}
             <Accordion>
               <AccordionItem
                 title={
@@ -260,7 +251,13 @@ const SpecimenCollection = () => {
           }
         >
           <Stack gap={7}>
-            <FormGroup legendText="Collection 1" hidden={isUpdate}>
+            <FormGroup
+              legendText="Collection 1"
+              hidden={
+                specimens[0]?.specimen_collection_1_date &&
+                !specimens[0]?.specimen_collection_2_date
+              }
+            >
               <Stack gap={7}>
                 <DatePicker
                   control={control}
@@ -524,8 +521,17 @@ const SpecimenCollection = () => {
             </FormGroup>
 
             {!isCreating || isUpdating ? (
-              <Button kind={isUpdate ? "secondary" : "primary"} type="submit">
-                {isUpdate ? "Update" : "Save"}
+              <Button
+                kind={
+                  isUpdate && specimens[0]?.specimen_collection_2_date
+                    ? "secondary"
+                    : "primary"
+                }
+                type="submit"
+              >
+                {isUpdate && specimens[0]?.specimen_collection_2_date
+                  ? "Update"
+                  : "Save"}
               </Button>
             ) : (
               <InlineLoading
