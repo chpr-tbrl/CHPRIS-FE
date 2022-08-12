@@ -83,7 +83,6 @@
 
   p {
     @include type.type-style("body-01");
-    margin-bottom: layout.$spacing-07;
   }
 
   @include grid.breakpoint(lg) {

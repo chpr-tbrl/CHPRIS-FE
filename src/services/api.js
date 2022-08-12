@@ -192,6 +192,34 @@ export const API = createApi({
         body: data,
       }),
     }),
+    recovery: builder.mutation({
+      query: (data) => ({
+        url: `/recovery`,
+        method: "POST",
+        body: data,
+      }),
+    }),
+    passwordReset: builder.mutation({
+      query: (data) => ({
+        url: `/recovery`,
+        method: "PUT",
+        body: data,
+      }),
+    }),
+    initOTP: builder.mutation({
+      query: (data) => ({
+        url: `/otp`,
+        method: "POST",
+        body: data,
+      }),
+    }),
+    validateOTP: builder.mutation({
+      query: (data) => ({
+        url: `/otp`,
+        method: "PUT",
+        body: data,
+      }),
+    }),
   }),
 });
 // Export hooks for usage in functional components, which are
@@ -224,4 +252,8 @@ export const {
   useNewTreatmentOutcomeMutation,
   useUpdateTreatmentOutcomeMutation,
   useDataExportMutation,
+  useRecoveryMutation,
+  useInitOTPMutation,
+  useValidateOTPMutation,
+  usePasswordResetMutation,
 } = API;
