@@ -129,9 +129,15 @@ const DataExport = () => {
       start_date: format(new Date(data.start_date), "yyyy-MM-dd"),
       end_date: format(new Date(data.end_date), "yyyy-MM-dd"),
     };
+
     try {
       const response = await dataExport(request).unwrap();
-      downloadRef.current.href = API_URL + response;
+
+      if (data.format === "pdf") {
+        downloadRef.current.href = response;
+      } else {
+        downloadRef.current.href = API_URL + response;
+      }
       downloadRef.current.click();
       toast.success("Data export ready");
       downloadRef.current.href = "empty";
