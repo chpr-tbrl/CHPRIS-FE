@@ -19,7 +19,7 @@ import {
 import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { sIGNUP_SCHEMA } from "schemas";
+import { SIGNUP_SCHEMA } from "schemas";
 import { useSignupMutation } from "services";
 import { useRegionsAndSites } from "hooks";
 import { PhoneNumberInput } from "components";
@@ -39,7 +39,7 @@ const Signup = () => {
     handleSubmit,
     formState: { errors },
   } = useForm({
-    resolver: yupResolver(sIGNUP_SCHEMA),
+    resolver: yupResolver(SIGNUP_SCHEMA),
   });
 
   const {
