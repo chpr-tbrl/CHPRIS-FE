@@ -18,10 +18,9 @@ export const SPECIMEN_COLLECTION_SCHEMA = yup.object({
       "isolate_from_sputum",
       "isolate_from_specimen_not_sputum",
       "pleural_fluid",
-      "unknown",
       "other",
     ])
-    .default("unknown")
+    .default("")
     .required("Field is required"),
   specimen_collection_1_other: yup
     .string()
@@ -32,8 +31,8 @@ export const SPECIMEN_COLLECTION_SCHEMA = yup.object({
     }),
   specimen_collection_1_period: yup
     .string()
-    .oneOf(["spot", "morning", "n_a"])
-    .default("spot")
+    .oneOf(["spot", "morning"])
+    .default("")
     .when("specimen_collection_1_specimen_collection_type", {
       is: "sputum",
       then: (schema) => schema.required("Field is required"),
@@ -69,10 +68,10 @@ export const SPECIMEN_COLLECTION_SCHEMA = yup.object({
       "isolate_from_sputum",
       "isolate_from_specimen_not_sputum",
       "pleural_fluid",
-      "unknown",
       "other",
     ])
-    .default("unknown")
+    .default("")
+    .required("Field is required")
     .when("specimen_collection_2_date", {
       is: (value) => value != null,
       then: (schema) => schema.required("Field is required"),
@@ -86,8 +85,8 @@ export const SPECIMEN_COLLECTION_SCHEMA = yup.object({
     }),
   specimen_collection_2_period: yup
     .string()
-    .oneOf(["spot", "morning", "n_a"])
-    .default("n_a")
+    .oneOf(["spot", "morning"])
+    .default("")
     .when("specimen_collection_2_specimen_collection_type", {
       is: "sputum",
       then: (schema) => schema.required("Field is required"),
@@ -95,7 +94,7 @@ export const SPECIMEN_COLLECTION_SCHEMA = yup.object({
   specimen_collection_2_aspect: yup
     .string()
     .nullable()
-    .default(null)
+    .default("")
     .when("specimen_collection_2_specimen_collection_type", {
       is: "sputum",
       then: (schema) =>

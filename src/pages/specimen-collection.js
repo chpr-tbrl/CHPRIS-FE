@@ -277,7 +277,7 @@ const SpecimenCollection = () => {
                   <Stack gap={7}>
                     <RadioButtonGroup
                       orientation="vertical"
-                      legendText="Type"
+                      legendText=""
                       name="specimen_collection_1_specimen_collection_type"
                       valueSelected={watch(
                         "specimen_collection_1_specimen_collection_type"
@@ -288,7 +288,7 @@ const SpecimenCollection = () => {
                           evt
                         );
                         setValue("specimen_collection_1_aspect", null);
-                        setValue("specimen_collection_1_period", "n_a");
+                        setValue("specimen_collection_1_period", null);
                       }}
                     >
                       <RadioButton labelText="sputum" value="sputum" />
@@ -319,9 +319,12 @@ const SpecimenCollection = () => {
                         labelText="Pleural fluid"
                         value="pleural_fluid"
                       />
-                      <RadioButton labelText="unknown" value="unknown" />
+
                       <RadioButton labelText="other" value="other" />
                     </RadioButtonGroup>
+                    {errors?.specimen_collection_1_specimen_collection_type && (
+                      <ErrorMessage id="specimen_collection_1_specimen_collection_type" />
+                    )}
 
                     {specimenOneType === "other" && (
                       <TextInput
@@ -357,7 +360,6 @@ const SpecimenCollection = () => {
                             value="morning"
                             id="morning"
                           />
-                          <RadioButton labelText="N/A" value="n_a" id="n_a" />
                         </RadioButtonGroup>
 
                         <Stack gap={5}>
@@ -469,9 +471,11 @@ const SpecimenCollection = () => {
                         labelText="Pleural fluid"
                         value="pleural_fluid"
                       />
-                      <RadioButton labelText="unknown" value="unknown" />
                       <RadioButton labelText="other" value="other" />
                     </RadioButtonGroup>
+                    {errors?.specimen_collection_1_specimen_collection_type && (
+                      <ErrorMessage id="specimen_collection_2_specimen_collection_type" />
+                    )}
 
                     {specimenTwoType === "other" && (
                       <TextInput
