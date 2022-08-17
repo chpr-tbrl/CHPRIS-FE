@@ -7,6 +7,7 @@ export const SPECIMEN_COLLECTION_SCHEMA = yup.object({
     .required("Field is required"),
   specimen_collection_1_specimen_collection_type: yup
     .string()
+    .nullable()
     .oneOf([
       "sputum",
       "csf",
@@ -20,7 +21,7 @@ export const SPECIMEN_COLLECTION_SCHEMA = yup.object({
       "pleural_fluid",
       "other",
     ])
-    .default("")
+    .default(null)
     .required("Field is required"),
   specimen_collection_1_other: yup
     .string()
@@ -70,7 +71,7 @@ export const SPECIMEN_COLLECTION_SCHEMA = yup.object({
       "pleural_fluid",
       "other",
     ])
-    .default("")
+    .default(null)
     .when("specimen_collection_2_date", {
       is: (value) => value != null,
       then: (schema) => schema.required("Field is required"),
