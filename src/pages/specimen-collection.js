@@ -275,54 +275,59 @@ const SpecimenCollection = () => {
 
                 <FormGroup legendText="Specimen type">
                   <Stack gap={7}>
-                    <RadioButtonGroup
-                      orientation="vertical"
-                      legendText="Type"
-                      name="specimen_collection_1_specimen_collection_type"
-                      valueSelected={watch(
-                        "specimen_collection_1_specimen_collection_type"
-                      )}
-                      onChange={(evt) => {
-                        setValue(
-                          "specimen_collection_1_specimen_collection_type",
-                          evt
-                        );
-                        setValue("specimen_collection_1_aspect", null);
-                        setValue("specimen_collection_1_period", "n_a");
-                      }}
-                    >
-                      <RadioButton labelText="sputum" value="sputum" />
-                      <RadioButton labelText="CSF" value="csf" />
-                      <RadioButton
-                        labelText="Lymph node aspirate"
-                        value="lymph_node_aspirate"
-                      />
-                      <RadioButton
-                        labelText="Gastric aspirate"
-                        value="gastric_aspirate"
-                      />
-                      <RadioButton labelText="Urine" value="urine" />
-                      <RadioButton labelText="Abscess" value="abscess" />
-                      <RadioButton
-                        labelText="Bronchoalveolar aspirate"
-                        value="bronchoalveolar_aspirate"
-                      />
-                      <RadioButton
-                        labelText="Isolate from sputum"
-                        value="isolate_from_sputum"
-                      />
-                      <RadioButton
-                        labelText="Isolate from specimen not sputum"
-                        value="isolate_from_specimen_not_sputum"
-                      />
-                      <RadioButton
-                        labelText="Pleural fluid"
-                        value="pleural_fluid"
-                      />
-                      <RadioButton labelText="unknown" value="unknown" />
-                      <RadioButton labelText="other" value="other" />
-                    </RadioButtonGroup>
+                    <Stack gap={5}>
+                      <RadioButtonGroup
+                        orientation="vertical"
+                        legendText=""
+                        name="specimen_collection_1_specimen_collection_type"
+                        valueSelected={watch(
+                          "specimen_collection_1_specimen_collection_type"
+                        )}
+                        onChange={(evt) => {
+                          setValue(
+                            "specimen_collection_1_specimen_collection_type",
+                            evt,
+                            { shouldValidate: true }
+                          );
+                          setValue("specimen_collection_1_aspect", null);
+                          setValue("specimen_collection_1_period", "n_a");
+                        }}
+                      >
+                        <RadioButton labelText="sputum" value="sputum" />
+                        <RadioButton labelText="CSF" value="csf" />
+                        <RadioButton
+                          labelText="Lymph node aspirate"
+                          value="lymph_node_aspirate"
+                        />
+                        <RadioButton
+                          labelText="Gastric aspirate"
+                          value="gastric_aspirate"
+                        />
+                        <RadioButton labelText="Urine" value="urine" />
+                        <RadioButton labelText="Abscess" value="abscess" />
+                        <RadioButton
+                          labelText="Bronchoalveolar aspirate"
+                          value="bronchoalveolar_aspirate"
+                        />
+                        <RadioButton
+                          labelText="Isolate from sputum"
+                          value="isolate_from_sputum"
+                        />
+                        <RadioButton
+                          labelText="Isolate from specimen not sputum"
+                          value="isolate_from_specimen_not_sputum"
+                        />
+                        <RadioButton
+                          labelText="Pleural fluid"
+                          value="pleural_fluid"
+                        />
 
+                        <RadioButton labelText="other" value="other" />
+                      </RadioButtonGroup>
+                      {errors?.specimen_collection_1_specimen_collection_type && (
+                        <ErrorMessage id="specimen_collection_1_specimen_collection_type" />
+                      )}
+                    </Stack>
                     {specimenOneType === "other" && (
                       <TextInput
                         id="specimen_collection_1_other"
@@ -339,27 +344,34 @@ const SpecimenCollection = () => {
 
                     {specimenOneType === "sputum" && (
                       <Fragment>
-                        <RadioButtonGroup
-                          legendText="Period"
-                          name="specimen_collection_1_period"
-                          valueSelected={watch("specimen_collection_1_period")}
-                          onChange={(evt) =>
-                            setValue("specimen_collection_1_period", evt)
-                          }
-                        >
-                          <RadioButton
-                            labelText="Spot"
-                            value="spot"
-                            id="spot"
-                          />
-                          <RadioButton
-                            labelText="Morning"
-                            value="morning"
-                            id="morning"
-                          />
-                          <RadioButton labelText="N/A" value="n_a" id="n_a" />
-                        </RadioButtonGroup>
-
+                        <Stack gap={5}>
+                          <RadioButtonGroup
+                            legendText="Period"
+                            name="specimen_collection_1_period"
+                            valueSelected={watch(
+                              "specimen_collection_1_period"
+                            )}
+                            onChange={(evt) =>
+                              setValue("specimen_collection_1_period", evt, {
+                                shouldValidate: true,
+                              })
+                            }
+                          >
+                            <RadioButton
+                              labelText="Spot"
+                              value="spot"
+                              id="spot"
+                            />
+                            <RadioButton
+                              labelText="Morning"
+                              value="morning"
+                              id="morning"
+                            />
+                          </RadioButtonGroup>
+                          {errors?.specimen_collection_1_period && (
+                            <ErrorMessage id="specimen_collection_1_period" />
+                          )}
+                        </Stack>
                         <Stack gap={5}>
                           <RadioButtonGroup
                             orientation="vertical"
@@ -425,54 +437,58 @@ const SpecimenCollection = () => {
 
                 <FormGroup legendText="Specimen type">
                   <Stack gap={7}>
-                    <RadioButtonGroup
-                      orientation="vertical"
-                      legendText="Type"
-                      name="specimen_collection_2_specimen_collection_type"
-                      valueSelected={watch(
-                        "specimen_collection_2_specimen_collection_type"
+                    <Stack gap={5}>
+                      <RadioButtonGroup
+                        orientation="vertical"
+                        legendText=""
+                        name="specimen_collection_2_specimen_collection_type"
+                        valueSelected={watch(
+                          "specimen_collection_2_specimen_collection_type"
+                        )}
+                        onChange={(evt) => {
+                          setValue(
+                            "specimen_collection_2_specimen_collection_type",
+                            evt,
+                            { shouldValidate: true }
+                          );
+                          setValue("specimen_collection_2_aspect", null);
+                          setValue("specimen_collection_2_period", null);
+                        }}
+                      >
+                        <RadioButton labelText="sputum" value="sputum" />
+                        <RadioButton labelText="CSF" value="csf" />
+                        <RadioButton
+                          labelText="Lymph node aspirate"
+                          value="lymph_node_aspirate"
+                        />
+                        <RadioButton
+                          labelText="Gastric aspirate"
+                          value="gastric_aspirate"
+                        />
+                        <RadioButton labelText="Urine" value="urine" />
+                        <RadioButton labelText="Abscess" value="abscess" />
+                        <RadioButton
+                          labelText="Bronchoalveolar aspirate"
+                          value="bronchoalveolar_aspirate"
+                        />
+                        <RadioButton
+                          labelText="Isolate from sputum"
+                          value="isolate_from_sputum"
+                        />
+                        <RadioButton
+                          labelText="Isolate from specimen not sputum"
+                          value="isolate_from_specimen_not_sputum"
+                        />
+                        <RadioButton
+                          labelText="Pleural fluid"
+                          value="pleural_fluid"
+                        />
+                        <RadioButton labelText="other" value="other" />
+                      </RadioButtonGroup>
+                      {errors?.specimen_collection_2_specimen_collection_type && (
+                        <ErrorMessage id="specimen_collection_2_specimen_collection_type" />
                       )}
-                      onChange={(evt) => {
-                        setValue(
-                          "specimen_collection_2_specimen_collection_type",
-                          evt
-                        );
-                        setValue("specimen_collection_2_aspect", null);
-                        setValue("specimen_collection_2_period", "n_a");
-                      }}
-                    >
-                      <RadioButton labelText="sputum" value="sputum" />
-                      <RadioButton labelText="CSF" value="csf" />
-                      <RadioButton
-                        labelText="Lymph node aspirate"
-                        value="lymph_node_aspirate"
-                      />
-                      <RadioButton
-                        labelText="Gastric aspirate"
-                        value="gastric_aspirate"
-                      />
-                      <RadioButton labelText="Urine" value="urine" />
-                      <RadioButton labelText="Abscess" value="abscess" />
-                      <RadioButton
-                        labelText="Bronchoalveolar aspirate"
-                        value="bronchoalveolar_aspirate"
-                      />
-                      <RadioButton
-                        labelText="Isolate from sputum"
-                        value="isolate_from_sputum"
-                      />
-                      <RadioButton
-                        labelText="Isolate from specimen not sputum"
-                        value="isolate_from_specimen_not_sputum"
-                      />
-                      <RadioButton
-                        labelText="Pleural fluid"
-                        value="pleural_fluid"
-                      />
-                      <RadioButton labelText="unknown" value="unknown" />
-                      <RadioButton labelText="other" value="other" />
-                    </RadioButtonGroup>
-
+                    </Stack>
                     {specimenTwoType === "other" && (
                       <TextInput
                         id="specimen_collection_2_other"
@@ -489,19 +505,26 @@ const SpecimenCollection = () => {
 
                     {specimenTwoType === "sputum" && (
                       <Fragment>
-                        <RadioButtonGroup
-                          legendText="Period"
-                          name="specimen_collection_2_period"
-                          valueSelected={watch("specimen_collection_2_period")}
-                          onChange={(evt) =>
-                            setValue("specimen_collection_2_period", evt)
-                          }
-                        >
-                          <RadioButton labelText="Spot" value="spot" />
-                          <RadioButton labelText="Morning" value="morning" />
-                          <RadioButton labelText="N/A" value="n_a" />
-                        </RadioButtonGroup>
-
+                        <Stack gap={5}>
+                          <RadioButtonGroup
+                            legendText="Period"
+                            name="specimen_collection_2_period"
+                            valueSelected={watch(
+                              "specimen_collection_2_period"
+                            )}
+                            onChange={(evt) =>
+                              setValue("specimen_collection_2_period", evt, {
+                                shouldValidate: true,
+                              })
+                            }
+                          >
+                            <RadioButton labelText="Spot" value="spot" />
+                            <RadioButton labelText="Morning" value="morning" />
+                          </RadioButtonGroup>
+                          {errors?.specimen_collection_2_period && (
+                            <ErrorMessage id="specimen_collection_2_period" />
+                          )}
+                        </Stack>
                         <Stack gap={5}>
                           <RadioButtonGroup
                             orientation="vertical"
