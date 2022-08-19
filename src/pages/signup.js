@@ -67,7 +67,7 @@ const Signup = () => {
         <div className="page--article__content">
           <h2 className="cds--type-semibold">CHPR-IS</h2>
           <p>
-            for Center for Health Promotion and Research - Information System
+            Center for Health Promotion and Research - Information System
           </p>
         </div>
       </Column>
