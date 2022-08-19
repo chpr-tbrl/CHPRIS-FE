@@ -99,8 +99,10 @@ const PasswordReset = () => {
     <Grid fullWidth>
       <Column sm={0} md={4} lg={8} className="page--article">
         <div className="page--article__content">
-          <h2 className="cds--type-semibold">CHPR</h2>
-          <p>Center for Health Promotion and Research</p>
+          <h2 className="cds--type-semibold">CHPR-IS</h2>
+          <p>
+            for Center for Health Promotion and Research - Information System
+          </p>
         </div>
       </Column>
       {!tel && (
