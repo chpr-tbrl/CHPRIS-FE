@@ -12,3 +12,4 @@ export * from "./DatePicker";
 export * from "./ScrollToTop";
 export * from "./Footer";
 export * from "./SearchBar";
+export * from "./ErrorMessage";

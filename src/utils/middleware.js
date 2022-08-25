@@ -27,12 +27,14 @@ export const RequestErrorHandler = (store) => (next) => (action) => {
               store.dispatch(logout());
             }
           }
-
           break;
         case 403:
           switch (endpointName) {
             case "updateProfile":
               toast.error("Forbidden, current password is wrong");
+              break;
+            case "validateOTP":
+              toast.error("Invalid Code provided");
               break;
             default:
               toast.error("Forbidden, you are not authorized");

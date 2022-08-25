@@ -5,6 +5,7 @@ export const useProfile = (id) => {
   const {
     data: account = {},
     isFetching: fetchingProfile,
+    isError,
     refetch,
   } = useGetProfileQuery(id, {
     skip: !id ? true : false,
@@ -14,6 +15,7 @@ export const useProfile = (id) => {
   return {
     account,
     fetchingProfile,
+    profileError: isError,
     reloadProfile: refetch,
   };
 };

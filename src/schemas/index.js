@@ -9,3 +9,4 @@ export * from "./tb-treatment-outcome";
 export * from "./data-export";
 export * from "./shared";
 export * from "./user-update";
+export * from "./password-reset";

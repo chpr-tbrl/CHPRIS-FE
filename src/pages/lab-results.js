@@ -1,8 +1,16 @@
-import React, { Fragment, useEffect } from "react";
-import { PageHeader, Spacer, TabBar, DatePicker } from "components";
+import React, { Fragment, useEffect, useState } from "react";
+import toast from "react-hot-toast";
+import {
+  PageHeader,
+  Spacer,
+  TabBar,
+  DatePicker,
+  ErrorMessage,
+} from "components";
 import {
   Stack,
   Form,
+  Modal,
   Button,
   Column,
   Loading,
@@ -13,11 +21,12 @@ import {
   RadioButton,
   RadioButtonGroup,
   InlineLoading,
+  ActionableNotification,
 } from "@carbon/react";
 import { Hospital } from "@carbon/icons-react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { LAB_RESULTS_SCHEMA } from "schemas";
+import { LAB_RESULTS_SCHEMA, NOT_DONE } from "schemas";
 import { useSelector } from "react-redux";
 import { recordSelector } from "features";
 import {
@@ -26,9 +35,11 @@ import {
   useUpdateLabResultMutation,
 } from "services";
 import { useNavigate } from "react-router-dom";
-import toast from "react-hot-toast";
+import { getResultType, normalizeData, deNormalizeData } from "utils";
 
 const LabResults = () => {
+  const [prompt, setPrompt] = useState(false);
+  const [cache, setCache] = useState({});
   const record = useSelector(recordSelector);
   const navigate = useNavigate();
   const [newLabResult, { isLoading: isCreating }] = useNewLabResultMutation();
@@ -37,8 +48,11 @@ const LabResults = () => {
   const {
     data: results = [],
     isFetching,
+    isError,
     refetch,
-  } = useGetLabResultsQuery(record.record_id);
+  } = useGetLabResultsQuery(record.record_id, {
+    refetchOnMountOrArgChange: true,
+  });
   const isUpdate = results[0]?.lab_id ? true : false;
 
   const {
@@ -55,24 +69,96 @@ const LabResults = () => {
   });
 
   const isResultOneDone =
-    watch("lab_smear_microscopy_result_result_1", "not_done") !== "not_done";
-  const MTBResult = watch("lab_xpert_mtb_rif_assay_result", "not_done");
-  const isLFDone = watch("lab_urine_lf_lam_result", "not_done") !== "not_done";
+    watch("lab_smear_microscopy_result_result_1", NOT_DONE) !== NOT_DONE;
+  const MTBResult = watch("lab_xpert_mtb_rif_assay_result", NOT_DONE);
+  const MTBResultTwo = watch("lab_xpert_mtb_rif_assay_result_2", NOT_DONE);
+  const isLFDone = watch("lab_urine_lf_lam_result", NOT_DONE) !== NOT_DONE;
+  const cultureFields = watch([
+    "lab_culture_mgit_culture",
+    "lab_culture_lj_culture",
+  ]);
+  const LPAFields = watch([
+    "lab_lpa_mtbdrplus_isoniazid",
+    "lab_lpa_mtbdrplus_rifampin",
+    "lab_lpa_mtbdrs_flouoroquinolones",
+    "lab_lpa_mtbdrs_kanamycin",
+    "lab_lpa_mtbdrs_amikacin",
+    "lab_lpa_mtbdrs_capreomycin",
+    "lab_lpa_mtbdrs_low_level_kanamycin",
+  ]);
+  const DSTFields = watch([
+    "lab_dst_isonazid",
+    "lab_dst_rifampin",
+    "lab_dst_ethambutol",
+    "lab_dst_kanamycin",
+    "lab_dst_ofloxacin",
+    "lab_dst_levofloxacinekanamycin",
+    "lab_dst_moxifloxacinekanamycin",
+    "lab_dst_amikacinekanamycin",
+  ]);
 
+  // Populate form with results
   useEffect(() => {
     if (results.length) {
-      reset(results[0]);
+      // normalize data to lowerCase
+      const data = deNormalizeData(results[0]);
+      // populate form with existing fields
+      reset(data);
     }
   }, [results, reset]);
 
-  async function handleResultCreation(data) {
-    const request = {
-      ...data,
-      record_id: record.record_id,
-    };
+  // Capitalize text inputs
+  useEffect(() => {
+    Array.prototype.forEach.call(
+      document.querySelectorAll("input[type=text],textarea"),
+      function (input) {
+        input.addEventListener("input", function () {
+          input.value = input.value.toUpperCase();
+        });
+      }
+    );
+  });
 
+  // check result type
+  function checkResultType(data) {
+    const resultType = getResultType(data);
+    const normalizedData = normalizeData(data);
+    if (resultType === "positive") {
+      setPrompt(true);
+      setCache({
+        ...normalizedData,
+        lab_result_type: resultType,
+        record_id: record.record_id,
+      });
+      return;
+    } else if (isUpdate) {
+      handleResultUpdate({
+        ...normalizedData,
+        lab_result_type: resultType,
+        record_id: record.record_id,
+      });
+    } else {
+      handleResultCreation({
+        ...normalizedData,
+        lab_result_type: resultType,
+        record_id: record.record_id,
+      });
+    }
+  }
+
+  function confirmResult() {
+    setPrompt(false);
+    if (isUpdate) {
+      handleResultUpdate(cache);
+      return;
+    }
+    handleResultCreation(cache);
+  }
+
+  // Create record
+  async function handleResultCreation(data) {
     try {
-      await newLabResult(request).unwrap();
+      await newLabResult(data).unwrap();
       toast.success("Lab result recorded");
       navigate("/dashboard");
     } catch (error) {
@@ -80,9 +166,16 @@ const LabResults = () => {
     }
   }
 
+  // Update record
   async function handleResultUpdate(data) {
+    const request = {
+      ...data,
+      lab_xpert_mtb_rif_assay_result_done:
+        results[0].lab_xpert_mtb_rif_assay_result !== "NOT_DONE" ? true : false,
+    };
+
     try {
-      await updateLabResult(data).unwrap();
+      await updateLabResult(request).unwrap();
       toast.success("Lab result updated");
       refetch();
     } catch (error) {
@@ -113,12 +206,24 @@ const LabResults = () => {
           </div>
         </Stack>
         <Spacer h={7} />
+        {isError && (
+          <Fragment>
+            <ActionableNotification
+              inline
+              kind="error"
+              title="An error occured"
+              subtitle="while fetching lab results"
+              lowContrast
+              hideCloseButton
+              actionButtonLabel="try again"
+              onActionButtonClick={refetch}
+            />
+            <Spacer h={7} />
+          </Fragment>
+        )}
         <Form
-          onSubmit={
-            isUpdate
-              ? handleSubmit(handleResultUpdate)
-              : handleSubmit(handleResultCreation)
-          }
+          className="data--collection"
+          onSubmit={handleSubmit(checkResultType)}
         >
           <Stack gap={7}>
             <DatePicker
@@ -154,13 +259,13 @@ const LabResults = () => {
                   orientation="vertical"
                   legendText="Result 1"
                   name="lab_smear_microscopy_result_result_1"
-                  defaultSelected={
-                    results[0]?.lab_smear_microscopy_result_result_1 ||
-                    "not_done"
-                  }
-                  onChange={(evt) =>
-                    setValue("lab_smear_microscopy_result_result_1", evt)
-                  }
+                  valueSelected={watch("lab_smear_microscopy_result_result_1")}
+                  onChange={(evt) => {
+                    if (evt === NOT_DONE) {
+                      setValue("lab_smear_microscopy_result_result_2", evt);
+                    }
+                    setValue("lab_smear_microscopy_result_result_1", evt);
+                  }}
                 >
                   <RadioButton labelText="No AFB seen" value="no_afb_seen" />
                   <RadioButton labelText="Scanty" value="scanty" />
@@ -184,10 +289,9 @@ const LabResults = () => {
                       orientation="vertical"
                       legendText="Result 2"
                       name="lab_smear_microscopy_result_result_2"
-                      defaultSelected={
-                        results[0]?.lab_smear_microscopy_result_result_2 ||
-                        "not_done"
-                      }
+                      valueSelected={watch(
+                        "lab_smear_microscopy_result_result_2"
+                      )}
                       onChange={(evt) =>
                         setValue("lab_smear_microscopy_result_result_2", evt)
                       }
@@ -251,15 +355,17 @@ const LabResults = () => {
                   orientation="vertical"
                   legendText="MTB result"
                   name="lab_xpert_mtb_rif_assay_result"
-                  defaultSelected={
-                    results[0]?.lab_xpert_mtb_rif_assay_result || "not_done"
-                  }
-                  onChange={(evt) =>
-                    setValue("lab_xpert_mtb_rif_assay_result", evt)
-                  }
+                  valueSelected={watch("lab_xpert_mtb_rif_assay_result")}
+                  onChange={(evt) => {
+                    setValue("lab_xpert_mtb_rif_assay_result", evt);
+                    setValue("lab_xpert_mtb_rif_assay_grades", null);
+                    setValue("lab_xpert_mtb_rif_assay_rif_result", NOT_DONE);
+                    setValue("lab_xpert_mtb_rif_assay_grades_2", null);
+                    setValue("lab_xpert_mtb_rif_assay_rif_result_2", NOT_DONE);
+                    setValue("lab_xpert_mtb_rif_assay_result_2", NOT_DONE);
+                  }}
                 >
                   <RadioButton labelText="Detected" value="detected" />
-                  <RadioButton labelText="Trace" value="trace" id="trace" />
                   <RadioButton labelText="Not detected" value="not_detected" />
                   <RadioButton
                     labelText="Error/invalid"
@@ -270,39 +376,44 @@ const LabResults = () => {
 
                 {MTBResult === "detected" && (
                   <Fragment>
-                    <RadioButtonGroup
-                      orientation="vertical"
-                      legendText="Grades"
-                      name="lab_xpert_mtb_rif_assay_grades"
-                      defaultSelected={
-                        results[0]?.lab_xpert_mtb_rif_assay_grades || "very_low"
-                      }
-                      onChange={(evt) =>
-                        setValue("lab_xpert_mtb_rif_assay_grades", evt)
-                      }
-                    >
-                      <RadioButton labelText="High" value="high" id="high" />
-                      <RadioButton
-                        labelText="Medium"
-                        value="medium"
-                        id="medium"
-                      />
-                      <RadioButton labelText="Low" value="low" id="low" />
-                      <RadioButton
-                        labelText="Very low"
-                        value="very_low"
-                        id="very_low"
-                      />
-                    </RadioButtonGroup>
+                    <Stack gap={5}>
+                      <RadioButtonGroup
+                        orientation="vertical"
+                        legendText="Grades"
+                        name="lab_xpert_mtb_rif_assay_grades"
+                        valueSelected={watch("lab_xpert_mtb_rif_assay_grades")}
+                        onChange={(evt) =>
+                          setValue("lab_xpert_mtb_rif_assay_grades", evt, {
+                            shouldValidate: true,
+                          })
+                        }
+                      >
+                        <RadioButton labelText="High" value="high" id="high" />
+                        <RadioButton
+                          labelText="Medium"
+                          value="medium"
+                          id="medium"
+                        />
+                        <RadioButton labelText="Low" value="low" id="low" />
+                        <RadioButton
+                          labelText="Very low"
+                          value="very_low"
+                          id="very_low"
+                        />
+                        <RadioButton labelText="Trace" value="trace" />
+                      </RadioButtonGroup>
+                      {errors?.lab_xpert_mtb_rif_assay_grades && (
+                        <ErrorMessage id="lab_xpert_mtb_rif_assay_grades" />
+                      )}
+                    </Stack>
 
                     <RadioButtonGroup
                       orientation="vertical"
                       legendText="RIF result"
                       name="lab_xpert_mtb_rif_assay_rif_result"
-                      defaultSelected={
-                        results[0]?.lab_xpert_mtb_rif_assay_rif_result ||
-                        "not_done"
-                      }
+                      valueSelected={watch(
+                        "lab_xpert_mtb_rif_assay_rif_result"
+                      )}
                       onChange={(evt) =>
                         setValue("lab_xpert_mtb_rif_assay_rif_result", evt)
                       }
@@ -321,7 +432,99 @@ const LabResults = () => {
                   </Fragment>
                 )}
 
-                {MTBResult !== "not_done" && (
+                {MTBResult !== NOT_DONE && (
+                  <RadioButtonGroup
+                    orientation="vertical"
+                    legendText="MTB result (2)"
+                    name="lab_xpert_mtb_rif_assay_result_2"
+                    valueSelected={watch("lab_xpert_mtb_rif_assay_result_2")}
+                    onChange={(evt) => {
+                      setValue("lab_xpert_mtb_rif_assay_grades_2", null);
+                      setValue(
+                        "lab_xpert_mtb_rif_assay_rif_result_2",
+                        NOT_DONE
+                      );
+                      setValue("lab_xpert_mtb_rif_assay_result_2", evt);
+                    }}
+                  >
+                    <RadioButton labelText="Detected" value="detected" />
+                    <RadioButton
+                      labelText="Not detected"
+                      value="not_detected"
+                    />
+                    <RadioButton
+                      labelText="Error/invalid"
+                      value="error_invalid"
+                    />
+                    <RadioButton labelText="Not done" value="not_done" />
+                  </RadioButtonGroup>
+                )}
+
+                {MTBResultTwo === "detected" && (
+                  <Fragment>
+                    <Stack gap={5}>
+                      <RadioButtonGroup
+                        orientation="vertical"
+                        legendText="Grades"
+                        name="lab_xpert_mtb_rif_assay_grades_2"
+                        valueSelected={watch(
+                          "lab_xpert_mtb_rif_assay_grades_2"
+                        )}
+                        onChange={(evt) =>
+                          setValue("lab_xpert_mtb_rif_assay_grades_2", evt, {
+                            shouldValidate: true,
+                          })
+                        }
+                      >
+                        <RadioButton
+                          labelText="High"
+                          value="high"
+                          id="high_2"
+                        />
+                        <RadioButton
+                          labelText="Medium"
+                          value="medium"
+                          id="medium_2"
+                        />
+                        <RadioButton labelText="Low" value="low" id="low_2" />
+                        <RadioButton
+                          labelText="Very low"
+                          value="very_low"
+                          id="very_low_2"
+                        />
+                        <RadioButton labelText="Trace" value="trace" />
+                      </RadioButtonGroup>
+                      {errors?.lab_xpert_mtb_rif_assay_grades_2 && (
+                        <ErrorMessage id="lab_xpert_mtb_rif_assay_grades_2" />
+                      )}
+                    </Stack>
+
+                    <RadioButtonGroup
+                      orientation="vertical"
+                      legendText="RIF result"
+                      name="lab_xpert_mtb_rif_assay_rif_result_2"
+                      valueSelected={watch(
+                        "lab_xpert_mtb_rif_assay_rif_result_2"
+                      )}
+                      onChange={(evt) =>
+                        setValue("lab_xpert_mtb_rif_assay_rif_result_2", evt)
+                      }
+                    >
+                      <RadioButton labelText="Detected" value="detected" />
+                      <RadioButton
+                        labelText="Indeterminate"
+                        value="indeterminate"
+                      />
+                      <RadioButton
+                        labelText="Not detected"
+                        value="not_detected"
+                      />
+                      <RadioButton labelText="Not done" value="not_done" />
+                    </RadioButtonGroup>
+                  </Fragment>
+                )}
+
+                {MTBResult !== NOT_DONE && (
                   <Fragment>
                     <DatePicker
                       control={control}
@@ -355,10 +558,14 @@ const LabResults = () => {
                   orientation="vertical"
                   legendText=""
                   name="lab_urine_lf_lam_result"
-                  defaultSelected={
-                    results[0]?.lab_urine_lf_lam_result || "not_done"
-                  }
-                  onChange={(evt) => setValue("lab_urine_lf_lam_result", evt)}
+                  valueSelected={watch("lab_urine_lf_lam_result")}
+                  onChange={(evt) => {
+                    if (evt === NOT_DONE) {
+                      setValue("lab_urine_lf_lam_date", "");
+                      setValue("lab_urine_lf_lam_done_by ", "");
+                    }
+                    setValue("lab_urine_lf_lam_result", evt);
+                  }}
                 >
                   <RadioButton labelText="Negative" value="negative" />
                   <RadioButton labelText="Positive" value="positive" />
@@ -391,6 +598,442 @@ const LabResults = () => {
               </Stack>
             </FormGroup>
 
+            <FormGroup legendText="Culture">
+              <Stack gap={7}>
+                <RadioButtonGroup
+                  orientation="vertical"
+                  legendText="MGIT Culture"
+                  id="lab_culture_mgit_culture"
+                  name="lab_culture_mgit_culture"
+                  valueSelected={watch("lab_culture_mgit_culture")}
+                  onChange={(evt) => setValue("lab_culture_mgit_culture", evt)}
+                >
+                  <RadioButton labelText="NTM" value="ntm" />
+                  <RadioButton labelText="TBC" value="tbc" />
+                  <RadioButton labelText="Negative" value="negative" />
+                  <RadioButton labelText="Contaminated" value="contaminated" />
+                  <RadioButton labelText="Not done" value="not_done" />
+                </RadioButtonGroup>
+
+                <RadioButtonGroup
+                  orientation="vertical"
+                  legendText="LJ Culture"
+                  name="lab_culture_lj_culture"
+                  valueSelected={watch("lab_culture_lj_culture")}
+                  onChange={(evt) => setValue("lab_culture_lj_culture", evt)}
+                >
+                  <RadioButton labelText="NTM" value="ntm" />
+                  <RadioButton labelText="TBC" value="tbc" />
+                  <RadioButton labelText="Negative" value="negative" />
+                  <RadioButton labelText="Contaminated" value="contaminated" />
+                  <RadioButton labelText="Not done" value="not_done" />
+                </RadioButtonGroup>
+
+                {cultureFields.some((field) => field !== NOT_DONE) && (
+                  <Fragment>
+                    <DatePicker
+                      control={control}
+                      labelText="Date"
+                      id="lab_culture_date"
+                      invalid={errors.lab_culture_date ? true : false}
+                      invalidText={errors.lab_culture_date?.message}
+                    />
+
+                    <TextInput
+                      id="lab_culture_done_by"
+                      labelText="Done by"
+                      {...register("lab_culture_done_by")}
+                      invalid={errors.lab_culture_done_by ? true : false}
+                      invalidText={errors.lab_culture_done_by?.message}
+                    />
+                  </Fragment>
+                )}
+              </Stack>
+            </FormGroup>
+
+            <FormGroup legendText="Line probe assay (LPA)">
+              <p className="form--group__description">
+                TB drug susceptibility testing (DST)
+              </p>
+              <br />
+              <Stack gap={7}>
+                <FormGroup legendText="First line LPA (MTBDRplus)">
+                  <Stack gap={6} className="indented--group">
+                    <RadioButtonGroup
+                      orientation="vertical"
+                      legendText="Isoniazid"
+                      name="lab_lpa_mtbdrplus_isoniazid"
+                      valueSelected={watch("lab_lpa_mtbdrplus_isoniazid")}
+                      onChange={(evt) =>
+                        setValue("lab_lpa_mtbdrplus_isoniazid", evt)
+                      }
+                      invalid={
+                        errors.lab_lpa_mtbdrplus_isoniazid ? true : false
+                      }
+                      invalidText={errors.lab_lpa_mtbdrplus_isoniazid?.message}
+                    >
+                      <RadioButton labelText="resistant" value="resistant" />
+                      <RadioButton
+                        labelText="susceptible"
+                        value="susceptible"
+                      />
+                      <RadioButton
+                        labelText="indeterminate"
+                        value="indeterminate"
+                      />
+                      <RadioButton labelText="Not done" value="not_done" />
+                    </RadioButtonGroup>
+
+                    <RadioButtonGroup
+                      orientation="vertical"
+                      legendText="Rifampin"
+                      name="lab_lpa_mtbdrplus_rifampin"
+                      valueSelected={watch("lab_lpa_mtbdrplus_rifampin")}
+                      onChange={(evt) =>
+                        setValue("lab_lpa_mtbdrplus_rifampin", evt)
+                      }
+                      invalid={errors.lab_lpa_mtbdrplus_rifampin ? true : false}
+                      invalidText={errors.lab_lpa_mtbdrplus_rifampin?.message}
+                    >
+                      <RadioButton labelText="resistant" value="resistant" />
+                      <RadioButton
+                        labelText="susceptible"
+                        value="susceptible"
+                      />
+                      <RadioButton
+                        labelText="indeterminate"
+                        value="indeterminate"
+                      />
+                      <RadioButton labelText="Not done" value="not_done" />
+                    </RadioButtonGroup>
+                  </Stack>
+                </FormGroup>
+
+                <FormGroup legendText="Second line LPA (MTBDRsl)">
+                  <Stack gap={6} className="indented--group">
+                    <RadioButtonGroup
+                      orientation="vertical"
+                      legendText="Flouoroquinolones"
+                      name="lab_lpa_mtbdrs_flouoroquinolones"
+                      valueSelected={watch("lab_lpa_mtbdrs_flouoroquinolones")}
+                      onChange={(evt) =>
+                        setValue("lab_lpa_mtbdrs_flouoroquinolones", evt)
+                      }
+                      invalid={
+                        errors.lab_lpa_mtbdrs_flouoroquinolones ? true : false
+                      }
+                      invalidText={
+                        errors.lab_lpa_mtbdrs_flouoroquinolones?.message
+                      }
+                    >
+                      <RadioButton labelText="resistant" value="resistant" />
+                      <RadioButton
+                        labelText="susceptible"
+                        value="susceptible"
+                      />
+                      <RadioButton
+                        labelText="indeterminate"
+                        value="indeterminate"
+                      />
+                      <RadioButton labelText="Not done" value="not_done" />
+                    </RadioButtonGroup>
+
+                    <RadioButtonGroup
+                      orientation="vertical"
+                      legendText="Kanamycin"
+                      name="lab_lpa_mtbdrs_kanamycin"
+                      valueSelected={watch("lab_lpa_mtbdrs_kanamycin")}
+                      onChange={(evt) =>
+                        setValue("lab_lpa_mtbdrs_kanamycin", evt)
+                      }
+                      invalid={errors.lab_lpa_mtbdrs_kanamycin ? true : false}
+                      invalidText={errors.lab_lpa_mtbdrs_kanamycin?.message}
+                    >
+                      <RadioButton labelText="resistant" value="resistant" />
+                      <RadioButton
+                        labelText="susceptible"
+                        value="susceptible"
+                      />
+                      <RadioButton
+                        labelText="indeterminate"
+                        value="indeterminate"
+                      />
+                      <RadioButton labelText="Not done" value="not_done" />
+                    </RadioButtonGroup>
+
+                    <RadioButtonGroup
+                      orientation="vertical"
+                      legendText="Amikacin"
+                      name="lab_lpa_mtbdrs_amikacin"
+                      valueSelected={watch("lab_lpa_mtbdrs_amikacin")}
+                      onChange={(evt) =>
+                        setValue("lab_lpa_mtbdrs_amikacin", evt)
+                      }
+                      invalid={errors.lab_lpa_mtbdrs_amikacin ? true : false}
+                      invalidText={errors.lab_lpa_mtbdrs_amikacin?.message}
+                    >
+                      <RadioButton labelText="resistant" value="resistant" />
+                      <RadioButton
+                        labelText="susceptible"
+                        value="susceptible"
+                      />
+                      <RadioButton
+                        labelText="indeterminate"
+                        value="indeterminate"
+                      />
+                      <RadioButton labelText="Not done" value="not_done" />
+                    </RadioButtonGroup>
+
+                    <RadioButtonGroup
+                      orientation="vertical"
+                      legendText="Capreomycin"
+                      name="lab_lpa_mtbdrs_capreomycin"
+                      valueSelected={watch("lab_lpa_mtbdrs_capreomycin")}
+                      onChange={(evt) =>
+                        setValue("lab_lpa_mtbdrs_capreomycin", evt)
+                      }
+                      invalid={errors.lab_lpa_mtbdrs_capreomycin ? true : false}
+                      invalidText={errors.lab_lpa_mtbdrs_capreomycin?.message}
+                    >
+                      <RadioButton labelText="resistant" value="resistant" />
+                      <RadioButton
+                        labelText="susceptible"
+                        value="susceptible"
+                      />
+                      <RadioButton
+                        labelText="indeterminate"
+                        value="indeterminate"
+                      />
+                      <RadioButton labelText="Not done" value="not_done" />
+                    </RadioButtonGroup>
+
+                    <RadioButtonGroup
+                      orientation="vertical"
+                      legendText="Low-level Kanamycin"
+                      name="lab_lpa_mtbdrs_low_level_kanamycin"
+                      valueSelected={watch(
+                        "lab_lpa_mtbdrs_low_level_kanamycin"
+                      )}
+                      onChange={(evt) =>
+                        setValue("lab_lpa_mtbdrs_low_level_kanamycin", evt)
+                      }
+                      invalid={
+                        errors.lab_lpa_mtbdrs_low_level_kanamycin ? true : false
+                      }
+                      invalidText={
+                        errors.lab_lpa_mtbdrs_low_level_kanamycin?.message
+                      }
+                    >
+                      <RadioButton labelText="resistant" value="resistant" />
+                      <RadioButton
+                        labelText="susceptible"
+                        value="susceptible"
+                      />
+                      <RadioButton
+                        labelText="indeterminate"
+                        value="indeterminate"
+                      />
+                      <RadioButton labelText="Not done" value="not_done" />
+                    </RadioButtonGroup>
+                  </Stack>
+                </FormGroup>
+
+                {LPAFields.some((field) => field !== NOT_DONE) && (
+                  <Fragment>
+                    <DatePicker
+                      control={control}
+                      labelText="Date"
+                      id="lab_lpa_date"
+                      invalid={errors.lab_lpa_date ? true : false}
+                      invalidText={errors.lab_lpa_date?.message}
+                    />
+
+                    <TextInput
+                      id="lab_lpa_done_by"
+                      labelText="Done by"
+                      {...register("lab_lpa_done_by")}
+                      invalid={errors.lab_lpa_done_by ? true : false}
+                      invalidText={errors.lab_lpa_done_by?.message}
+                    />
+                  </Fragment>
+                )}
+              </Stack>
+            </FormGroup>
+
+            <FormGroup legendText="Proportion method drug susceptibility testing (DST)">
+              <Stack gap={6} className="indented--group">
+                <RadioButtonGroup
+                  orientation="vertical"
+                  legendText="Isoniazid"
+                  name="lab_dst_isonazid"
+                  valueSelected={watch("lab_dst_isonazid")}
+                  onChange={(evt) => setValue("lab_dst_isonazid", evt)}
+                  invalid={errors.lab_dst_isonazid ? true : false}
+                  invalidText={errors.lab_dst_isonazid?.message}
+                >
+                  <RadioButton labelText="resistant" value="resistant" />
+                  <RadioButton labelText="susceptible" value="susceptible" />
+                  <RadioButton
+                    labelText="indeterminate"
+                    value="indeterminate"
+                  />
+                  <RadioButton labelText="Not done" value="not_done" />
+                </RadioButtonGroup>
+
+                <RadioButtonGroup
+                  orientation="vertical"
+                  legendText="Rifampin"
+                  name="lab_dst_rifampin"
+                  valueSelected={watch("lab_dst_rifampin")}
+                  onChange={(evt) => setValue("lab_dst_rifampin", evt)}
+                  invalid={errors.lab_dst_rifampin ? true : false}
+                  invalidText={errors.lab_dst_rifampin?.message}
+                >
+                  <RadioButton labelText="resistant" value="resistant" />
+                  <RadioButton labelText="susceptible" value="susceptible" />
+                  <RadioButton
+                    labelText="indeterminate"
+                    value="indeterminate"
+                  />
+                  <RadioButton labelText="Not done" value="not_done" />
+                </RadioButtonGroup>
+
+                <RadioButtonGroup
+                  orientation="vertical"
+                  legendText="Ethambutol"
+                  name="lab_dst_ethambutol"
+                  valueSelected={watch("lab_dst_ethambutol")}
+                  onChange={(evt) => setValue("lab_dst_ethambutol", evt)}
+                  invalid={errors.lab_dst_ethambutol ? true : false}
+                  invalidText={errors.lab_dst_ethambutol?.message}
+                >
+                  <RadioButton labelText="resistant" value="resistant" />
+                  <RadioButton labelText="susceptible" value="susceptible" />
+                  <RadioButton
+                    labelText="indeterminate"
+                    value="indeterminate"
+                  />
+                  <RadioButton labelText="Not done" value="not_done" />
+                </RadioButtonGroup>
+
+                <RadioButtonGroup
+                  orientation="vertical"
+                  legendText="Kanamycin"
+                  name="lab_dst_kanamycin"
+                  valueSelected={watch("lab_dst_kanamycin")}
+                  onChange={(evt) => setValue("lab_dst_kanamycin", evt)}
+                  invalid={errors.lab_dst_kanamycin ? true : false}
+                  invalidText={errors.lab_dst_kanamycin?.message}
+                >
+                  <RadioButton labelText="resistant" value="resistant" />
+                  <RadioButton labelText="susceptible" value="susceptible" />
+                  <RadioButton
+                    labelText="indeterminate"
+                    value="indeterminate"
+                  />
+                  <RadioButton labelText="Not done" value="not_done" />
+                </RadioButtonGroup>
+
+                <RadioButtonGroup
+                  orientation="vertical"
+                  legendText="Ofloxacin"
+                  name="lab_dst_ofloxacin"
+                  valueSelected={watch("lab_dst_ofloxacin")}
+                  onChange={(evt) => setValue("lab_dst_ofloxacin", evt)}
+                  invalid={errors.lab_dst_ofloxacin ? true : false}
+                  invalidText={errors.lab_dst_ofloxacin?.message}
+                >
+                  <RadioButton labelText="resistant" value="resistant" />
+                  <RadioButton labelText="susceptible" value="susceptible" />
+                  <RadioButton
+                    labelText="indeterminate"
+                    value="indeterminate"
+                  />
+                  <RadioButton labelText="Not done" value="not_done" />
+                </RadioButtonGroup>
+
+                <RadioButtonGroup
+                  orientation="vertical"
+                  legendText="LevofloxacineKanamycin"
+                  name="lab_dst_levofloxacinekanamycin"
+                  valueSelected={watch("lab_dst_levofloxacinekanamycin")}
+                  onChange={(evt) =>
+                    setValue("lab_dst_levofloxacinekanamycin", evt)
+                  }
+                  invalid={errors.lab_dst_levofloxacinekanamycin ? true : false}
+                  invalidText={errors.lab_dst_levofloxacinekanamycin?.message}
+                >
+                  <RadioButton labelText="resistant" value="resistant" />
+                  <RadioButton labelText="susceptible" value="susceptible" />
+                  <RadioButton
+                    labelText="indeterminate"
+                    value="indeterminate"
+                  />
+                  <RadioButton labelText="Not done" value="not_done" />
+                </RadioButtonGroup>
+
+                <RadioButtonGroup
+                  orientation="vertical"
+                  legendText="MoxifloxacineKanamycin"
+                  name="lab_dst_moxifloxacinekanamycin"
+                  valueSelected={watch("lab_dst_moxifloxacinekanamycin")}
+                  onChange={(evt) =>
+                    setValue("lab_dst_moxifloxacinekanamycin", evt)
+                  }
+                  invalid={errors.lab_dst_moxifloxacinekanamycin ? true : false}
+                  invalidText={errors.lab_dst_moxifloxacinekanamycin?.message}
+                >
+                  <RadioButton labelText="resistant" value="resistant" />
+                  <RadioButton labelText="susceptible" value="susceptible" />
+                  <RadioButton
+                    labelText="indeterminate"
+                    value="indeterminate"
+                  />
+                  <RadioButton labelText="Not done" value="not_done" />
+                </RadioButtonGroup>
+
+                <RadioButtonGroup
+                  orientation="vertical"
+                  legendText="AmikacineKanamycin"
+                  name="lab_dst_amikacinekanamycin"
+                  valueSelected={watch("lab_dst_amikacinekanamycin")}
+                  onChange={(evt) =>
+                    setValue("lab_dst_amikacinekanamycin", evt)
+                  }
+                  invalid={errors.lab_dst_amikacinekanamycin ? true : false}
+                  invalidText={errors.lab_dst_amikacinekanamycin?.message}
+                >
+                  <RadioButton labelText="resistant" value="resistant" />
+                  <RadioButton labelText="susceptible" value="susceptible" />
+                  <RadioButton
+                    labelText="indeterminate"
+                    value="indeterminate"
+                  />
+                  <RadioButton labelText="Not done" value="not_done" />
+                </RadioButtonGroup>
+
+                {DSTFields.some((field) => field !== NOT_DONE) && (
+                  <Fragment>
+                    <DatePicker
+                      control={control}
+                      labelText="Date"
+                      id="lab_dst_date"
+                      invalid={errors.lab_dst_date ? true : false}
+                      invalidText={errors.lab_dst_date?.message}
+                    />
+
+                    <TextInput
+                      id="lab_dst_done_by"
+                      labelText="Done by"
+                      {...register("lab_dst_done_by")}
+                      invalid={errors.lab_dst_done_by ? true : false}
+                      invalidText={errors.lab_dst_done_by?.message}
+                    />
+                  </Fragment>
+                )}
+              </Stack>
+            </FormGroup>
+
             {!isCreating || isUpdating ? (
               <Button kind={isUpdate ? "secondary" : "primary"} type="submit">
                 {isUpdate ? "Update" : "Save"}
@@ -405,6 +1048,19 @@ const LabResults = () => {
           </Stack>
         </Form>
       </Column>
+      <Modal
+        size="sm"
+        open={prompt}
+        modalHeading="Positive result!"
+        modalLabel="Alert"
+        primaryButtonText="Confirm"
+        secondaryButtonText="Cancel"
+        preventCloseOnClickOutside
+        onRequestClose={() => setPrompt(false)}
+        onRequestSubmit={() => confirmResult()}
+      >
+        <p>You are about to record a positive result</p>
+      </Modal>
     </FlexGrid>
   );
 };

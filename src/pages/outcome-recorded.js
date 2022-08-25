@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, Fragment } from "react";
 import { PageHeader, Spacer, TabBar } from "components";
 import {
   Stack,
@@ -15,6 +15,7 @@ import {
   InlineLoading,
   TextArea,
   FlexGrid,
+  ActionableNotification,
 } from "@carbon/react";
 import { DocumentAdd } from "@carbon/icons-react";
 import { useForm } from "react-hook-form";
@@ -25,10 +26,12 @@ import { recordSelector } from "features";
 import {
   useGetOutcomesQuery,
   useNewOutcomeMutation,
+  useGetLabResultsQuery,
   useUpdateOutcomeMutation,
 } from "services";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
+import { deNormalizeData, normalizeData } from "utils";
 
 const OutcomeRecorded = () => {
   const navigate = useNavigate();
@@ -38,8 +41,19 @@ const OutcomeRecorded = () => {
   const {
     data: outcomes = [],
     isFetching,
+    isError,
     refetch,
-  } = useGetOutcomesQuery(record.record_id);
+  } = useGetOutcomesQuery(record.record_id, {
+    refetchOnMountOrArgChange: true,
+  });
+
+  const {
+    data: results = [],
+    isFetching: fetchingResults,
+    refetch: refetchResults,
+  } = useGetLabResultsQuery(record.record_id, {
+    refetchOnMountOrArgChange: true,
+  });
 
   const isUpdate = outcomes[0]?.outcome_recorded_id ? true : false;
 
@@ -62,9 +76,21 @@ const OutcomeRecorded = () => {
 
   useEffect(() => {
     if (outcomes.length) {
-      reset(outcomes[0]);
+      const data = deNormalizeData(outcomes[0]);
+      reset(data);
     }
   }, [outcomes, reset]);
+
+  useEffect(() => {
+    Array.prototype.forEach.call(
+      document.querySelectorAll("input[type=text],textarea"),
+      function (input) {
+        input.addEventListener("input", function () {
+          input.value = input.value.toUpperCase();
+        });
+      }
+    );
+  });
 
   async function handleOutcome(data) {
     const request = {
@@ -81,8 +107,11 @@ const OutcomeRecorded = () => {
   }
 
   async function handleOutcomeUpdate(data) {
+    // Re normalize the data before submission
+    const normalizedData = normalizeData(data);
+
     try {
-      await updateOutcome(data).unwrap();
+      await updateOutcome(normalizedData).unwrap();
       toast.success("Outcome recorded");
       refetch();
     } catch (error) {
@@ -90,7 +119,7 @@ const OutcomeRecorded = () => {
     }
   }
 
-  if (isFetching) return <Loading />;
+  if (isFetching || fetchingResults) return <Loading />;
 
   return (
     <FlexGrid fullWidth className="page">
@@ -113,12 +142,28 @@ const OutcomeRecorded = () => {
           </div>
         </Stack>
         <Spacer h={7} />
+        {isError && (
+          <Fragment>
+            <ActionableNotification
+              inline
+              kind="error"
+              title="An error occured"
+              subtitle="while fetching outcome recorded"
+              lowContrast
+              hideCloseButton
+              actionButtonLabel="try again"
+              onActionButtonClick={refetch}
+            />
+            <Spacer h={7} />
+          </Fragment>
+        )}
         <Form
           onSubmit={
             isUpdate
               ? handleSubmit(handleOutcomeUpdate)
               : handleSubmit(handleOutcome)
           }
+          className="data--collection"
         >
           <Stack gap={7}>
             <Accordion>
@@ -129,15 +174,51 @@ const OutcomeRecorded = () => {
               >
                 <Stack gap={5}>
                   <h5>SMR results</h5>
-                  <p>Result 1: Not done</p>
-                  <p>Result 2: Not done</p>
+                  <p>
+                    <span>Result 1: </span>
+                    {results[0]?.lab_smear_microscopy_result_result_1 || "N/A"}
+                  </p>
+                  <p>
+                    <span>Result 2: </span>
+                    {results[0]?.lab_smear_microscopy_result_result_1 || "N/A"}
+                  </p>
                   <h5>Xpert results</h5>
-                  <p>MTB: Detected</p>
-                  <p>Grade: Very Low</p>
-                  <p>RIF: Not done</p>
+                  <p>
+                    <span>MTB: </span>
+                    {results[0]?.lab_xpert_mtb_rif_assay_result || "N/A"}
+                  </p>
+                  <p>
+                    <span>Grade: </span>
+                    {results[0]?.lab_xpert_mtb_rif_assay_grades || "N/A"}
+                  </p>
+                  <p>
+                    <span>RIF: </span>
+                    {results[0]?.lab_xpert_mtb_rif_assay_rif_result || "N/A"}
+                  </p>
+
+                  <h5>Xpert results (2)</h5>
+                  <p>
+                    <span>MTB: </span>
+                    {results[0]?.lab_xpert_mtb_rif_assay_result_2 || "N/A"}
+                  </p>
+                  <p>
+                    <span>Grade: </span>
+                    {results[0]?.lab_xpert_mtb_rif_assay_grades_2 || "N/A"}
+                  </p>
+                  <p>
+                    <span>RIF: </span>
+                    {results[0]?.lab_xpert_mtb_rif_assay_rif_result_2 || "N/A"}
+                  </p>
 
                   <h5>Urine results</h5>
-                  <p>Result: Not done</p>
+                  <p>
+                    <span>LFLam: </span>
+                    {results[0]?.lab_urine_lf_lam_result || "N/A"}
+                  </p>
+
+                  <Button kind="tertiary" onClick={() => refetchResults()}>
+                    refresh
+                  </Button>
                 </Stack>
               </AccordionItem>
             </Accordion>
@@ -146,15 +227,17 @@ const OutcomeRecorded = () => {
               orientation="vertical"
               legendText="Treatment"
               name="outcome_recorded_started_tb_treatment_outcome"
-              defaultSelected={
-                outcomes[0]?.outcome_recorded_started_tb_treatment_outcome ||
-                "started_tb_treatment"
-              }
-              onChange={(evt) =>
+              valueSelected={watch(
+                "outcome_recorded_started_tb_treatment_outcome"
+              )}
+              onChange={(evt) => {
+                if (evt !== "started_tb_treatment") {
+                  setValue("outcome_recorded_tb_rx_number", "");
+                }
                 setValue("outcome_recorded_started_tb_treatment_outcome", evt, {
                   shouldValidate: true,
-                })
-              }
+                });
+              }}
             >
               <RadioButton
                 labelText="Started TB treatment"

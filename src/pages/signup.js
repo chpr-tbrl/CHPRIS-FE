@@ -11,13 +11,15 @@ import {
   InlineLoading,
   PasswordInput,
   DropdownSkeleton,
+  RadioButtonGroup,
+  RadioButton,
   InlineNotification,
   Modal,
 } from "@carbon/react";
 import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { sIGNUP_SCHEMA } from "schemas";
+import { SIGNUP_SCHEMA } from "schemas";
 import { useSignupMutation } from "services";
 import { useRegionsAndSites } from "hooks";
 import { PhoneNumberInput } from "components";
@@ -37,7 +39,7 @@ const Signup = () => {
     handleSubmit,
     formState: { errors },
   } = useForm({
-    resolver: yupResolver(sIGNUP_SCHEMA),
+    resolver: yupResolver(SIGNUP_SCHEMA),
   });
 
   const {
@@ -63,12 +65,9 @@ const Signup = () => {
     <Grid fullWidth>
       <Column sm={0} md={4} lg={8} className="page--article">
         <div className="page--article__content">
-          <h2>Lorem ipsum</h2>
+          <h2 className="cds--type-semibold">CHPR-IS</h2>
           <p>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Nobis
-            debitis voluptate voluptatum, exercitationem reiciendis dolores
-            voluptatibus, tempora amet delectus magnam accusantium quibusdam
-            temporibus. Iste nisi nihil cum consequatur delectus eius?
+            Center for Health Promotion and Research - Information System
           </p>
         </div>
       </Column>
@@ -81,11 +80,6 @@ const Signup = () => {
           </Link>
         </p>
         <h1>Create an account</h1>
-        <p>
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolore soluta
-          dolorum facere vel repellendus repellat rem iusto, blanditiis ex
-          dolorem.
-        </p>
 
         <Form onSubmit={handleSubmit(handleSignup)}>
           <Stack gap={7}>
@@ -188,6 +182,24 @@ const Signup = () => {
                   invalid={errors.confirm_password ? true : false}
                   invalidText={errors.confirm_password?.message}
                 />
+
+                <RadioButtonGroup
+                  legendText="SMS notification type"
+                  name="sms_notifications_type"
+                  defaultSelected="positive"
+                  onChange={(evt) =>
+                    setValue("sms_notifications_type", evt, {
+                      shouldValidate: true,
+                    })
+                  }
+                >
+                  <RadioButton
+                    labelText="Positive"
+                    value="positive"
+                    id="positive"
+                  />
+                  <RadioButton labelText="All" value="all" id="all" />
+                </RadioButtonGroup>
               </Stack>
             </FormGroup>
 

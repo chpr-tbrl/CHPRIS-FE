@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, Fragment } from "react";
 import { PageHeader, Spacer, TabBar, DatePicker } from "components";
 import {
   Stack,
@@ -15,6 +15,7 @@ import {
   InlineLoading,
   FormLabel,
   TextArea,
+  ActionableNotification,
 } from "@carbon/react";
 import { ReminderMedical } from "@carbon/icons-react";
 import { useForm } from "react-hook-form";
@@ -24,6 +25,7 @@ import { recordSelector } from "features";
 import { useSelector } from "react-redux";
 import {
   useGetFollowUpsQuery,
+  useGetLabResultsQuery,
   useNewFollowUpMutation,
   useUpdateFollowUpMutation,
 } from "services";
@@ -39,8 +41,19 @@ const FollowUP = () => {
   const {
     data: followUps = [],
     isFetching,
+    isError,
     refetch,
-  } = useGetFollowUpsQuery(record.record_id);
+  } = useGetFollowUpsQuery(record.record_id, {
+    refetchOnMountOrArgChange: true,
+  });
+
+  const {
+    data: results = [],
+    isFetching: fetchingResults,
+    refetch: refetchResults,
+  } = useGetLabResultsQuery(record.record_id, {
+    refetchOnMountOrArgChange: true,
+  });
 
   const isUpdate = followUps[0]?.follow_up_id ? true : false;
 
@@ -59,6 +72,17 @@ const FollowUP = () => {
       reset(followUps[0]);
     }
   }, [followUps, reset]);
+
+  useEffect(() => {
+    Array.prototype.forEach.call(
+      document.querySelectorAll("input[type=text],textarea"),
+      function (input) {
+        input.addEventListener("keyup", function () {
+          input.value = input.value.toUpperCase();
+        });
+      }
+    );
+  });
 
   async function handleFollowUpCreation(data) {
     const request = {
@@ -84,7 +108,7 @@ const FollowUP = () => {
     }
   }
 
-  if (isFetching) return <Loading />;
+  if (isFetching || fetchingResults) return <Loading />;
 
   return (
     <FlexGrid fullWidth className="page">
@@ -107,6 +131,21 @@ const FollowUP = () => {
           </div>
         </Stack>
         <Spacer h={7} />
+        {isError && (
+          <Fragment>
+            <ActionableNotification
+              inline
+              kind="error"
+              title="An error occured"
+              subtitle="while fetching followup"
+              lowContrast
+              hideCloseButton
+              actionButtonLabel="try again"
+              onActionButtonClick={refetch}
+            />
+            <Spacer h={7} />
+          </Fragment>
+        )}
         <Form
           onSubmit={
             isUpdate
@@ -123,15 +162,51 @@ const FollowUP = () => {
               >
                 <Stack gap={5}>
                   <h5>SMR results</h5>
-                  <p>Result 1: Not done</p>
-                  <p>Result 2: Not done</p>
+                  <p>
+                    <span>Result 1: </span>
+                    {results[0]?.lab_smear_microscopy_result_result_1 || "N/A"}
+                  </p>
+                  <p>
+                    <span>Result 2: </span>
+                    {results[0]?.lab_smear_microscopy_result_result_1 || "N/A"}
+                  </p>
                   <h5>Xpert results</h5>
-                  <p>MTB: Detected</p>
-                  <p>Grade: Very Low</p>
-                  <p>RIF: Not done</p>
+                  <p>
+                    <span>MTB: </span>
+                    {results[0]?.lab_xpert_mtb_rif_assay_result || "N/A"}
+                  </p>
+                  <p>
+                    <span>Grade: </span>
+                    {results[0]?.lab_xpert_mtb_rif_assay_grades || "N/A"}
+                  </p>
+                  <p>
+                    <span>RIF: </span>
+                    {results[0]?.lab_xpert_mtb_rif_assay_rif_result || "N/A"}
+                  </p>
+
+                  <h5>Xpert results (2)</h5>
+                  <p>
+                    <span>MTB: </span>
+                    {results[0]?.lab_xpert_mtb_rif_assay_result_2 || "N/A"}
+                  </p>
+                  <p>
+                    <span>Grade: </span>
+                    {results[0]?.lab_xpert_mtb_rif_assay_grades_2 || "N/A"}
+                  </p>
+                  <p>
+                    <span>RIF: </span>
+                    {results[0]?.lab_xpert_mtb_rif_assay_rif_result_2 || "N/A"}
+                  </p>
 
                   <h5>Urine results</h5>
-                  <p>Result: Not done</p>
+                  <p>
+                    <span>LFLam: </span>
+                    {results[0]?.lab_urine_lf_lam_result || "N/A"}
+                  </p>
+
+                  <Button kind="tertiary" onClick={() => refetchResults()}>
+                    refresh
+                  </Button>
                 </Stack>
               </AccordionItem>
             </Accordion>

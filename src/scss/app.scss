@@ -83,7 +83,6 @@
 
   p {
     @include type.type-style("body-01");
-    margin-bottom: layout.$spacing-07;
   }
 
   @include grid.breakpoint(lg) {
@@ -188,6 +187,20 @@ form {
     font-size: type.type-scale(3);
     margin-bottom: layout.$spacing-04;
   }
+  .form--group__description {
+    font-size: type.type-scale(2);
+  }
+  .indented--group {
+    @include grid.breakpoint(lg) {
+      margin-left: layout.rem(18px);
+    }
+  }
+}
+
+form.data--collection {
+  input[type="text"] {
+    text-transform: uppercase;
+  }
 }
 
 footer {
@@ -203,7 +216,12 @@ footer {
   .search--option {
     flex-grow: 1;
     @include grid.breakpoint(lg) {
-      width: 10rem;
+      width: layout.rem(160px);
     }
   }
+}
+
+.error--message {
+  color: themes.$text-error;
+  font-size: layout.rem(14px);
 }

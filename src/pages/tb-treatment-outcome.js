@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, Fragment } from "react";
 import toast from "react-hot-toast";
 import {
   Stack,
@@ -15,6 +15,7 @@ import {
   InlineLoading,
   FormLabel,
   TextArea,
+  ActionableNotification
 } from "@carbon/react";
 import { Archive } from "@carbon/icons-react";
 import { useForm } from "react-hook-form";
@@ -25,10 +26,14 @@ import { useNavigate } from "react-router-dom";
 import { TB_TREATMENT_OUTCOME_SCHEMA } from "schemas";
 import { recordSelector } from "features";
 import {
+  useGetOutcomesQuery,
+  useGetFollowUpsQuery,
+  useGetLabResultsQuery,
   useGetTreatmentOutcomesQuery,
   useNewTreatmentOutcomeMutation,
   useUpdateTreatmentOutcomeMutation,
 } from "services";
+import { deNormalizeData, normalizeData } from "utils";
 
 const TBTreatmentOutcome = () => {
   const record = useSelector(recordSelector);
@@ -40,25 +45,67 @@ const TBTreatmentOutcome = () => {
   const {
     data: treatmentOutcomes = [],
     isFetching,
+    isError,
     refetch,
-  } = useGetTreatmentOutcomesQuery(record.record_id);
+  } = useGetTreatmentOutcomesQuery(record.record_id, {
+    refetchOnMountOrArgChange: true,
+  });
+
+  const {
+    data: results = [],
+    isFetching: fetchingResults,
+    refetch: refetchResults,
+  } = useGetLabResultsQuery(record.record_id, {
+    refetchOnMountOrArgChange: true,
+  });
+
+  const {
+    data: followUp = [],
+    isFetching: fetchingFollowUp,
+    refetch: refetchFollowUp,
+  } = useGetFollowUpsQuery(record.record_id, {
+    refetchOnMountOrArgChange: true,
+  });
+
+  const {
+    data: outcome = [],
+    isFetching: fetchingOutcome,
+    refetch: refetchOutcome,
+  } = useGetOutcomesQuery(record.record_id, {
+    refetchOnMountOrArgChange: true,
+  });
+
   const isUpdate = treatmentOutcomes[0]?.tb_treatment_outcome_id ? true : false;
 
   const {
     reset,
+    watch,
     setValue,
     register,
     handleSubmit,
     formState: { errors },
   } = useForm({
     resolver: yupResolver(TB_TREATMENT_OUTCOME_SCHEMA),
+    defaultValues: TB_TREATMENT_OUTCOME_SCHEMA.cast(),
   });
 
   useEffect(() => {
     if (treatmentOutcomes.length) {
-      reset(treatmentOutcomes[0]);
+      const data = deNormalizeData(treatmentOutcomes[0]);
+      reset(data);
     }
   }, [treatmentOutcomes, reset]);
+
+  useEffect(() => {
+    Array.prototype.forEach.call(
+      document.querySelectorAll("input[type=text],textarea"),
+      function (input) {
+        input.addEventListener("input", function () {
+          input.value = input.value.toUpperCase();
+        });
+      }
+    );
+  });
 
   async function handleTreatmentOutcome(data) {
     const request = {
@@ -76,7 +123,7 @@ const TBTreatmentOutcome = () => {
 
   async function handleUpdate(data) {
     try {
-      await updateTreatmentOutcome(data).unwrap();
+      await updateTreatmentOutcome(normalizeData).unwrap();
       toast.success("Treatment outcome updated");
       refetch();
     } catch (error) {
@@ -84,10 +131,11 @@ const TBTreatmentOutcome = () => {
     }
   }
 
-  if (isFetching) return <Loading />;
+  if (isFetching || fetchingResults || fetchingFollowUp || fetchingOutcome)
+    return <Loading />;
   return (
     <FlexGrid fullWidth className="page">
-      <Column sm={4} lg={{ span: 8, offset: 4 }}>
+      <Column sm={4} lg={{ span: 12, offset: 2 }}>
         <TabBar />
         <PageHeader
           title="TB treatment outcome"
@@ -106,13 +154,28 @@ const TBTreatmentOutcome = () => {
           </div>
         </Stack>
         <Spacer h={7} />
-
+        {isError && (
+          <Fragment>
+            <ActionableNotification
+              inline
+              kind="error"
+              title="An error occured"
+              subtitle="while fetching treatment outcome"
+              lowContrast
+              hideCloseButton
+              actionButtonLabel="try again"
+              onActionButtonClick={refetch}
+            />
+            <Spacer h={7} />
+          </Fragment>
+        )}
         <Form
           onSubmit={
             isUpdate
               ? handleSubmit(handleUpdate)
               : handleSubmit(handleTreatmentOutcome)
           }
+          className="data--collection"
         >
           <Stack gap={7}>
             <br />
@@ -123,17 +186,56 @@ const TBTreatmentOutcome = () => {
                     <span className="accordion--title">View lab results</span>
                   }
                 >
-                  <Stack gap={5}>
+                  <Stack gap={4}>
                     <h5>SMR results</h5>
-                    <p>Result 1: Not done</p>
-                    <p>Result 2: Not done</p>
+                    <p>
+                      <span>Result 1: </span>
+                      {results[0]?.lab_smear_microscopy_result_result_1 ||
+                        "N/A"}
+                    </p>
+                    <p>
+                      <span>Result 2: </span>
+                      {results[0]?.lab_smear_microscopy_result_result_1 ||
+                        "N/A"}
+                    </p>
                     <h5>Xpert results</h5>
-                    <p>MTB: Detected</p>
-                    <p>Grade: Very Low</p>
-                    <p>RIF: Not done</p>
+                    <p>
+                      <span>MTB: </span>
+                      {results[0]?.lab_xpert_mtb_rif_assay_result || "N/A"}
+                    </p>
+                    <p>
+                      <span>Grade: </span>
+                      {results[0]?.lab_xpert_mtb_rif_assay_grades || "N/A"}
+                    </p>
+                    <p>
+                      <span>RIF: </span>
+                      {results[0]?.lab_xpert_mtb_rif_assay_rif_result || "N/A"}
+                    </p>
+
+                    <h5>Xpert results (2)</h5>
+                    <p>
+                      <span>MTB: </span>
+                      {results[0]?.lab_xpert_mtb_rif_assay_result_2 || "N/A"}
+                    </p>
+                    <p>
+                      <span>Grade: </span>
+                      {results[0]?.lab_xpert_mtb_rif_assay_grades_2 || "N/A"}
+                    </p>
+                    <p>
+                      <span>RIF: </span>
+                      {results[0]?.lab_xpert_mtb_rif_assay_rif_result_2 ||
+                        "N/A"}
+                    </p>
 
                     <h5>Urine results</h5>
-                    <p>Result: Not done</p>
+                    <p>
+                      <span>LFLam: </span>
+                      {results[0]?.lab_urine_lf_lam_result || "N/A"}
+                    </p>
+
+                    <Button kind="tertiary" onClick={() => refetchResults()}>
+                      refresh
+                    </Button>
                   </Stack>
                 </AccordionItem>
               </Accordion>
@@ -145,12 +247,25 @@ const TBTreatmentOutcome = () => {
                     </span>
                   }
                 >
-                  <Stack gap={5}>
-                    <p>xray:</p>
-                    <p>Amoxicilin:</p>
-                    <p>Other Antibiotic:</p>
-                    <p>Follow up date(Y-m-d):</p>
-                    <p>Comments:</p>
+                  <Stack gap={4}>
+                    <h5>Results</h5>
+                    <p>
+                      <span>Xray: </span>
+                      {followUp[0]?.follow_up_xray ? "Yes" : "No"}
+                    </p>
+                    <p>
+                      <span>Amoxicilin: </span>
+                      {followUp[0]?.follow_up_amoxicillin ? "Yes" : "No"}
+                    </p>
+                    <h5>Other Antibiotic</h5>
+                    <p>{followUp[0]?.follow_up_other_antibiotic || "N/A"}</p>
+                    <h5>Follow up date</h5>
+                    <p>{followUp[0]?.follow_up_date || "N/A"}</p>
+                    <h5>Comments</h5>
+                    <p>{followUp[0]?.follow_up_comments || "N/A"}</p>
+                    <Button kind="tertiary" onClick={() => refetchFollowUp()}>
+                      refresh
+                    </Button>
                   </Stack>
                 </AccordionItem>
               </Accordion>
@@ -162,10 +277,21 @@ const TBTreatmentOutcome = () => {
                     </span>
                   }
                 >
-                  <Stack gap={5}>
-                    <p>Outcome:</p>
-                    <p> TB RX number:</p>
-                    <p> Comments:</p>
+                  <Stack gap={4}>
+                    <h5>Outcome recorded</h5>
+                    <p>
+                      {outcome[0]
+                        ?.outcome_recorded_started_tb_treatment_outcome ||
+                        "N/A"}
+                    </p>
+                    <h5>TB RX number: </h5>
+                    <p>{outcome[0]?.outcome_recorded_tb_rx_number || "N/A"}</p>
+                    <h5>Comments</h5>
+                    <p>{outcome[0]?.outcome_recorded_comments || "N/A"}</p>
+
+                    <Button kind="tertiary" onClick={() => refetchOutcome()}>
+                      refresh
+                    </Button>
                   </Stack>
                 </AccordionItem>
               </Accordion>
@@ -174,9 +300,7 @@ const TBTreatmentOutcome = () => {
               orientation="vertical"
               legendText="Treatment outcome"
               name="tb_treatment_outcome_result"
-              defaultSelected={
-                treatmentOutcomes[0]?.tb_treatment_outcome_result || "cured"
-              }
+              valueSelected={watch("tb_treatment_outcome_result")}
               onChange={(evt) =>
                 setValue("tb_treatment_outcome_result", evt, {
                   shouldValidate: true,
