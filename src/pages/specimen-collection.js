@@ -1,5 +1,6 @@
 import React, { Fragment, useEffect } from "react";
 import toast from "react-hot-toast";
+import { format } from "date-fns";
 import {
   PageHeader,
   Spacer,
@@ -102,6 +103,14 @@ const SpecimenCollection = () => {
     const normalizedData = normalizeData(data);
     const request = {
       ...normalizedData,
+      specimen_collection_1_date: format(
+        new Date(normalizedData.specimen_collection_1_date),
+        "yyyy-MM-dd"
+      ),
+      specimen_collection_2_date: format(
+        new Date(normalizedData.specimen_collection_2_date),
+        "yyyy-MM-dd"
+      ),
       record_id: record.record_id,
     };
     try {
@@ -116,8 +125,21 @@ const SpecimenCollection = () => {
   async function handleSpecimenUpdate(data) {
     // Re normalize the data before submission
     const normalizedData = normalizeData(data);
+
+    const request = {
+      ...normalizedData,
+      specimen_collection_1_date: format(
+        new Date(normalizedData.specimen_collection_1_date),
+        "yyyy-MM-dd"
+      ),
+      specimen_collection_2_date: format(
+        new Date(normalizedData.specimen_collection_2_date),
+        "yyyy-MM-dd"
+      ),
+    };
+    
     try {
-      await updateSpecimen(normalizedData).unwrap();
+      await updateSpecimen(request).unwrap();
       toast.success("specimen updated");
       refetch();
     } catch (error) {

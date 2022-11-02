@@ -1,5 +1,6 @@
 import React, { Fragment, useEffect, useState } from "react";
 import toast from "react-hot-toast";
+import { format } from "date-fns";
 import {
   PageHeader,
   Spacer,
@@ -170,10 +171,33 @@ const LabResults = () => {
     handleResultCreation(cache);
   }
 
+  // format date
+  function formatDate(date) {
+    if (!date) return date;
+    return format(new Date(date), "yyyy-MM-dd");
+  }
+
   // Create record
   async function handleResultCreation(data) {
+    const request = {
+      ...data,
+      lab_date_specimen_collection_received: formatDate(
+        data.lab_date_specimen_collection_received
+      ),
+      lab_smear_microscopy_result_date: formatDate(
+        data.lab_smear_microscopy_result_date
+      ),
+      lab_xpert_mtb_rif_assay_date: formatDate(
+        data.lab_xpert_mtb_rif_assay_date
+      ),
+      lab_urine_lf_lam_date: formatDate(data.lab_urine_lf_lam_date),
+      lab_culture_date: formatDate(data.lab_culture_date),
+      lab_lpa_date: formatDate(data.lab_lpa_date),
+      lab_dst_date: formatDate(data.lab_dst_date),
+    };
+
     try {
-      await newLabResult(data).unwrap();
+      await newLabResult(request).unwrap();
       toast.success("Lab result recorded");
       navigate("/dashboard");
     } catch (error) {
@@ -187,6 +211,19 @@ const LabResults = () => {
       ...data,
       lab_xpert_mtb_rif_assay_result_done:
         results[0].lab_xpert_mtb_rif_assay_result !== "NOT_DONE" ? true : false,
+      lab_date_specimen_collection_received: formatDate(
+        data.lab_date_specimen_collection_received
+      ),
+      lab_smear_microscopy_result_date: formatDate(
+        data.lab_smear_microscopy_result_date
+      ),
+      lab_xpert_mtb_rif_assay_date: formatDate(
+        data.lab_xpert_mtb_rif_assay_date
+      ),
+      lab_urine_lf_lam_date: formatDate(data.lab_urine_lf_lam_date),
+      lab_culture_date: formatDate(data.lab_culture_date),
+      lab_lpa_date: formatDate(data.lab_lpa_date),
+      lab_dst_date: formatDate(data.lab_dst_date),
     };
 
     try {
