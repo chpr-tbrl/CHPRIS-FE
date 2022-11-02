@@ -173,7 +173,7 @@ const LabResults = () => {
 
   // format date
   function formatDate(date) {
-    if (!date) return date;
+    if (!date || date === "" || date === "0000-00-00") return date;
     return format(new Date(date), "yyyy-MM-dd");
   }
 
