@@ -59,10 +59,20 @@ export function deNormalizeData(inputs) {
   // parse the object
   return Object.fromEntries(
     Object.entries(inputs).map(([key, value]) => {
-      // do not parse dates, phone numbers or nullish values
-      if (!value || key.includes("date") || key.includes("telephone")) {
+      // handle erros
+      if (key.includes("date")) {
+        // eslint-disable-next-line eqeqeq
+        if (value == "0000-00-00") {
+          return [key, ""];
+        }
         return [key, value];
       }
+
+      // do not parse dates, phone numbers or nullish values
+      if (!value || key.includes("telephone")) {
+        return [key, value];
+      }
+
       // do not parse booleans or numbers too
       // Booleans will be converted to YES/NO at export
       else if (typeof value === "number" || typeof value === "boolean") {
