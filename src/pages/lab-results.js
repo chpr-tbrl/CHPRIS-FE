@@ -1,5 +1,6 @@
 import React, { Fragment, useEffect, useState } from "react";
 import toast from "react-hot-toast";
+import { format } from "date-fns";
 import {
   PageHeader,
   Spacer,
@@ -36,6 +37,7 @@ import {
 } from "services";
 import { useNavigate } from "react-router-dom";
 import { getResultType, normalizeData, deNormalizeData } from "utils";
+import { useGetSpecimensQuery } from "services";
 
 const LabResults = () => {
   const [prompt, setPrompt] = useState(false);
@@ -55,6 +57,8 @@ const LabResults = () => {
   });
   const isUpdate = results[0]?.lab_id ? true : false;
 
+  const [open, setOpen] = useState(true);
+
   const {
     reset,
     watch,
@@ -67,6 +71,18 @@ const LabResults = () => {
     defaultValues: LAB_RESULTS_SCHEMA.cast(),
     resolver: yupResolver(LAB_RESULTS_SCHEMA),
   });
+
+  const { data: specimens = [] } = useGetSpecimensQuery(record.record_id, {
+    refetchOnMountOrArgChange: true,
+  });
+
+  useEffect(() => {
+    if (specimens.length === 0) {
+      setOpen(true);
+    } else {
+      setOpen(false);
+    }
+  }, [specimens, reset]);
 
   const isResultOneDone =
     watch("lab_smear_microscopy_result_result_1", NOT_DONE) !== NOT_DONE;
@@ -155,10 +171,33 @@ const LabResults = () => {
     handleResultCreation(cache);
   }
 
+  // format date
+  function formatDate(date) {
+    if (!date || date === "" || date === "0000-00-00") return date;
+    return format(new Date(date), "yyyy-MM-dd");
+  }
+
   // Create record
   async function handleResultCreation(data) {
+    const request = {
+      ...data,
+      lab_date_specimen_collection_received: formatDate(
+        data.lab_date_specimen_collection_received
+      ),
+      lab_smear_microscopy_result_date: formatDate(
+        data.lab_smear_microscopy_result_date
+      ),
+      lab_xpert_mtb_rif_assay_date: formatDate(
+        data.lab_xpert_mtb_rif_assay_date
+      ),
+      lab_urine_lf_lam_date: formatDate(data.lab_urine_lf_lam_date),
+      lab_culture_date: formatDate(data.lab_culture_date),
+      lab_lpa_date: formatDate(data.lab_lpa_date),
+      lab_dst_date: formatDate(data.lab_dst_date),
+    };
+
     try {
-      await newLabResult(data).unwrap();
+      await newLabResult(request).unwrap();
       toast.success("Lab result recorded");
       navigate("/dashboard");
     } catch (error) {
@@ -172,6 +211,19 @@ const LabResults = () => {
       ...data,
       lab_xpert_mtb_rif_assay_result_done:
         results[0].lab_xpert_mtb_rif_assay_result !== "NOT_DONE" ? true : false,
+      lab_date_specimen_collection_received: formatDate(
+        data.lab_date_specimen_collection_received
+      ),
+      lab_smear_microscopy_result_date: formatDate(
+        data.lab_smear_microscopy_result_date
+      ),
+      lab_xpert_mtb_rif_assay_date: formatDate(
+        data.lab_xpert_mtb_rif_assay_date
+      ),
+      lab_urine_lf_lam_date: formatDate(data.lab_urine_lf_lam_date),
+      lab_culture_date: formatDate(data.lab_culture_date),
+      lab_lpa_date: formatDate(data.lab_lpa_date),
+      lab_dst_date: formatDate(data.lab_dst_date),
     };
 
     try {
@@ -187,6 +239,20 @@ const LabResults = () => {
 
   return (
     <FlexGrid fullWidth className="page">
+      <Modal
+        open={open}
+        passiveModal
+        onRequestClose={() => {
+          setOpen(false);
+          navigate("/dashboard/records");
+        }}
+      >
+        <Stack gap={7}>
+          <h4>Create Specimen</h4>
+          <p> You will have to add a specimen before proceeding</p>
+        </Stack>
+      </Modal>
+
       <Column sm={4} lg={{ span: 8, offset: 4 }}>
         <TabBar />
         <PageHeader
