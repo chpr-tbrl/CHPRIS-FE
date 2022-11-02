@@ -36,6 +36,7 @@ import {
 } from "services";
 import { useNavigate } from "react-router-dom";
 import { getResultType, normalizeData, deNormalizeData } from "utils";
+import { useGetSpecimensQuery } from "services";
 
 const LabResults = () => {
   const [prompt, setPrompt] = useState(false);
@@ -55,6 +56,8 @@ const LabResults = () => {
   });
   const isUpdate = results[0]?.lab_id ? true : false;
 
+  const [open, setOpen] = useState(true);
+
   const {
     reset,
     watch,
@@ -67,6 +70,18 @@ const LabResults = () => {
     defaultValues: LAB_RESULTS_SCHEMA.cast(),
     resolver: yupResolver(LAB_RESULTS_SCHEMA),
   });
+
+  const { data: specimens = [] } = useGetSpecimensQuery(record.record_id, {
+    refetchOnMountOrArgChange: true,
+  });
+
+  useEffect(() => {
+    if (specimens.length === 0) {
+      setOpen(true);
+    } else {
+      setOpen(false);
+    }
+  }, [specimens, reset]);
 
   const isResultOneDone =
     watch("lab_smear_microscopy_result_result_1", NOT_DONE) !== NOT_DONE;
@@ -187,6 +202,20 @@ const LabResults = () => {
 
   return (
     <FlexGrid fullWidth className="page">
+      <Modal
+        open={open}
+        passiveModal
+        onRequestClose={() => {
+          setOpen(false);
+          navigate("/dashboard/records");
+        }}
+      >
+        <Stack gap={7}>
+          <h4>Create Specimen</h4>
+          <p> You will have to add a specimen before proceeding</p>
+        </Stack>
+      </Modal>
+
       <Column sm={4} lg={{ span: 8, offset: 4 }}>
         <TabBar />
         <PageHeader
