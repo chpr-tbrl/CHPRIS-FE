@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 
 export const ErrorMessage = ({ message, id }) => {
   return (
-    <small class="error--message" id={id}>
+    <small className="error--message" id={id}>
       {message || "Field is required"}
     </small>
   );
