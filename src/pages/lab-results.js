@@ -108,10 +108,6 @@ const LabResults = () => {
     if (results.length) {
       // normalize data to lowerCase
       const data = deNormalizeData(results[0]);
-      console.log(
-        "🚀 ~ file: lab-results.js ~ line 111 ~ useEffect ~ data ",
-        data
-      );
       // populate form with existing fields
       reset(data);
     }
