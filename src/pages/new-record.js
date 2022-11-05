@@ -10,19 +10,17 @@ import {
   FlexGrid,
   FormGroup,
   TextInput,
-  DatePicker,
+  // DatePicker,
   RadioButton,
   NumberInput,
   InlineLoading,
-  DatePickerInput,
   RadioButtonGroup,
 } from "@carbon/react";
-import { format } from "date-fns";
 import { UserFollow } from "@carbon/icons-react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useNavigate } from "react-router-dom";
-import { handleSetValue, normalizeData } from "utils";
+import { normalizeData } from "utils";
 import { NEW_RECORD_SCHEMA } from "schemas";
 import { useNewRecordMutation } from "services";
 import {
@@ -31,6 +29,7 @@ import {
   Spacer,
   TabBar,
   ErrorMessage,
+  DatePicker,
 } from "components";
 import { useFetchedRegionsAndSites, useDeviceDetection } from "hooks";
 
@@ -63,7 +62,7 @@ const NewRecord = () => {
     "records_symptoms_night_sweats",
     "records_symptoms_weight_loss",
   ]);
-
+  
   const reasonForTest = watch("records_reason_for_test");
 
   const { regions, sites, selectSite, selectRegion } =
@@ -72,17 +71,8 @@ const NewRecord = () => {
   async function handleRecordCreation(data) {
     // capitalize all inputs
     const normalizedData = normalizeData(data);
-    // build request body
-    const request = {
-      ...normalizedData,
-      records_date_of_test_request: format(
-        new Date(normalizedData.records_date_of_test_request),
-        "yyyy-MM-dd"
-      ),
-    };
-
     try {
-      await newRecord(request).unwrap();
+      await newRecord(normalizedData).unwrap();
       toast.success("Record created");
       navigate("/dashboard");
     } catch (error) {
@@ -90,11 +80,12 @@ const NewRecord = () => {
     }
   }
 
+  // handle input text capitalization
   useEffect(() => {
     Array.prototype.forEach.call(
       document.querySelectorAll("input[type=text]"),
       function (input) {
-        input.addEventListener("input", function () {
+        input.addEventListener("change", function () {
           input.value = input.value.toUpperCase();
         });
       }
@@ -166,7 +157,7 @@ const NewRecord = () => {
               {errors?.records_sex && <ErrorMessage id="records_sex" />}
             </Stack>
 
-            <DatePicker
+            {/* <DatePicker
               datePickerType="single"
               maxDate={new Date()}
               onChange={(evt) => {
@@ -176,15 +167,16 @@ const NewRecord = () => {
                   setValue
                 );
               }}
-            >
-              <DatePickerInput
-                placeholder="mm/dd/yyyy"
-                labelText="Date of test request"
-                id="records_date_of_test_request"
-                invalid={errors.records_date_of_test_request ? true : false}
-                invalidText={errors.records_date_of_test_request?.message}
-              />
-            </DatePicker>
+            > */}
+            <DatePicker
+              control={control}
+              placeholder="mm/dd/yyyy"
+              labelText="Date of test request"
+              id="records_date_of_test_request"
+              invalid={errors.records_date_of_test_request ? true : false}
+              invalidText={errors.records_date_of_test_request?.message}
+            />
+            {/* </DatePicker> */}
 
             <TextInput
               id="records_address"
@@ -439,6 +431,7 @@ const NewRecord = () => {
             <FormGroup legendText="Reason for test">
               <Stack gap={5}>
                 <RadioButtonGroup
+                  name="records_reason_for_test"
                   legendText="Diagnostic"
                   valueSelected={watch("records_reason_for_test")}
                   orientation="vertical"
@@ -452,6 +445,7 @@ const NewRecord = () => {
 
                 <RadioButtonGroup
                   legendText="Follow up"
+                  name="records_reason_for_test"
                   valueSelected={watch("records_reason_for_test")}
                   orientation="vertical"
                   onChange={(evt) => {
@@ -494,6 +488,7 @@ const NewRecord = () => {
               <Stack gap={5}>
                 <RadioButtonGroup
                   legendText=""
+                  name="records_tb_treatment_history"
                   valueSelected={watch("records_tb_treatment_history")}
                   orientation="vertical"
                   onChange={(evt) =>

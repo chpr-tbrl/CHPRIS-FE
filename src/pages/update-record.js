@@ -76,7 +76,7 @@ const UpdateRecord = () => {
     Array.prototype.forEach.call(
       document.querySelectorAll("input[type=text]"),
       function (input) {
-        input.addEventListener("input", function () {
+        input.addEventListener("change", function () {
           input.value = input.value.toUpperCase();
         });
       }
@@ -98,7 +98,6 @@ const UpdateRecord = () => {
   async function handleUpdate(data) {
     // Re normalize the data before submission
     const normalizedData = normalizeData(data);
-
     try {
       await updateRecord(normalizedData).unwrap();
       toast.success("Record updated");
@@ -120,7 +119,10 @@ const UpdateRecord = () => {
           renderIcon={<UserProfile size={42} />}
         />
         <Spacer h={7} />
-        <Form className="data--collection" onSubmit={handleSubmit(handleUpdate)}>
+        <Form
+          className="data--collection"
+          onSubmit={handleSubmit(handleUpdate)}
+        >
           <Stack gap={7}>
             <TextInput
               id="records_name"
@@ -397,6 +399,7 @@ const UpdateRecord = () => {
               <Stack gap={5}>
                 <RadioButtonGroup
                   legendText="Diagnostic"
+                  name="records_reason_for_test"
                   valueSelected={watch("records_reason_for_test")}
                   orientation="vertical"
                   onChange={(evt) => setValue("records_reason_for_test", evt)}
@@ -409,6 +412,7 @@ const UpdateRecord = () => {
 
                 <RadioButtonGroup
                   legendText="Follow up"
+                  name="records_reason_for_test"
                   valueSelected={watch("records_reason_for_test")}
                   orientation="vertical"
                   onChange={(evt) => {
@@ -442,6 +446,7 @@ const UpdateRecord = () => {
                     invalidText={
                       errors.records_reason_for_test_follow_up_months?.message
                     }
+                    iconDescription="presumptive tb count"
                   />
                 )}
               </Stack>
@@ -451,6 +456,7 @@ const UpdateRecord = () => {
               <Stack gap={5}>
                 <RadioButtonGroup
                   legendText=""
+                  name="records_tb_treatment_history"
                   valueSelected={watch("records_tb_treatment_history")}
                   orientation="vertical"
                   onChange={(evt) =>

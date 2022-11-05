@@ -30,6 +30,7 @@ import {
   useUpdateFollowUpMutation,
 } from "services";
 import { useNavigate } from "react-router-dom";
+import { normalizeData, deNormalizeData } from "utils";
 import toast from "react-hot-toast";
 
 const FollowUP = () => {
@@ -69,10 +70,14 @@ const FollowUP = () => {
 
   useEffect(() => {
     if (followUps.length) {
-      reset(followUps[0]);
+      // normalize data to lowerCase
+      const data = deNormalizeData(followUps[0]);
+      // populate form with existing fields
+      reset(data);
     }
   }, [followUps, reset]);
 
+  // handle input capitalization
   useEffect(() => {
     Array.prototype.forEach.call(
       document.querySelectorAll("input[type=text],textarea"),
@@ -85,8 +90,9 @@ const FollowUP = () => {
   });
 
   async function handleFollowUpCreation(data) {
+    const normalizedData = normalizeData(data);
     const request = {
-      ...data,
+      ...normalizedData,
       record_id: record.record_id,
     };
     try {
@@ -99,8 +105,10 @@ const FollowUP = () => {
   }
 
   async function handleFollowUpdate(data) {
+    const normalizedData = normalizeData(data);
+
     try {
-      await updateFollowUp(data).unwrap();
+      await updateFollowUp(normalizedData).unwrap();
       toast.success("Follow up updated");
       refetch();
     } catch (error) {
@@ -152,6 +160,7 @@ const FollowUP = () => {
               ? handleSubmit(handleFollowUpdate)
               : handleSubmit(handleFollowUpCreation)
           }
+          className="data--collection"
         >
           <Stack gap={7}>
             <Accordion>

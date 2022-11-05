@@ -1,5 +1,5 @@
 // utilities for transforming data
-
+import { format, isValid } from "date-fns";
 export function formatUTCDate(date) {
   return new Date(date).toLocaleString();
 }
@@ -39,10 +39,20 @@ export function normalizeData(inputs) {
   // parse the object
   return Object.fromEntries(
     Object.entries(inputs).map(([key, value]) => {
-      // do not parse dates, phone numbers or nullish values
-      if (!value || key.includes("date") || key.includes("telephone")) {
+      // format all dates so they don't get coerced
+      // also convert nullish values to null so they dont get stored as 0000-00-00
+      if (key.includes("date")) {
+        // check validity
+        if (!value || !isValid(new Date(value))) {
+          return [key, null];
+        }
+        return [key, format(new Date(value), "yyyy-MM-dd")];
+      }
+      // do not parse phone numbers or nullish values
+      else if (!value || key.includes("telephone")) {
         return [key, value];
       }
+
       // do not parse booleans or numbers too
       // Booleans will be converted to YES/NO at export
       else if (typeof value === "number" || typeof value === "boolean") {
@@ -59,17 +69,18 @@ export function deNormalizeData(inputs) {
   // parse the object
   return Object.fromEntries(
     Object.entries(inputs).map(([key, value]) => {
-      // handle erros
+      // format all dates so they don't get coerced
+      // also convert nullish values to null so they dont get stored as 0000-00-00
       if (key.includes("date")) {
-        // eslint-disable-next-line eqeqeq
-        if (value == "0000-00-00") {
-          return [key, ""];
+        // check validity
+        if (!value || !isValid(new Date(value))) {
+          return [key, null];
         }
-        return [key, value];
+        return [key, format(new Date(value), "yyyy-MM-dd")];
       }
 
-      // do not parse dates, phone numbers or nullish values
-      if (!value || key.includes("telephone")) {
+      // do not parse phone numbers or nullish values
+      else if (!value || key.includes("telephone")) {
         return [key, value];
       }
 
